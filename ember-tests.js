@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.12b24963
+ * @version   1.13.0-beta.1+canary.ff82f2e0
  */
 
 (function() {
@@ -44518,7 +44518,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.12b24963", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.ff82f2e0", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
@@ -46239,6 +46239,25 @@ enifed('ember-views/tests/compat/attrs_proxy_test', ['ember-views/views/view', '
     utils.runAppend(view);
 
     equal(view.$().text(), "baz", "value specified in the template is used");
+  });
+
+});
+enifed('ember-views/tests/compat/metamorph_test', ['ember-views/views/view', 'ember-views/compat/metamorph_view'], function (View, metamorph_view) {
+
+  'use strict';
+
+  QUnit.module("ember-views: _Metamorph [DEPRECATED]");
+
+  QUnit.test("Instantiating _MetamorphView triggers deprecation", function () {
+    expectDeprecation(function () {
+      View['default'].extend(metamorph_view._Metamorph).create();
+    }, /Using Ember\._Metamorph is deprecated./);
+  });
+
+  QUnit.test("Instantiating _MetamorphView triggers deprecation", function () {
+    expectDeprecation(function () {
+      metamorph_view['default'].create();
+    }, /Using Ember\._MetamorphView is deprecated./);
   });
 
 });
