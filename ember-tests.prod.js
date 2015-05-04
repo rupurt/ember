@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.a4f9da43
+ * @version   1.13.0-beta.1+canary.b0103130
  */
 
 (function() {
@@ -11501,8 +11501,6 @@ enifed('ember-htmlbars/tests/helpers/view_test', ['ember-views/views/view', 'con
   });
 
   QUnit.test("Non-\"Binding\"-suffixed bindings are runloop-synchronized", function () {
-    expectDeprecation();
-
     var subview;
 
     var Subview = EmberView['default'].extend({
@@ -12543,8 +12541,6 @@ enifed('ember-htmlbars/tests/helpers/view_test', ['ember-views/views/view', 'con
   });
 
   QUnit.test("Specifying `id` to {{view}} is set on the view.", function () {
-    expectDeprecation(/You tried to look up an attribute directly on the component/);
-
     registry.register("view:derp", EmberView['default'].extend({
       template: compile['default']("<div id=\"view-id\">{{view.id}}</div><div id=\"view-elementId\">{{view.elementId}}</div>")
     }));
@@ -12563,8 +12559,6 @@ enifed('ember-htmlbars/tests/helpers/view_test', ['ember-views/views/view', 'con
   });
 
   QUnit.test("Specifying `id` to {{view}} does not allow bound id changes.", function () {
-    expectDeprecation(/You tried to look up an attribute directly on the component/);
-
     registry.register("view:derp", EmberView['default'].extend({
       template: compile['default']("<div id=\"view-id\">{{view.id}}</div><div id=\"view-elementId\">{{view.elementId}}</div>")
     }));
@@ -44344,7 +44338,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.a4f9da43", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.b0103130", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
@@ -54715,8 +54709,6 @@ enifed('ember/tests/component_registration_test', ['ember', 'ember-template-comp
 
   // The test following this one is the non-deprecated version
   QUnit.test("properties of a component without a template should not collide with internal structures [DEPRECATED]", function () {
-    expectDeprecation(/You tried to look up an attribute directly on the component/);
-
     Ember.TEMPLATES.application = compile['default']("<div id='wrapper'>{{my-component data=foo}}</div>");
 
     boot(function () {
