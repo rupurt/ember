@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.807a0cd8
+ * @version   1.13.0-beta.1+canary.27a6c57b
  */
 
 (function() {
@@ -7696,7 +7696,7 @@ enifed('ember-htmlbars/keywords/real_outlet', ['exports', 'ember-metal/property_
   @submodule ember-htmlbars
   */
 
-  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
 
   exports['default'] = {
     willRender: function (renderNode, env) {
@@ -8977,7 +8977,7 @@ enifed('ember-htmlbars/templates/component', ['exports', 'ember-template-compile
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9009,7 +9009,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9035,7 +9035,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9059,7 +9059,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9083,7 +9083,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9114,7 +9114,7 @@ enifed('ember-htmlbars/templates/empty', ['exports', 'ember-template-compiler/sy
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9142,7 +9142,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
         var child0 = (function () {
           return {
             isHTMLBars: true,
-            revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+            revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
             arity: 0,
             cachedFragment: null,
             hasRendered: false,
@@ -9166,7 +9166,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
         })();
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9191,7 +9191,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       var child1 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9215,7 +9215,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9241,7 +9241,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9265,7 +9265,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9289,7 +9289,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9320,7 +9320,7 @@ enifed('ember-htmlbars/templates/link-to-escaped', ['exports', 'ember-template-c
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9351,7 +9351,7 @@ enifed('ember-htmlbars/templates/link-to-unescaped', ['exports', 'ember-template
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9384,7 +9384,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9409,7 +9409,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       var child1 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9433,7 +9433,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9458,7 +9458,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
     var child1 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9482,7 +9482,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9514,7 +9514,7 @@ enifed('ember-htmlbars/templates/select-optgroup', ['exports', 'ember-template-c
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9538,7 +9538,7 @@ enifed('ember-htmlbars/templates/select-optgroup', ['exports', 'ember-template-c
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9569,7 +9569,7 @@ enifed('ember-htmlbars/templates/select-option', ['exports', 'ember-template-com
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9601,7 +9601,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9628,7 +9628,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 1,
           cachedFragment: null,
           hasRendered: false,
@@ -9652,7 +9652,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9678,7 +9678,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+          revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
           arity: 1,
           cachedFragment: null,
           hasRendered: false,
@@ -9702,7 +9702,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+        revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9726,7 +9726,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9761,7 +9761,7 @@ enifed('ember-htmlbars/templates/top-level-view', ['exports', 'ember-template-co
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.807a0cd8",
+      revision: "Ember@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -12440,7 +12440,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.807a0cd8
+    @version 1.13.0-beta.1+canary.27a6c57b
   */
 
   if ('undefined' === typeof Ember) {
@@ -12469,10 +12469,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.807a0cd8'
+    @default '1.13.0-beta.1+canary.27a6c57b'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.807a0cd8';
+  Ember.VERSION = '1.13.0-beta.1+canary.27a6c57b';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -16043,6 +16043,8 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
   exports.endPropertyChanges = endPropertyChanges;
   exports.changeProperties = changeProperties;
 
+  var PROPERTY_DID_CHANGE = utils.symbol("PROPERTY_DID_CHANGE");
+
   var beforeObserverSet = new ObserverSet['default']();
   var observerSet = new ObserverSet['default']();
   var deferred = 0;
@@ -16119,6 +16121,10 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
     // shouldn't this mean that we're watching this key?
     if (desc && desc.didChange) {
       desc.didChange(obj, keyName);
+    }
+
+    if (obj[PROPERTY_DID_CHANGE]) {
+      obj[PROPERTY_DID_CHANGE](keyName);
     }
 
     if (!watching && keyName !== "length") {
@@ -16336,6 +16342,8 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
       ember_metal__events.sendEvent(obj, eventName, [obj, keyName]);
     }
   }
+
+  exports.PROPERTY_DID_CHANGE = PROPERTY_DID_CHANGE;
 
 });
 enifed('ember-metal/property_get', ['exports', 'ember-metal/core', 'ember-metal/error', 'ember-metal/path_cache', 'ember-metal/platform/define_property', 'ember-metal/utils'], function (exports, Ember, EmberError, path_cache, define_property, utils) {
@@ -16588,6 +16596,9 @@ enifed('ember-metal/property_set', ['exports', 'ember-metal/core', 'ember-metal/
         }
       } else {
         obj[keyName] = value;
+        if (obj[property_events.PROPERTY_DID_CHANGE]) {
+          obj[property_events.PROPERTY_DID_CHANGE](keyName);
+        }
       }
     }
     return value;
@@ -19407,7 +19418,7 @@ enifed('ember-routing-htmlbars/helpers/link-to', ['exports', 'ember-metal/core',
   @submodule ember-routing-htmlbars
   */
 
-  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.807a0cd8"; /**
+  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.27a6c57b"; /**
                                                                   The `{{link-to}}` helper renders a link to the supplied
                                                                   `routeName` passing an optionally supplied model to the
                                                                   route as its `model` context of the route. The block
@@ -20152,7 +20163,7 @@ enifed('ember-routing-views/views/link', ['exports', 'ember-metal/core', 'ember-
   @submodule ember-routing-views
   */
 
-  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
 
   var linkViewClassNameBindings = ["active", "loading", "disabled"];
   
@@ -20622,7 +20633,7 @@ enifed('ember-routing-views/views/outlet', ['exports', 'ember-views/views/view',
   @submodule ember-routing-views
   */
 
-  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
 
   var CoreOutletView = View['default'].extend({
     defaultTemplate: topLevelViewTemplate['default'],
@@ -35217,7 +35228,7 @@ enifed('ember-template-compiler/system/compile_options', ['exports', 'ember-meta
       options = {};
     }
 
-    options.revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+    options.revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
     options.disableComponentGeneration = disableComponentGeneration;
     options.plugins = plugins['default'];
 
@@ -35341,7 +35352,7 @@ enifed('ember-views', ['exports', 'ember-runtime', 'ember-views/system/jquery', 
   exports['default'] = Ember['default'];
 
 });
-enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/property_get', 'ember-metal/mixin', 'ember-metal/events', 'ember-metal/utils', 'ember-metal/keys', 'ember-metal/property_set'], function (exports, property_get, mixin, events, utils, objectKeys, property_set) {
+enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/property_get', 'ember-metal/mixin', 'ember-metal/events', 'ember-metal/utils', 'ember-metal/keys', 'ember-metal/property_events'], function (exports, property_get, mixin, events, utils, objectKeys, property_events) {
 
   'use strict';
 
@@ -35420,33 +35431,16 @@ enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/property_get',
     //}
   };
 
-  AttrsProxyMixin[property_set.INTERCEPT_SET] = function (obj, key, value) {
-    var attrs = obj.attrs;
+  AttrsProxyMixin[property_events.PROPERTY_DID_CHANGE] = function (key) {
+    var attrs = this.attrs;
 
-    if (key === "attrs") {
-      return property_set.UNHANDLED_SET;
+    if (attrs && key in attrs) {
+      var possibleCell = attrs[key];
+
+      if (possibleCell[MUTABLE_CELL]) {
+        possibleCell.update(property_get.get(this, key));
+      }
     }
-    if (!attrs || !(key in attrs)) {
-      return property_set.UNHANDLED_SET;
-    }
-
-    var possibleCell = attrs[key];
-
-    if (!possibleCell[MUTABLE_CELL]) {
-      return property_set.UNHANDLED_SET;
-      // This would ideally be an error, but there are cases where immutable
-      // data from attrs is copied into local state, setting that
-      // state is legitimate.
-      //throw new Error(`You cannot set ${key} because attrs.${key} is not mutable`);
-    }
-
-    possibleCell.update(value);
-
-    if (key in obj) {
-      return property_set.UNHANDLED_SET;
-    }
-
-    return value;
   };
 
   exports['default'] = mixin.Mixin.create(AttrsProxyMixin);
@@ -38430,7 +38424,7 @@ enifed('ember-views/views/container_view', ['exports', 'ember-metal/core', 'embe
 
   'use strict';
 
-  containerViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+  containerViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
 
   /**
   @module ember
@@ -42498,7 +42492,7 @@ enifed('htmlbars-runtime/render', ['exports', '../htmlbars-util/array-utils', '.
 
     var template = {
       isHTMLBars: true,
-      revision: "HTMLBars@1.13.0-beta.1+canary.807a0cd8",
+      revision: "HTMLBars@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,

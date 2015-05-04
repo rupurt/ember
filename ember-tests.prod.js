@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.807a0cd8
+ * @version   1.13.0-beta.1+canary.27a6c57b
  */
 
 (function() {
@@ -15022,13 +15022,13 @@ enifed('ember-htmlbars/tests/integration/select_in_template_test', ['ember-runti
     equal(selectEl.selectedIndex, 1, "The DOM is updated to reflect the new selection");
   }
 
-  QUnit.skip("select element should correctly initialize and update selectedIndex and bound properties when using valueBinding [DEPRECATED]", function () {
+  QUnit.test("select element should correctly initialize and update selectedIndex and bound properties when using valueBinding [DEPRECATED]", function () {
     expectDeprecation("You're using legacy binding syntax: valueBinding=\"view.val\" @ 1:176 in (inline). Please replace with value=view.val");
 
     testValueBinding("{{view view.selectView viewName=\"select\"" + "    contentBinding=\"view.collection\"" + "    optionLabelPath=\"content.name\"" + "    optionValuePath=\"content.value\"" + "    prompt=\"Please wait...\"" + "    valueBinding=\"view.val\"}}");
   });
 
-  QUnit.skip("select element should correctly initialize and update selectedIndex and bound properties when using valueBinding", function () {
+  QUnit.test("select element should correctly initialize and update selectedIndex and bound properties when using valueBinding", function () {
     testValueBinding("{{view view.selectView viewName=\"select\"" + "    content=view.collection" + "    optionLabelPath=\"content.name\"" + "    optionValuePath=\"content.value\"" + "    prompt=\"Please wait...\"" + "    value=view.val}}");
   });
 
@@ -44364,7 +44364,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.807a0cd8", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.27a6c57b", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
@@ -54321,7 +54321,7 @@ enifed('ember-views/tests/views/view_test', ['ember-metal/computed', 'ember-meta
     equal(view.get("parentProp"), "new-value", "new value is propagated across template");
   });
 
-  QUnit.skip("propagates dependent-key invalidated bindings upstream", function () {
+  QUnit.test("propagates dependent-key invalidated bindings upstream", function () {
     view = EmberView['default'].create({
       parentProp: "parent-value",
       template: ember_template_compiler.compile("{{view view.childView childProp=view.parentProp}}"),
@@ -54344,7 +54344,9 @@ enifed('ember-views/tests/views/view_test', ['ember-metal/computed', 'ember-meta
 
     equal(view.get("parentProp"), "parent-value", "precond - parent value is there");
     var childView = view.get("childView");
-    childView.set("dependencyProp", "new-value");
+    run['default'](function () {
+      return childView.set("dependencyProp", "new-value");
+    });
     equal(childView.get("childProp"), "new-value", "pre-cond - new value is propagated to CP");
     equal(view.get("parentProp"), "new-value", "new value is propagated across template");
   });

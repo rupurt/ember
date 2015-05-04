@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.807a0cd8
+ * @version   1.13.0-beta.1+canary.27a6c57b
  */
 
 (function() {
@@ -2632,7 +2632,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.807a0cd8
+    @version 1.13.0-beta.1+canary.27a6c57b
   */
 
   if ('undefined' === typeof Ember) {
@@ -2661,10 +2661,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.807a0cd8'
+    @default '1.13.0-beta.1+canary.27a6c57b'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.807a0cd8';
+  Ember.VERSION = '1.13.0-beta.1+canary.27a6c57b';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -6267,6 +6267,8 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
   exports.endPropertyChanges = endPropertyChanges;
   exports.changeProperties = changeProperties;
 
+  var PROPERTY_DID_CHANGE = utils.symbol("PROPERTY_DID_CHANGE");
+
   var beforeObserverSet = new ObserverSet['default']();
   var observerSet = new ObserverSet['default']();
   var deferred = 0;
@@ -6343,6 +6345,10 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
     // shouldn't this mean that we're watching this key?
     if (desc && desc.didChange) {
       desc.didChange(obj, keyName);
+    }
+
+    if (obj[PROPERTY_DID_CHANGE]) {
+      obj[PROPERTY_DID_CHANGE](keyName);
     }
 
     if (!watching && keyName !== "length") {
@@ -6560,6 +6566,8 @@ enifed('ember-metal/property_events', ['exports', 'ember-metal/utils', 'ember-me
       ember_metal__events.sendEvent(obj, eventName, [obj, keyName]);
     }
   }
+
+  exports.PROPERTY_DID_CHANGE = PROPERTY_DID_CHANGE;
 
 });
 enifed('ember-metal/property_get', ['exports', 'ember-metal/core', 'ember-metal/error', 'ember-metal/path_cache', 'ember-metal/platform/define_property', 'ember-metal/utils'], function (exports, Ember, EmberError, path_cache, define_property, utils) {
@@ -6831,6 +6839,9 @@ enifed('ember-metal/property_set', ['exports', 'ember-metal/core', 'ember-metal/
         }
       } else {
         obj[keyName] = value;
+        if (obj[property_events.PROPERTY_DID_CHANGE]) {
+          obj[property_events.PROPERTY_DID_CHANGE](keyName);
+        }
       }
     }
     return value;
@@ -10321,7 +10332,7 @@ enifed('ember-template-compiler/system/compile_options', ['exports', 'ember-meta
       options = {};
     }
 
-    options.revision = "Ember@1.13.0-beta.1+canary.807a0cd8";
+    options.revision = "Ember@1.13.0-beta.1+canary.27a6c57b";
     options.disableComponentGeneration = disableComponentGeneration;
     options.plugins = plugins['default'];
 
@@ -12765,7 +12776,7 @@ enifed('htmlbars-runtime/render', ['exports', '../htmlbars-util/array-utils', '.
 
     var template = {
       isHTMLBars: true,
-      revision: "HTMLBars@1.13.0-beta.1+canary.807a0cd8",
+      revision: "HTMLBars@1.13.0-beta.1+canary.27a6c57b",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
