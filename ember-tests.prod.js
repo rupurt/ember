@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.06728684
+ * @version   1.13.0-beta.1+canary.807a0cd8
  */
 
 (function() {
@@ -14655,6 +14655,7 @@ enifed('ember-htmlbars/tests/integration/mutable_binding_test', ['ember-views/vi
     }));
 
     registry.register("component:bottom-mut", Component['default'].extend({
+      layout: compile['default']("<p class=\"bottom\">{{attrs.stuff}}</p>"),
       didInsertElement: function () {
         bottom = this;
       }
@@ -14669,6 +14670,7 @@ enifed('ember-htmlbars/tests/integration/mutable_binding_test', ['ember-views/vi
     utils.runAppend(view);
 
     assert.strictEqual(bottom.attrs.stuff.value, "foo", "precond - the data propagated");
+    assert.strictEqual(view.$("p.bottom").text(), "foo");
   });
 
   QUnit.test("a simple mutable binding using `mut` inserts into the DOM", function (assert) {
@@ -44362,7 +44364,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.06728684", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.807a0cd8", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
