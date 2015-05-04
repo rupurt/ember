@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.b0103130
+ * @version   1.13.0-beta.1+canary.06728684
  */
 
 (function() {
@@ -14645,6 +14645,30 @@ enifed('ember-htmlbars/tests/integration/mutable_binding_test', ['ember-views/vi
 
     assert.strictEqual(bottom.attrs.setMe.value, 13, "precond - the set took effect");
     assert.strictEqual(view.get("val"), 13, "the set propagated back up");
+  });
+
+  QUnit.skip("using a string value through middle tier does not trigger assertion", function (assert) {
+    var bottom;
+
+    registry.register("component:middle-mut", Component['default'].extend({
+      layout: compile['default']("{{bottom-mut stuff=attrs.value}}")
+    }));
+
+    registry.register("component:bottom-mut", Component['default'].extend({
+      didInsertElement: function () {
+        bottom = this;
+      }
+    }));
+
+    view = EmberView['default'].create({
+      container: container,
+      template: compile['default']("{{middle-mut value=\"foo\"}}"),
+      val: 12
+    });
+
+    utils.runAppend(view);
+
+    assert.strictEqual(bottom.attrs.stuff.value, "foo", "precond - the data propagated");
   });
 
   QUnit.test("a simple mutable binding using `mut` inserts into the DOM", function (assert) {
@@ -44492,7 +44516,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.b0103130", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.06728684", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
