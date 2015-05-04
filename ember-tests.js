@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.27a6c57b
+ * @version   1.13.0-beta.1+canary.a233059b
  */
 
 (function() {
@@ -14647,7 +14647,7 @@ enifed('ember-htmlbars/tests/integration/mutable_binding_test', ['ember-views/vi
     assert.strictEqual(view.get("val"), 13, "the set propagated back up");
   });
 
-  QUnit.skip("using a string value through middle tier does not trigger assertion", function (assert) {
+  QUnit.test("using a string value through middle tier does not trigger assertion", function (assert) {
     var bottom;
 
     registry.register("component:middle-mut", Component['default'].extend({
@@ -44518,7 +44518,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.27a6c57b", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.a233059b", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
