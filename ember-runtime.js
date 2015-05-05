@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.5bbfe689
+ * @version   1.13.0-beta.1+canary.535e44b0
  */
 
 (function() {
@@ -4391,7 +4391,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.5bbfe689
+    @version 1.13.0-beta.1+canary.535e44b0
   */
 
   if ('undefined' === typeof Ember) {
@@ -4420,10 +4420,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.5bbfe689'
+    @default '1.13.0-beta.1+canary.535e44b0'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.5bbfe689';
+  Ember.VERSION = '1.13.0-beta.1+canary.535e44b0';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -9534,7 +9534,11 @@ enifed('ember-metal/streams/key-stream', ['exports', 'ember-metal/core', 'ember-
       }
     },
 
+    _super$deactivate: Stream['default'].prototype.deactivate,
+
     deactivate: function () {
+      this._super$deactivate();
+
       if (this.observedObject) {
         observer.removeObserver(this.observedObject, this.key, this, this.notify);
         this.observedObject = null;
