@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.820d5591
+ * @version   1.13.0-beta.1+canary.38a9d867
  */
 
 (function() {
@@ -12324,6 +12324,30 @@ enifed('ember-htmlbars/tests/helpers/view_test', ['ember-views/views/view', 'con
     });
 
     equal(view.$().text(), "", "updates the DOM when the controller is changed");
+  });
+
+  QUnit.test("should expose a controller that can be used in the view instance", function () {
+    var templateString = "{{#view view.childThing tagName=\"div\"}}Stuff{{/view}}";
+    var controller = {
+      foo: "bar"
+    };
+    var childThingController;
+    view = EmberView['default'].create({
+      container: container,
+      controller: controller,
+
+      childThing: EmberView['default'].extend({
+        didInsertElement: function () {
+          childThingController = property_get.get(this, "controller");
+        }
+      }),
+
+      template: compile['default'](templateString)
+    });
+
+    utils.runAppend(view);
+
+    equal(controller, childThingController, "childThing should get the same controller as the outer scope");
   });
 
   QUnit.test("should expose a controller keyword that persists through Ember.ContainerView", function () {
@@ -44518,7 +44542,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.820d5591", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.38a9d867", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
@@ -55055,6 +55079,28 @@ enifed('ember/tests/controller_test', ['ember', 'ember-htmlbars/compat'], functi
     bootApp();
 
     $fixture.find(".component-with-action").click();
+  });
+
+  QUnit.skip("the controller property is provided to route driven views", function () {
+    var applicationController, applicationViewController;
+
+    App.ApplicationController = Ember.Controller.extend({
+      init: function () {
+        this._super.apply(this, arguments);
+        applicationController = this;
+      }
+    });
+
+    App.ApplicationView = Ember.View.extend({
+      init: function () {
+        this._super.apply(this, arguments);
+        applicationViewController = this.get("controller");
+      }
+    });
+
+    bootApp();
+
+    equal(applicationViewController, applicationController, "application view should get its controller set properly");
   });
 
   // This test caught a regression where {{#each}}s used directly in a template
