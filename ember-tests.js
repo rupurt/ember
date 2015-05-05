@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.38a9d867
+ * @version   1.13.0-beta.1+canary.691a5b0e
  */
 
 (function() {
@@ -44542,7 +44542,7 @@ enifed('ember-template-compiler/tests/system/compile_test', ['ember-template-com
 
     var actual = compile['default'](templateString);
 
-    equal(actual.revision, "Ember@1.13.0-beta.1+canary.38a9d867", "revision is included in generated template");
+    equal(actual.revision, "Ember@1.13.0-beta.1+canary.691a5b0e", "revision is included in generated template");
   });
 
   QUnit.test("the template revision is different than the HTMLBars default revision", function () {
@@ -55081,7 +55081,7 @@ enifed('ember/tests/controller_test', ['ember', 'ember-htmlbars/compat'], functi
     $fixture.find(".component-with-action").click();
   });
 
-  QUnit.skip("the controller property is provided to route driven views", function () {
+  QUnit.test("the controller property is provided to route driven views", function () {
     var applicationController, applicationViewController;
 
     App.ApplicationController = Ember.Controller.extend({
