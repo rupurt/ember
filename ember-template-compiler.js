@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.4d177caf
+ * @version   1.13.0-beta.1+canary.12cd9075
  */
 
 (function() {
@@ -2632,7 +2632,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.4d177caf
+    @version 1.13.0-beta.1+canary.12cd9075
   */
 
   if ('undefined' === typeof Ember) {
@@ -2661,10 +2661,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.4d177caf'
+    @default '1.13.0-beta.1+canary.12cd9075'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.4d177caf';
+  Ember.VERSION = '1.13.0-beta.1+canary.12cd9075';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -9596,8 +9596,8 @@ enifed('ember-template-compiler/plugins/transform-bind-attr-to-attributes', ['ex
     switch (parts.length) {
       case 1:
         // Before: {{bind-attr class="view.fooBar ..."}}
-        // After: class="{{bind-attr-class view.fooBar "foo-bar"}} ..."
-        return b.sexpr(b.path("bind-attr-class"), [b.path(parts[0]), b.string(dasherizeLastKey(parts[0]))]);
+        // After: class="{{-bind-attr-class view.fooBar "foo-bar"}} ..."
+        return b.sexpr(b.path("-bind-attr-class"), [b.path(parts[0]), b.string(dasherizeLastKey(parts[0]))]);
       case 2:
         if (parts[0] === "") {
           // Before: {{bind-attr class=":foo ..."}}
@@ -10336,7 +10336,7 @@ enifed('ember-template-compiler/system/compile_options', ['exports', 'ember-meta
       options = {};
     }
 
-    options.revision = "Ember@1.13.0-beta.1+canary.4d177caf";
+    options.revision = "Ember@1.13.0-beta.1+canary.12cd9075";
     options.disableComponentGeneration = disableComponentGeneration;
     options.plugins = plugins['default'];
 
@@ -12780,7 +12780,7 @@ enifed('htmlbars-runtime/render', ['exports', '../htmlbars-util/array-utils', '.
 
     var template = {
       isHTMLBars: true,
-      revision: "HTMLBars@1.13.0-beta.1+canary.4d177caf",
+      revision: "HTMLBars@1.13.0-beta.1+canary.12cd9075",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
