@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.12cd9075
+ * @version   1.13.0-beta.1+canary.820d5591
  */
 
 (function() {
@@ -8011,7 +8011,7 @@ enifed('ember-htmlbars/keywords/real_outlet', ['exports', 'ember-metal/property_
   @submodule ember-htmlbars
   */
 
-  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.12cd9075";
+  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.820d5591";
 
   exports['default'] = {
     willRender: function (renderNode, env) {
@@ -9292,7 +9292,7 @@ enifed('ember-htmlbars/templates/component', ['exports', 'ember-template-compile
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9324,7 +9324,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9350,7 +9350,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9374,7 +9374,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9398,7 +9398,7 @@ enifed('ember-htmlbars/templates/container-view', ['exports', 'ember-template-co
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9429,7 +9429,7 @@ enifed('ember-htmlbars/templates/empty', ['exports', 'ember-template-compiler/sy
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9457,7 +9457,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
         var child0 = (function () {
           return {
             isHTMLBars: true,
-            revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+            revision: "Ember@1.13.0-beta.1+canary.820d5591",
             arity: 0,
             cachedFragment: null,
             hasRendered: false,
@@ -9481,7 +9481,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
         })();
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9506,7 +9506,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       var child1 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9530,7 +9530,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9556,7 +9556,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9580,7 +9580,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9604,7 +9604,7 @@ enifed('ember-htmlbars/templates/legacy-each', ['exports', 'ember-template-compi
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9635,7 +9635,7 @@ enifed('ember-htmlbars/templates/link-to-escaped', ['exports', 'ember-template-c
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9666,7 +9666,7 @@ enifed('ember-htmlbars/templates/link-to-unescaped', ['exports', 'ember-template
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9699,7 +9699,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9724,7 +9724,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       var child1 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 0,
           cachedFragment: null,
           hasRendered: false,
@@ -9748,7 +9748,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9773,7 +9773,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
     var child1 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9797,7 +9797,7 @@ enifed('ember-htmlbars/templates/link-to', ['exports', 'ember-template-compiler/
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9829,7 +9829,7 @@ enifed('ember-htmlbars/templates/select-optgroup', ['exports', 'ember-template-c
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 1,
         cachedFragment: null,
         hasRendered: false,
@@ -9853,7 +9853,7 @@ enifed('ember-htmlbars/templates/select-optgroup', ['exports', 'ember-template-c
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9884,7 +9884,7 @@ enifed('ember-htmlbars/templates/select-option', ['exports', 'ember-template-com
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -9916,7 +9916,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
     var child0 = (function () {
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9943,7 +9943,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 1,
           cachedFragment: null,
           hasRendered: false,
@@ -9967,7 +9967,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -9993,7 +9993,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       var child0 = (function () {
         return {
           isHTMLBars: true,
-          revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+          revision: "Ember@1.13.0-beta.1+canary.820d5591",
           arity: 1,
           cachedFragment: null,
           hasRendered: false,
@@ -10017,7 +10017,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
       })();
       return {
         isHTMLBars: true,
-        revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+        revision: "Ember@1.13.0-beta.1+canary.820d5591",
         arity: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -10041,7 +10041,7 @@ enifed('ember-htmlbars/templates/select', ['exports', 'ember-template-compiler/s
     })();
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -10076,7 +10076,7 @@ enifed('ember-htmlbars/templates/top-level-view', ['exports', 'ember-template-co
   exports['default'] = template['default']((function () {
     return {
       isHTMLBars: true,
-      revision: "Ember@1.13.0-beta.1+canary.12cd9075",
+      revision: "Ember@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -12770,7 +12770,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.12cd9075
+    @version 1.13.0-beta.1+canary.820d5591
   */
 
   if ('undefined' === typeof Ember) {
@@ -12799,10 +12799,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.12cd9075'
+    @default '1.13.0-beta.1+canary.820d5591'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.12cd9075';
+  Ember.VERSION = '1.13.0-beta.1+canary.820d5591';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -19571,613 +19571,6 @@ enifed('ember-routing-htmlbars', ['exports', 'ember-metal/core', 'ember-metal/me
   exports['default'] = Ember['default'];
 
 });
-enifed('ember-routing-htmlbars/helpers/action', ['exports', 'ember-metal/core', 'ember-metal/utils', 'ember-metal/run_loop', 'ember-views/streams/utils', 'ember-views/system/utils', 'ember-views/system/action_manager', 'ember-metal/streams/utils'], function (exports, Ember, utils, run, streams__utils, system__utils, ActionManager, ember_metal__streams__utils) {
-
-  'use strict';
-
-  exports.actionHelper = actionHelper;
-
-  /**
-    The `{{action}}` helper provides a useful shortcut for registering an HTML
-    element within a template for a single DOM event and forwarding that
-    interaction to the template's controller or specified `target` option.
-
-    If the controller does not implement the specified action, the event is sent
-    to the current route, and it bubbles up the route hierarchy from there.
-
-    For more advanced event handling see [Ember.Component](/api/classes/Ember.Component.html)
-
-
-    ### Use
-    Given the following application Handlebars template on the page
-
-    ```handlebars
-    <div {{action 'anActionName'}}>
-      click me
-    </div>
-    ```
-
-    And application code
-
-    ```javascript
-    App.ApplicationController = Ember.Controller.extend({
-      actions: {
-        anActionName: function() {
-        }
-      }
-    });
-    ```
-
-    Will result in the following rendered HTML
-
-    ```html
-    <div class="ember-view">
-      <div data-ember-action="1">
-        click me
-      </div>
-    </div>
-    ```
-
-    Clicking "click me" will trigger the `anActionName` action of the
-    `App.ApplicationController`. In this case, no additional parameters will be passed.
-
-    If you provide additional parameters to the helper:
-
-    ```handlebars
-    <button {{action 'edit' post}}>Edit</button>
-    ```
-
-    Those parameters will be passed along as arguments to the JavaScript
-    function implementing the action.
-
-    ### Event Propagation
-
-    Events triggered through the action helper will automatically have
-    `.preventDefault()` called on them. You do not need to do so in your event
-    handlers. If you need to allow event propagation (to handle file inputs for
-    example) you can supply the `preventDefault=false` option to the `{{action}}` helper:
-
-    ```handlebars
-    <div {{action "sayHello" preventDefault=false}}>
-      <input type="file" />
-      <input type="checkbox" />
-    </div>
-    ```
-
-    To disable bubbling, pass `bubbles=false` to the helper:
-
-    ```handlebars
-    <button {{action 'edit' post bubbles=false}}>Edit</button>
-    ```
-
-    If you need the default handler to trigger you should either register your
-    own event handler, or use event methods on your view class. See [Ember.View](/api/classes/Ember.View.html)
-    'Responding to Browser Events' for more information.
-
-    ### Specifying DOM event type
-
-    By default the `{{action}}` helper registers for DOM `click` events. You can
-    supply an `on` option to the helper to specify a different DOM event name:
-
-    ```handlebars
-    <div {{action "anActionName" on="doubleClick"}}>
-      click me
-    </div>
-    ```
-
-    See `Ember.View` 'Responding to Browser Events' for a list of
-    acceptable DOM event names.
-
-    ### Specifying whitelisted modifier keys
-
-    By default the `{{action}}` helper will ignore click event with pressed modifier
-    keys. You can supply an `allowedKeys` option to specify which keys should not be ignored.
-
-    ```handlebars
-    <div {{action "anActionName" allowedKeys="alt"}}>
-      click me
-    </div>
-    ```
-
-    This way the `{{action}}` will fire when clicking with the alt key pressed down.
-
-    Alternatively, supply "any" to the `allowedKeys` option to accept any combination of modifier keys.
-
-    ```handlebars
-    <div {{action "anActionName" allowedKeys="any"}}>
-      click me with any key pressed
-    </div>
-    ```
-
-    ### Specifying a Target
-
-    There are several possible target objects for `{{action}}` helpers:
-
-    In a typical Ember application, where templates are managed through use of the
-    `{{outlet}}` helper, actions will bubble to the current controller, then
-    to the current route, and then up the route hierarchy.
-
-    Alternatively, a `target` option can be provided to the helper to change
-    which object will receive the method call. This option must be a path
-    to an object, accessible in the current context:
-
-    ```handlebars
-    {{! the application template }}
-    <div {{action "anActionName" target=view}}>
-      click me
-    </div>
-    ```
-
-    ```javascript
-    App.ApplicationView = Ember.View.extend({
-      actions: {
-        anActionName: function() {}
-      }
-    });
-
-    ```
-
-    ### Additional Parameters
-
-    You may specify additional parameters to the `{{action}}` helper. These
-    parameters are passed along as the arguments to the JavaScript function
-    implementing the action.
-
-    ```handlebars
-    {{#each person in people}}
-      <div {{action "edit" person}}>
-        click me
-      </div>
-    {{/each}}
-    ```
-
-    Clicking "click me" will trigger the `edit` method on the current controller
-    with the value of `person` as a parameter.
-
-    @method action
-    @for Ember.Handlebars.helpers
-    @param {String} actionName
-    @param {Object} [context]*
-    @param {Hash} options
-  */
-  function actionArgs(parameters, actionName) {
-    var ret, i, l;
-
-    if (actionName === undefined) {
-      ret = new Array(parameters.length);
-      for (i = 0, l = parameters.length; i < l; i++) {
-        ret[i] = streams__utils.readUnwrappedModel(parameters[i]);
-      }
-    } else {
-      ret = new Array(parameters.length + 1);
-      ret[0] = actionName;
-      for (i = 0, l = parameters.length; i < l; i++) {
-        ret[i + 1] = streams__utils.readUnwrappedModel(parameters[i]);
-      }
-    }
-
-    return ret;
-  }
-
-  var ActionHelper = {};
-
-  // registeredActions is re-exported for compatibility with older plugins
-  // that were using this undocumented API.
-  ActionHelper.registeredActions = ActionManager['default'].registeredActions;
-
-  var keys = ["alt", "shift", "meta", "ctrl"];
-
-  var POINTER_EVENT_TYPE_REGEX = /^click|mouse|touch/;
-
-  var isAllowedEvent = function (event, allowedKeys) {
-    if (typeof allowedKeys === "undefined") {
-      if (POINTER_EVENT_TYPE_REGEX.test(event.type)) {
-        return system__utils.isSimpleClick(event);
-      } else {
-        allowedKeys = "";
-      }
-    }
-
-    if (allowedKeys.indexOf("any") >= 0) {
-      return true;
-    }
-
-    for (var i = 0, l = keys.length; i < l; i++) {
-      if (event[keys[i] + "Key"] && allowedKeys.indexOf(keys[i]) === -1) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  ActionHelper.registerAction = function (actionNameOrStream, options, allowedKeys) {
-    var actionId = utils.uuid();
-    var eventName = options.eventName;
-    var parameters = options.parameters;
-
-    ActionManager['default'].registeredActions[actionId] = {
-      eventName: eventName,
-      handler: function (event) {
-        if (!isAllowedEvent(event, allowedKeys)) {
-          return true;
-        }
-
-        if (options.preventDefault !== false) {
-          event.preventDefault();
-        }
-
-        if (options.bubbles === false) {
-          event.stopPropagation();
-        }
-
-        var target = options.target.value();
-
-        var actionName;
-
-        if (ember_metal__streams__utils.isStream(actionNameOrStream)) {
-          actionName = actionNameOrStream.value();
-
-          Ember['default'].assert("You specified a quoteless path to the {{action}} helper " + "which did not resolve to an action name (a string). " + "Perhaps you meant to use a quoted actionName? (e.g. {{action 'save'}}).", typeof actionName === "string");
-        } else {
-          actionName = actionNameOrStream;
-        }
-
-        run['default'](function runRegisteredAction() {
-          if (target.send) {
-            target.send.apply(target, actionArgs(parameters, actionName));
-          } else {
-            Ember['default'].assert("The action '" + actionName + "' did not exist on " + target, typeof target[actionName] === "function");
-            target[actionName].apply(target, actionArgs(parameters));
-          }
-        });
-      }
-    };
-
-    options.view.on("willClearRender", function () {
-      delete ActionManager['default'].registeredActions[actionId];
-    });
-
-    return actionId;
-  };
-  function actionHelper(params, hash, options, env) {
-    var view = env.data.view;
-    var target;
-    if (!hash.target) {
-      target = view.getStream("controller");
-    } else if (ember_metal__streams__utils.isStream(hash.target)) {
-      target = hash.target;
-    } else {
-      target = view.getStream(hash.target);
-    }
-
-    // Ember.assert("You specified a quoteless path to the {{action}} helper which did not resolve to an action name (a string). Perhaps you meant to use a quoted actionName? (e.g. {{action 'save'}}).", !params[0].isStream);
-    // Ember.deprecate("You specified a quoteless path to the {{action}} helper which did not resolve to an action name (a string). Perhaps you meant to use a quoted actionName? (e.g. {{action 'save'}}).", params[0].isStream);
-
-    var actionOptions = {
-      eventName: hash.on || "click",
-      parameters: params.slice(1),
-      view: view,
-      bubbles: hash.bubbles,
-      preventDefault: hash.preventDefault,
-      target: target,
-      withKeyCode: hash.withKeyCode
-    };
-
-    var actionId = ActionHelper.registerAction(params[0], actionOptions, hash.allowedKeys);
-    env.dom.setAttribute(options.element, "data-ember-action", actionId);
-  }
-
-  exports.ActionHelper = ActionHelper;
-
-});
-enifed('ember-routing-htmlbars/helpers/link-to', ['exports', 'ember-metal/core', 'ember-htmlbars/templates/link-to', 'ember-htmlbars'], function (exports, Ember, linkToTemplate) {
-
-  'use strict';
-
-  exports.deprecatedLinkToHelper = deprecatedLinkToHelper;
-  exports.linkToHelper = linkToHelper;
-
-  /**
-  @module ember
-  @submodule ember-routing-htmlbars
-  */
-
-  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.12cd9075"; /**
-                                                                  The `{{link-to}}` helper renders a link to the supplied
-                                                                  `routeName` passing an optionally supplied model to the
-                                                                  route as its `model` context of the route. The block
-                                                                  for `{{link-to}}` becomes the innerHTML of the rendered
-                                                                  element:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery'}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  You can also use an inline form of `{{link-to}}` helper by
-                                                                  passing the link text as the first argument
-                                                                  to the helper:
-                                                                
-                                                                  ```handlebars
-                                                                  {{link-to 'Great Hamster Photos' 'photoGallery'}}
-                                                                  ```
-                                                                
-                                                                  Both will result in:
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos">
-                                                                    Great Hamster Photos
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  ### Supplying a tagName
-                                                                  By default `{{link-to}}` renders an `<a>` element. This can
-                                                                  be overridden for a single use of `{{link-to}}` by supplying
-                                                                  a `tagName` option:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' tagName="li"}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ```html
-                                                                  <li>
-                                                                    Great Hamster Photos
-                                                                  </li>
-                                                                  ```
-                                                                
-                                                                  To override this option for your entire application, see
-                                                                  "Overriding Application-wide Defaults".
-                                                                
-                                                                  ### Disabling the `link-to` helper
-                                                                  By default `{{link-to}}` is enabled.
-                                                                  any passed value to `disabled` helper property will disable the `link-to` helper.
-                                                                
-                                                                  static use: the `disabled` option:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' disabled=true}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  dynamic use: the `disabledWhen` option:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' disabledWhen=controller.someProperty}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  any passed value to `disabled` will disable it except `undefined`.
-                                                                  to ensure that only `true` disable the `link-to` helper you can
-                                                                  override the global behaviour of `Ember.LinkView`.
-                                                                
-                                                                  ```javascript
-                                                                  Ember.LinkView.reopen({
-                                                                    disabled: Ember.computed(function(key, value) {
-                                                                      if (value !== undefined) {
-                                                                        this.set('_isDisabled', value === true);
-                                                                      }
-                                                                      return value === true ? get(this, 'disabledClass') : false;
-                                                                    })
-                                                                  });
-                                                                  ```
-                                                                
-                                                                  see "Overriding Application-wide Defaults" for more.
-                                                                
-                                                                  ### Handling `href`
-                                                                  `{{link-to}}` will use your application's Router to
-                                                                  fill the element's `href` property with a url that
-                                                                  matches the path to the supplied `routeName` for your
-                                                                  router's configured `Location` scheme, which defaults
-                                                                  to Ember.HashLocation.
-                                                                
-                                                                  ### Handling current route
-                                                                  `{{link-to}}` will apply a CSS class name of 'active'
-                                                                  when the application's current route matches
-                                                                  the supplied routeName. For example, if the application's
-                                                                  current route is 'photoGallery.recent' the following
-                                                                  use of `{{link-to}}`:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery.recent'}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  will result in
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos/this-week" class="active">
-                                                                    Great Hamster Photos
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  The CSS class name used for active classes can be customized
-                                                                  for a single use of `{{link-to}}` by passing an `activeClass`
-                                                                  option:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery.recent' activeClass="current-url"}}
-                                                                    Great Hamster Photos
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos/this-week" class="current-url">
-                                                                    Great Hamster Photos
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  To override this option for your entire application, see
-                                                                  "Overriding Application-wide Defaults".
-                                                                
-                                                                  ### Supplying a model
-                                                                  An optional model argument can be used for routes whose
-                                                                  paths contain dynamic segments. This argument will become
-                                                                  the model context of the linked route:
-                                                                
-                                                                  ```javascript
-                                                                  App.Router.map(function() {
-                                                                    this.resource("photoGallery", {path: "hamster-photos/:photo_id"});
-                                                                  });
-                                                                  ```
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' aPhoto}}
-                                                                    {{aPhoto.title}}
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos/42">
-                                                                    Tomster
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  ### Supplying multiple models
-                                                                  For deep-linking to route paths that contain multiple
-                                                                  dynamic segments, multiple model arguments can be used.
-                                                                  As the router transitions through the route path, each
-                                                                  supplied model argument will become the context for the
-                                                                  route with the dynamic segments:
-                                                                
-                                                                  ```javascript
-                                                                  App.Router.map(function() {
-                                                                    this.resource("photoGallery", {path: "hamster-photos/:photo_id"}, function() {
-                                                                      this.route("comment", {path: "comments/:comment_id"});
-                                                                    });
-                                                                  });
-                                                                  ```
-                                                                  This argument will become the model context of the linked route:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery.comment' aPhoto comment}}
-                                                                    {{comment.body}}
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos/42/comments/718">
-                                                                    A+++ would snuggle again.
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  ### Supplying an explicit dynamic segment value
-                                                                  If you don't have a model object available to pass to `{{link-to}}`,
-                                                                  an optional string or integer argument can be passed for routes whose
-                                                                  paths contain dynamic segments. This argument will become the value
-                                                                  of the dynamic segment:
-                                                                
-                                                                  ```javascript
-                                                                  App.Router.map(function() {
-                                                                    this.resource("photoGallery", {path: "hamster-photos/:photo_id"});
-                                                                  });
-                                                                  ```
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' aPhotoId}}
-                                                                    {{aPhoto.title}}
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ```html
-                                                                  <a href="/hamster-photos/42">
-                                                                    Tomster
-                                                                  </a>
-                                                                  ```
-                                                                
-                                                                  When transitioning into the linked route, the `model` hook will
-                                                                  be triggered with parameters including this passed identifier.
-                                                                
-                                                                  ### Allowing Default Action
-                                                                
-                                                                 By default the `{{link-to}}` helper prevents the default browser action
-                                                                 by calling `preventDefault()` as this sort of action bubbling is normally
-                                                                 handled internally and we do not want to take the browser to a new URL (for
-                                                                 example).
-                                                                
-                                                                 If you need to override this behavior specify `preventDefault=false` in
-                                                                 your template:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to 'photoGallery' aPhotoId preventDefault=false}}
-                                                                    {{aPhotoId.title}}
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  ### Overriding attributes
-                                                                  You can override any given property of the Ember.LinkView
-                                                                  that is generated by the `{{link-to}}` helper by passing
-                                                                  key/value pairs, like so:
-                                                                
-                                                                  ```handlebars
-                                                                  {{#link-to  aPhoto tagName='li' title='Following this link will change your life' classNames='pic sweet'}}
-                                                                    Uh-mazing!
-                                                                  {{/link-to}}
-                                                                  ```
-                                                                
-                                                                  See [Ember.LinkView](/api/classes/Ember.LinkView.html) for a
-                                                                  complete list of overrideable properties. Be sure to also
-                                                                  check out inherited properties of `LinkView`.
-                                                                
-                                                                  ### Overriding Application-wide Defaults
-                                                                  ``{{link-to}}`` creates an instance of Ember.LinkView
-                                                                  for rendering. To override options for your entire
-                                                                  application, reopen Ember.LinkView and supply the
-                                                                  desired values:
-                                                                
-                                                                  ``` javascript
-                                                                  Ember.LinkView.reopen({
-                                                                    activeClass: "is-active",
-                                                                    tagName: 'li'
-                                                                  })
-                                                                  ```
-                                                                
-                                                                  It is also possible to override the default event in
-                                                                  this manner:
-                                                                
-                                                                  ``` javascript
-                                                                  Ember.LinkView.reopen({
-                                                                    eventName: 'customEventName'
-                                                                  });
-                                                                  ```
-                                                                
-                                                                  @method link-to
-                                                                  @for Ember.Handlebars.helpers
-                                                                  @param {String} routeName
-                                                                  @param {Object} [context]*
-                                                                  @param [options] {Object} Handlebars key/value pairs of options, you can override any property of Ember.LinkView
-                                                                  @return {String} HTML string
-                                                                  @see {Ember.LinkView}
-                                                                */
-  // this has been replaced by link-to component
-  function linkToHelper(params, hash) {
-    // TODO: Implement more than just stub functionality here
-    this.yieldIn(linkToTemplate['default'], { href: "#", classes: hash["class"] });
-  }
-
-  /**
-    See [link-to](/api/classes/Ember.Handlebars.helpers.html#method_link-to)
-
-    @method linkTo
-    @for Ember.Handlebars.helpers
-    @deprecated
-    @param {String} routeName
-    @param {Object} [context]*
-    @return {String} HTML string
-  */
-  function deprecatedLinkToHelper(params, hash, options, env) {
-    Ember['default'].deprecate("The 'linkTo' view helper is deprecated in favor of 'link-to'");
-
-    return env.helpers["link-to"].helperFunction.call(this, params, hash, options, env);
-  }
-
-});
 enifed('ember-routing-htmlbars/helpers/query-params', ['exports', 'ember-metal/core', 'ember-routing/system/query_params'], function (exports, Ember, QueryParams) {
 
   'use strict';
@@ -20349,6 +19742,11 @@ enifed('ember-routing-htmlbars/keywords/link-to', ['exports', 'ember-metal/strea
 
   'use strict';
 
+  /**
+  @module ember
+  @submodule ember-routing-htmlbars
+  */
+
   exports['default'] = {
     link: function (state, params, hash) {
       Ember['default'].assert("You must provide one or more parameters to the link-to helper.", params.length);
@@ -20374,6 +19772,17 @@ enifed('ember-routing-htmlbars/keywords/link-to', ['exports', 'ember-metal/strea
       this.render(morph, env, scope, params, hash, template, inverse, visitor);
     }
   };
+
+  /**
+    See [link-to](/api/classes/Ember.Handlebars.helpers.html#method_link-to)
+
+    @method linkTo
+    @for Ember.Handlebars.helpers
+    @deprecated
+    @param {String} routeName
+    @param {Object} [context]*
+    @return {String} HTML string
+  */
 
 });
 enifed('ember-routing-htmlbars/keywords/render', ['exports', 'ember-metal/core', 'ember-metal/property_get', 'ember-metal/error', 'ember-metal/platform/create', 'ember-metal/streams/utils', 'ember-runtime/system/string', 'ember-routing/system/generate_controller', 'ember-htmlbars/system/component-node'], function (exports, Ember, property_get, EmberError, create, utils, string, generateController, ComponentNode) {
@@ -20638,7 +20047,7 @@ enifed('ember-routing-views/views/link', ['exports', 'ember-metal/core', 'ember-
   @submodule ember-routing-views
   */
 
-  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.12cd9075";
+  linkToTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.820d5591";
 
   var linkViewClassNameBindings = ["active", "loading", "disabled"];
   
@@ -21112,7 +20521,7 @@ enifed('ember-routing-views/views/outlet', ['exports', 'ember-views/views/view',
   @submodule ember-routing-views
   */
 
-  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.12cd9075";
+  topLevelViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.820d5591";
 
   var CoreOutletView = View['default'].extend({
     defaultTemplate: topLevelViewTemplate['default'],
@@ -35803,7 +35212,7 @@ enifed('ember-template-compiler/system/compile_options', ['exports', 'ember-meta
       options = {};
     }
 
-    options.revision = "Ember@1.13.0-beta.1+canary.12cd9075";
+    options.revision = "Ember@1.13.0-beta.1+canary.820d5591";
     options.disableComponentGeneration = disableComponentGeneration;
     options.plugins = plugins['default'];
 
@@ -40257,7 +39666,7 @@ enifed('ember-views/views/container_view', ['exports', 'ember-metal/core', 'embe
 
   'use strict';
 
-  containerViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.12cd9075";
+  containerViewTemplate['default'].revision = "Ember@1.13.0-beta.1+canary.820d5591";
 
   /**
   @module ember
@@ -44356,7 +43765,7 @@ enifed('htmlbars-runtime/render', ['exports', '../htmlbars-util/array-utils', '.
 
     var template = {
       isHTMLBars: true,
-      revision: "HTMLBars@1.13.0-beta.1+canary.12cd9075",
+      revision: "HTMLBars@1.13.0-beta.1+canary.820d5591",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
