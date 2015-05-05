@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.0-beta.1+canary.ff82f2e0
+ * @version   1.13.0-beta.1+canary.5bbfe689
  */
 
 (function() {
@@ -2632,7 +2632,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
 
     @class Ember
     @static
-    @version 1.13.0-beta.1+canary.ff82f2e0
+    @version 1.13.0-beta.1+canary.5bbfe689
   */
 
   if ('undefined' === typeof Ember) {
@@ -2661,10 +2661,10 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   /**
     @property VERSION
     @type String
-    @default '1.13.0-beta.1+canary.ff82f2e0'
+    @default '1.13.0-beta.1+canary.5bbfe689'
     @static
   */
-  Ember.VERSION = '1.13.0-beta.1+canary.ff82f2e0';
+  Ember.VERSION = '1.13.0-beta.1+canary.5bbfe689';
 
   /**
     Standard environmental variables. You can define these in a global `EmberENV`
@@ -10332,7 +10332,7 @@ enifed('ember-template-compiler/system/compile_options', ['exports', 'ember-meta
       options = {};
     }
 
-    options.revision = "Ember@1.13.0-beta.1+canary.ff82f2e0";
+    options.revision = "Ember@1.13.0-beta.1+canary.5bbfe689";
     options.disableComponentGeneration = disableComponentGeneration;
     options.plugins = plugins['default'];
 
@@ -12776,7 +12776,7 @@ enifed('htmlbars-runtime/render', ['exports', '../htmlbars-util/array-utils', '.
 
     var template = {
       isHTMLBars: true,
-      revision: "HTMLBars@1.13.0-beta.1+canary.ff82f2e0",
+      revision: "HTMLBars@1.13.0-beta.1+canary.5bbfe689",
       arity: 0,
       cachedFragment: null,
       hasRendered: false,
