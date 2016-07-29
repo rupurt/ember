@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+f247628d
+ * @version   2.9.0-alpha+b236ff1e
  */
 
 var enifed, requireModule, require, Ember;
@@ -19583,6 +19583,13 @@ enifed('ember-metal/transaction', ['exports', 'ember-metal/meta', 'ember-metal/d
     };
   }
 
+  var implication = undefined;
+  if (false) {
+    implication = 'will be removed in Ember 3.0.';
+  } else if (true) {
+    implication = 'is no longer supported. See https://github.com/emberjs/ember.js/issues/13948 for more details.';
+  }
+
   if (true || false) {
     (function () {
       var counter = 0;
@@ -19622,12 +19629,20 @@ enifed('ember-metal/transaction', ['exports', 'ember-metal/meta', 'ember-metal/d
             var parts = [];
             var lastRef = ref[key];
 
-            while (lastRef && lastRef._propertyKey && lastRef._parentReference) {
-              parts.unshift(lastRef._propertyKey);
-              lastRef = lastRef._parentReference;
+            var label = undefined;
+
+            if (lastRef) {
+              while (lastRef && lastRef._propertyKey && lastRef._parentReference) {
+                parts.unshift(lastRef._propertyKey);
+                lastRef = lastRef._parentReference;
+              }
+
+              label = parts.join();
+            } else {
+              label = 'the same value';
             }
 
-            return 'You modified ' + parts.join('.') + ' twice in a single render. This was unreliable and slow in Ember 1.x and will be removed in Ember 3.0.';
+            return 'You modified ' + parts.join('.') + ' twice in a single render. This was unreliable and slow in Ember 1.x and ' + implication;
           })(), false);
 
           shouldReflush = true;
@@ -38087,7 +38102,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+f247628d";
+  exports.default = "2.9.0-alpha+b236ff1e";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
