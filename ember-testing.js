@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-canary+eac9d743
+ * @version   2.9.0-canary+ed8b3edc
  */
 
 var enifed, requireModule, require, Ember;
@@ -486,7 +486,7 @@ enifed('ember-debug/index', ['exports', 'ember-metal/core', 'ember-environment',
       _emberMetalFeatures.FEATURES['features-stripped-test'] = true;
       var featuresWereStripped = true;
 
-      if (_emberMetalFeatures.default('features-stripped-test')) {
+      if (false) {
         featuresWereStripped = false;
       }
 
