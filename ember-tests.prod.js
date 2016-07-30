@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+b03c1bf3
+ * @version   2.9.0-alpha+b2e5d62b
  */
 
 var enifed, requireModule, require, Ember;
@@ -26432,8 +26432,6 @@ enifed('ember-glimmer/tests/integration/input-test', ['exports', 'ember-glimmer/
 enifed('ember-glimmer/tests/integration/outlet-test', ['exports', 'ember-glimmer/tests/utils/test-case', 'ember-runtime/tests/utils'], function (exports, _emberGlimmerTestsUtilsTestCase, _emberRuntimeTestsUtils) {
   'use strict';
 
-  var _slice = Array.prototype.slice;
-
   function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -26449,46 +26447,50 @@ enifed('ember-glimmer/tests/integration/outlet-test', ['exports', 'ember-glimmer
       _RenderingTest.apply(this, arguments);
 
       var CoreOutlet = this.owner._lookupFactory('view:-outlet');
-      this.top = CoreOutlet.create();
+      this.component = CoreOutlet.create();
     }
-
-    _class.prototype.teardown = function teardown() {
-      var _RenderingTest$prototype$teardown;
-
-      _emberRuntimeTestsUtils.runDestroy(this.top);
-
-      (_RenderingTest$prototype$teardown = _RenderingTest.prototype.teardown).call.apply(_RenderingTest$prototype$teardown, [this].concat(_slice.call(arguments)));
-    };
-
-    _class.prototype.withTemplate = function withTemplate(string) {
-      return {
-        render: {
-          template: this.compile(string)
-        },
-        outlets: {}
-      };
-    };
-
-    _class.prototype.appendTop = function appendTop() {
-      _emberRuntimeTestsUtils.runAppend(this.top);
-    };
 
     _class.prototype['@htmlbars should render the outlet when set after DOM insertion'] = function htmlbarsShouldRenderTheOutletWhenSetAfterDOMInsertion() {
       var _this = this;
 
-      var routerState = this.withTemplate('<h1>HI</h1>{{outlet}}');
-      this.top.setOutletState(routerState);
+      var outletState = {
+        render: {
+          owner: this.owner,
+          into: undefined,
+          outlet: 'main',
+          name: 'application',
+          controller: {},
+          ViewClass: undefined,
+          template: this.compile('HI{{outlet}}')
+        },
+        outlets: Object.create(null)
+      };
 
-      this.appendTop();
+      this.runTask(function () {
+        return _this.component.setOutletState(outletState);
+      });
+
+      _emberRuntimeTestsUtils.runAppend(this.component);
 
       this.assertText('HI');
 
       this.assertStableRerender();
 
-      routerState.outlets.main = this.withTemplate('<p>BYE</p>');
+      outletState.outlets.main = {
+        render: {
+          owner: this.owner,
+          into: undefined,
+          outlet: 'main',
+          name: 'application',
+          controller: {},
+          ViewClass: undefined,
+          template: this.compile('<p>BYE</p>')
+        },
+        outlets: Object.create(null)
+      };
 
       this.runTask(function () {
-        return _this.top.setOutletState(routerState);
+        return _this.component.setOutletState(outletState);
       });
 
       this.assertText('HIBYE');
