@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+13ea22bd
+ * @version   2.9.0-alpha+1fdfb44b
  */
 
 var enifed, requireModule, require, Ember;
@@ -2820,21 +2820,7 @@ enifed('ember-application/system/application-instance', ['exports', 'ember-metal
     },
 
     setupRegistry: function (options) {
-      var registry = this.__registry__;
-
-      registry.register('-environment:main', options.toEnvironment(), { instantiate: false });
-      registry.injection('view', '_environment', '-environment:main');
-      registry.injection('route', '_environment', '-environment:main');
-
-      registry.register('service:-document', options.document, { instantiate: false });
-
-      if (options.isInteractive) {
-        registry.injection('view', 'renderer', 'renderer:-dom');
-        registry.injection('component', 'renderer', 'renderer:-dom');
-      } else {
-        registry.injection('view', 'renderer', 'renderer:-inert');
-        registry.injection('component', 'renderer', 'renderer:-inert');
-      }
+      this.constructor.setupRegistry(this.__registry__, options);
     },
 
     router: _emberMetalComputed.computed(function () {
@@ -2970,6 +2956,32 @@ enifed('ember-application/system/application-instance', ['exports', 'ember-metal
 
       // getURL returns the set url with the rootURL stripped off
       return router.handleURL(location.getURL()).then(handleResolve, handleReject);
+    }
+  });
+
+  ApplicationInstance.reopenClass({
+    /**
+     @private
+     @method setupRegistry
+     @param {Registry} registry
+     @param {BootOptions} options
+    */
+    setupRegistry: function (registry) {
+      var options = arguments.length <= 1 || arguments[1] === undefined ? new BootOptions() : arguments[1];
+
+      registry.register('-environment:main', options.toEnvironment(), { instantiate: false });
+      registry.injection('view', '_environment', '-environment:main');
+      registry.injection('route', '_environment', '-environment:main');
+
+      registry.register('service:-document', options.document, { instantiate: false });
+
+      if (options.isInteractive) {
+        registry.injection('view', 'renderer', 'renderer:-dom');
+        registry.injection('component', 'renderer', 'renderer:-dom');
+      } else {
+        registry.injection('view', 'renderer', 'renderer:-inert');
+        registry.injection('component', 'renderer', 'renderer:-inert');
+      }
     }
   });
 
@@ -3175,7 +3187,7 @@ enifed('ember-application/system/application-instance', ['exports', 'ember-metal
 
   exports.default = ApplicationInstance;
 });
-enifed('ember-application/system/application', ['exports', 'ember-environment', 'ember-metal/debug', 'ember-metal/libraries', 'ember-metal/testing', 'ember-metal/property_get', 'ember-runtime/system/namespace', 'ember-runtime/system/lazy_load', 'ember-metal/run_loop', 'ember-views/system/event_dispatcher', 'ember-views/system/jquery', 'ember-routing/system/route', 'ember-routing/system/router', 'ember-routing/location/hash_location', 'ember-routing/location/history_location', 'ember-routing/location/auto_location', 'ember-routing/location/none_location', 'ember-routing/system/cache', 'ember-application/system/application-instance', 'ember-runtime/mixins/registry_proxy', 'container/registry', 'ember-runtime/ext/rsvp', 'ember-application/system/engine', 'require'], function (exports, _emberEnvironment, _emberMetalDebug, _emberMetalLibraries, _emberMetalTesting, _emberMetalProperty_get, _emberRuntimeSystemNamespace, _emberRuntimeSystemLazy_load, _emberMetalRun_loop, _emberViewsSystemEvent_dispatcher, _emberViewsSystemJquery, _emberRoutingSystemRoute, _emberRoutingSystemRouter, _emberRoutingLocationHash_location, _emberRoutingLocationHistory_location, _emberRoutingLocationAuto_location, _emberRoutingLocationNone_location, _emberRoutingSystemCache, _emberApplicationSystemApplicationInstance, _emberRuntimeMixinsRegistry_proxy, _containerRegistry, _emberRuntimeExtRsvp, _emberApplicationSystemEngine, _require) {
+enifed('ember-application/system/application', ['exports', 'ember-environment', 'ember-metal/debug', 'ember-metal/libraries', 'ember-metal/testing', 'ember-metal/property_get', 'ember-runtime/system/namespace', 'ember-runtime/system/lazy_load', 'ember-metal/run_loop', 'ember-views/system/event_dispatcher', 'ember-views/system/jquery', 'ember-routing/system/route', 'ember-routing/system/router', 'ember-routing/location/hash_location', 'ember-routing/location/history_location', 'ember-routing/location/auto_location', 'ember-routing/location/none_location', 'ember-routing/system/cache', 'ember-application/system/application-instance', 'ember-runtime/mixins/registry_proxy', 'container/registry', 'ember-runtime/ext/rsvp', 'ember-application/system/engine', 'require', 'ember-metal/features'], function (exports, _emberEnvironment, _emberMetalDebug, _emberMetalLibraries, _emberMetalTesting, _emberMetalProperty_get, _emberRuntimeSystemNamespace, _emberRuntimeSystemLazy_load, _emberMetalRun_loop, _emberViewsSystemEvent_dispatcher, _emberViewsSystemJquery, _emberRoutingSystemRoute, _emberRoutingSystemRouter, _emberRoutingLocationHash_location, _emberRoutingLocationHistory_location, _emberRoutingLocationAuto_location, _emberRoutingLocationNone_location, _emberRoutingSystemCache, _emberApplicationSystemApplicationInstance, _emberRuntimeMixinsRegistry_proxy, _containerRegistry, _emberRuntimeExtRsvp, _emberApplicationSystemEngine, _require, _emberMetalFeatures) {
   /**
   @module ember
   @submodule ember-application
@@ -4071,12 +4083,17 @@ enifed('ember-application/system/application', ['exports', 'ember-environment', 
 
       commonSetupRegistry(registry);
 
-      if (options[_emberApplicationSystemEngine.GLIMMER]) {
+      if (true) {
         var glimmerSetupRegistry = _require.default('ember-glimmer/setup-registry').setupApplicationRegistry;
         glimmerSetupRegistry(registry);
       } else {
-        var htmlbarsSetupRegistry = _require.default('ember-htmlbars/setup-registry').setupApplicationRegistry;
-        htmlbarsSetupRegistry(registry);
+        if (options[_emberApplicationSystemEngine.GLIMMER]) {
+          var glimmerSetupRegistry = _require.default('ember-glimmer/setup-registry').setupApplicationRegistry;
+          glimmerSetupRegistry(registry);
+        } else {
+          var htmlbarsSetupRegistry = _require.default('ember-htmlbars/setup-registry').setupApplicationRegistry;
+          htmlbarsSetupRegistry(registry);
+        }
       }
 
       return registry;
@@ -4714,12 +4731,17 @@ enifed('ember-application/system/engine', ['exports', 'ember-runtime/system/name
 
       commonSetupRegistry(registry);
 
-      if (options[GLIMMER]) {
+      if (true) {
         var glimmerSetupRegistry = _require.default('ember-glimmer/setup-registry').setupEngineRegistry;
         glimmerSetupRegistry(registry);
       } else {
-        var htmlbarsSetupRegistry = _require.default('ember-htmlbars/setup-registry').setupEngineRegistry;
-        htmlbarsSetupRegistry(registry);
+        if (options[GLIMMER]) {
+          var glimmerSetupRegistry = _require.default('ember-glimmer/setup-registry').setupEngineRegistry;
+          glimmerSetupRegistry(registry);
+        } else {
+          var htmlbarsSetupRegistry = _require.default('ember-htmlbars/setup-registry').setupEngineRegistry;
+          htmlbarsSetupRegistry(registry);
+        }
       }
 
       return registry;
@@ -40297,7 +40319,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+13ea22bd";
+  exports.default = "2.9.0-alpha+1fdfb44b";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
