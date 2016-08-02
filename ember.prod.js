@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+20de5413
+ * @version   2.9.0-alpha+ef157d01
  */
 
 var enifed, requireModule, require, Ember;
@@ -8177,6 +8177,8 @@ enifed('ember-glimmer/helpers/component', ['exports', 'ember-glimmer/utils/refer
       this.tag = args.positional.at(0).tag;
       this.parentMeta = parentMeta;
       this.args = args;
+      this.lastDefinition = undefined;
+      this.lastName = undefined;
     }
 
     ClosureComponentReference.prototype.compute = function compute() {
@@ -8187,9 +8189,17 @@ enifed('ember-glimmer/helpers/component', ['exports', 'ember-glimmer/utils/refer
       var defRef = this.defRef;
       var env = this.env;
       var parentMeta = this.parentMeta;
+      var lastDefinition = this.lastDefinition;
+      var lastName = this.lastName;
 
       var nameOrDef = defRef.value();
       var definition = null;
+
+      if (nameOrDef && nameOrDef === lastName) {
+        return lastDefinition;
+      }
+
+      this.lastName = nameOrDef;
 
       if (typeof nameOrDef === 'string') {
         definition = env.getComponentDefinition([nameOrDef], parentMeta);
@@ -8200,6 +8210,8 @@ enifed('ember-glimmer/helpers/component', ['exports', 'ember-glimmer/utils/refer
       }
 
       var newDef = createCurriedDefinition(definition, args);
+
+      this.lastDefinition = newDef;
 
       return newDef;
     };
@@ -37682,7 +37694,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+20de5413";
+  exports.default = "2.9.0-alpha+ef157d01";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
