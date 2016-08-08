@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+fe48cd5e
+ * @version   2.9.0-alpha+156b1f7b
  */
 
 var enifed, requireModule, require, Ember;
@@ -12759,7 +12759,7 @@ enifed('ember-glimmer/utils/to-bool', ['exports', 'ember-runtime/utils', 'ember-
     return true;
   }
 });
-enifed('ember-glimmer/views/outlet', ['exports', 'ember-metal/assign', 'glimmer-reference', 'ember-metal/empty_object'], function (exports, _emberMetalAssign, _glimmerReference, _emberMetalEmpty_object) {
+enifed('ember-glimmer/views/outlet', ['exports', 'ember-metal/assign', 'glimmer-reference', 'ember-metal/empty_object', 'ember-environment'], function (exports, _emberMetalAssign, _glimmerReference, _emberMetalEmpty_object, _emberEnvironment) {
   'use strict';
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -12922,13 +12922,16 @@ enifed('ember-glimmer/views/outlet', ['exports', 'ember-metal/assign', 'glimmer-
     }
 
     OutletView.prototype.appendTo = function appendTo(selector) {
-      var jQuery = this._environment.options.jQuery;
+      var env = this._environment || _emberEnvironment.environment;
+      var target = undefined;
 
-      if (jQuery) {
-        this._renderResult = this.renderer.appendOutletView(this, jQuery(selector)[0]);
+      if (env.hasDOM) {
+        target = typeof selector === 'string' ? document.querySelector(selector) : selector;
       } else {
-        this._renderResult = this.renderer.appendOutletView(this, selector);
+        target = selector;
       }
+
+      this._renderResult = this.renderer.appendOutletView(this, target);
     };
 
     OutletView.prototype.appendChild = function appendChild(instance) {
@@ -40446,7 +40449,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+fe48cd5e";
+  exports.default = "2.9.0-alpha+156b1f7b";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
