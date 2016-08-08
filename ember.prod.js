@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+71a5f610
+ * @version   2.9.0-alpha+e540e5d2
  */
 
 var enifed, requireModule, require, Ember;
@@ -22850,7 +22850,7 @@ enifed('ember-routing/system/route', ['exports', 'ember-metal/debug', 'ember-met
         This action is called when one or more query params have changed. Bubbles.
          @method queryParamsDidChange
         @param changed {Object} Keys are names of query params that have changed.
-        @param totalPresent {Number}
+        @param totalPresent {Object} Keys are names of query params that are currently set.
         @param removed {Object} Keys are names of query params that have been removed.
         @returns {boolean}
         @private
@@ -37809,7 +37809,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+71a5f610";
+  exports.default = "2.9.0-alpha+e540e5d2";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
