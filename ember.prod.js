@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+ffa25a90
+ * @version   2.9.0-alpha+98cbb482
  */
 
 var enifed, requireModule, require, Ember;
@@ -37810,7 +37810,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+ffa25a90";
+  exports.default = "2.9.0-alpha+98cbb482";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
@@ -48942,10 +48942,7 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
     // `x`, irrespective of the other parts.
     // Because of this similarity, we assign each type of segment a number value written as a
     // string. We can find the specificity of compound routes by concatenating these strings
-    // together, from left to right. After we have looped through all of the segments,
-    // we convert the string to a number.
-    specificity.val = '';
-
+    // together, from left to right.
     for (var i = 0; i < segments.length; i++) {
       var segment = segments[i],
           match;
@@ -48969,9 +48966,11 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
       }
     }
 
-    specificity.val = +specificity.val;
-
     return results;
+  }
+
+  function isEqualCharSpec(specA, specB) {
+    return specA.validChars === specB.validChars && specA.invalidChars === specB.invalidChars;
   }
 
   // A State has a character specification and (`charSpec`) and a list of possible
@@ -48994,7 +48993,6 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
   function State(charSpec) {
     this.charSpec = charSpec;
     this.nextStates = [];
-    this.charSpecs = {};
     this.regex = undefined;
     this.handlers = undefined;
     this.specificity = undefined;
@@ -49002,20 +49000,12 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
 
   State.prototype = {
     get: function (charSpec) {
-      if (this.charSpecs[charSpec.validChars]) {
-        return this.charSpecs[charSpec.validChars];
-      }
-
       var nextStates = this.nextStates;
 
       for (var i = 0; i < nextStates.length; i++) {
         var child = nextStates[i];
 
-        var isEqual = child.charSpec.validChars === charSpec.validChars;
-        isEqual = isEqual && child.charSpec.invalidChars === charSpec.invalidChars;
-
-        if (isEqual) {
-          this.charSpecs[charSpec.validChars] = child;
+        if (isEqualCharSpec(child.charSpec, charSpec)) {
           return child;
         }
       }
@@ -49079,7 +49069,7 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
   // Sort the routes by specificity
   function sortSolutions(states) {
     return states.sort(function (a, b) {
-      return b.specificity.val - a.specificity.val;
+      return b.specificity.val < a.specificity.val ? -1 : b.specificity.val === a.specificity.val ? 0 : 1;
     });
   }
 
@@ -49173,7 +49163,7 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
     add: function (routes, options) {
       var currentState = this.rootState,
           regex = "^",
-          specificity = {},
+          specificity = { val: '' },
           handlers = new Array(routes.length),
           allSegments = [],
           name;
