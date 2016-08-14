@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+fe045694
+ * @version   2.9.0-alpha+4eeff936
  */
 
 var enifed, requireModule, require, Ember;
@@ -40451,7 +40451,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+fe045694";
+  exports.default = "2.9.0-alpha+4eeff936";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
@@ -52268,20 +52268,6 @@ enifed('router/handler-info', ['exports', 'router/utils', 'rsvp/promise'], funct
       return this.handler = undefined;
     },
 
-    get handler() {
-      // _handler could be set to either a handler object or undefined, so we
-      // compare against a default reference to know when it's been set
-      if (this._handler !== DEFAULT_HANDLER) {
-        return this._handler;
-      }
-
-      return this.fetchHandler();
-    },
-
-    set handler(handler) {
-      return this._handler = handler;
-    },
-
     _handlerPromise: undefined,
 
     get handlerPromise() {
@@ -52434,6 +52420,22 @@ enifed('router/handler-info', ['exports', 'router/utils', 'rsvp/promise'], funct
       return other.name !== this.name || this.hasOwnProperty('context') && !contextsMatch || this.hasOwnProperty('params') && !paramsMatch(this.params, other.params);
     }
   };
+
+  Object.defineProperty(HandlerInfo.prototype, 'handler', {
+    get: function () {
+      // _handler could be set to either a handler object or undefined, so we
+      // compare against a default reference to know when it's been set
+      if (this._handler !== DEFAULT_HANDLER) {
+        return this._handler;
+      }
+
+      return this.fetchHandler();
+    },
+
+    set: function (handler) {
+      return this._handler = handler;
+    }
+  });
 
   function paramsMatch(a, b) {
     if (!a ^ !b) {
