@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+ccfef8b8
+ * @version   2.9.0-alpha+70a24648
  */
 
 var enifed, requireModule, require, Ember;
@@ -8747,22 +8747,20 @@ enifed('ember-glimmer/helpers/mut', ['exports', 'ember-metal/symbol', 'ember-met
     The `mut` helper lets you __clearly specify__ that a child `Component` can update the
     (mutable) value passed to it, which will __change the value of the parent component__.
   
-    This is very helpful for passing mutable values to a `Component` of any size, but
-    critical to understanding the logic of a large/complex `Component`.
-  
     To specify that a parameter is mutable, when invoking the child `Component`:
   
     ```handlebars
     {{my-child childClickCount=(mut totalClicks)}}
     ```
   
-    The child `Component` can then modify the parent's value as needed:
+    The child `Component` can then modify the parent's value just by modifying its own
+    property:
   
     ```javascript
     // my-child.js
     export default Component.extend({
       click() {
-        this.get('childClickCount').update(this.get('childClickCount').value + 1);
+        this.incrementProperty('childClickCount');
       }
     });
     ```
@@ -8786,9 +8784,6 @@ enifed('ember-glimmer/helpers/mut', ['exports', 'ember-metal/symbol', 'ember-met
     ```
   
     The `mut` helper changes the `totalClicks` value to what was provided as the action argument.
-  
-    See a [2.0 blog post](http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html#toc_the-code-mut-code-helper) for
-    additional information on using `{{mut}}`.
   
     @method mut
     @param {Object} [attr] the "two-way" attribute that can be modified.
@@ -37810,7 +37805,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+ccfef8b8";
+  exports.default = "2.9.0-alpha+70a24648";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
