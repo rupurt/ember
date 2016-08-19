@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+66c8a9e5
+ * @version   2.9.0-alpha+89905695
  */
 
 var enifed, requireModule, require, Ember;
@@ -10058,12 +10058,12 @@ enifed('ember-glimmer/renderer', ['exports', 'ember-glimmer/utils/references', '
     };
 
     Renderer.prototype.register = function register(view) {
-      _emberMetalDebug.assert('Attempted to register a view with an id already in use: ' + view.elementId, !this._viewRegistry[this.elementId]);
+      _emberMetalDebug.assert('Attempted to register a view with an id already in use: ' + view.elementId, !this._viewRegistry[view.elementId]);
       this._viewRegistry[view.elementId] = view;
     };
 
     Renderer.prototype.unregister = function unregister(view) {
-      delete this._viewRegistry[this.elementId];
+      delete this._viewRegistry[view.elementId];
     };
 
     Renderer.prototype.remove = function remove(view) {
@@ -40213,7 +40213,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+66c8a9e5";
+  exports.default = "2.9.0-alpha+89905695";
 });
 var babelHelpers;
 
