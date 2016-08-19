@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+c49ff666
+ * @version   2.9.0-alpha+e150088e
  */
 
 var enifed, requireModule, require, Ember;
@@ -9357,6 +9357,7 @@ enifed('ember-glimmer/renderer', ['exports', 'ember-glimmer/utils/references', '
 
     Renderer.prototype.remove = function remove(view) {
       view.trigger('willDestroyElement');
+      view.trigger('willClearRender');
       view._transitionTo('destroying');
 
       if (this._root === view) {
@@ -37759,7 +37760,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+c49ff666";
+  exports.default = "2.9.0-alpha+e150088e";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
