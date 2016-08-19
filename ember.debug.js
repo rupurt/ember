@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+205e5acf
+ * @version   2.9.0-alpha+f56d1372
  */
 
 var enifed, requireModule, require, Ember;
@@ -10101,6 +10101,8 @@ enifed('ember-glimmer/renderer', ['exports', 'ember-glimmer/utils/references', '
       var env = this._env;
 
       var render = function () {
+        _emberMetalDebug.assert('You cannot render `' + self.value() + '` without a template.', template);
+
         var result = template.asEntryPoint().render(self, env, {
           appendTo: parentElement,
           dynamicScope: dynamicScope
@@ -40211,7 +40213,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+205e5acf";
+  exports.default = "2.9.0-alpha+f56d1372";
 });
 var babelHelpers;
 
