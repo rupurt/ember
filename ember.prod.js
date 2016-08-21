@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+23ecbcc6
+ * @version   2.9.0-alpha+71ea36e9
  */
 
 var enifed, requireModule, require, Ember;
@@ -6750,7 +6750,7 @@ enifed('ember-glimmer/components/link-to', ['exports', 'ember-console', 'ember-m
        @property activeClass
       @type String
       @default active
-      @private
+      @public
     **/
     activeClass: 'active',
 
@@ -37590,7 +37590,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+23ecbcc6";
+  exports.default = "2.9.0-alpha+71ea36e9";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
