@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+b216f384
+ * @version   2.9.0-alpha+23ecbcc6
  */
 
 var enifed, requireModule, require, Ember;
@@ -36296,25 +36296,6 @@ enifed('ember-testing/helpers', ['exports', 'ember-testing/test/helpers', 'ember
   */
   _emberTestingTestHelpers.registerAsyncHelper('click', _emberTestingHelpersClick.default);
 
-  /**
-    Simulates a key event, e.g. `keypress`, `keydown`, `keyup` with the desired keyCode
-  
-    Example:
-  
-    ```javascript
-    keyEvent('.some-jQuery-selector', 'keypress', 13).then(function() {
-     // assert something
-    });
-    ```
-  
-    @method keyEvent
-    @param {String} selector jQuery selector for finding element on the DOM
-    @param {String} type the type of key event, e.g. `keypress`, `keydown`, `keyup`
-    @param {Number} keyCode the keyCode of the simulated key event
-    @return {RSVP.Promise}
-    @since 1.5.0
-    @public
-  */
   _emberTestingTestHelpers.registerAsyncHelper('keyEvent', _emberTestingHelpersKey_event.default);
 
   /**
@@ -36354,22 +36335,6 @@ enifed('ember-testing/helpers', ['exports', 'ember-testing/test/helpers', 'ember
   */
   _emberTestingTestHelpers.registerHelper('find', _emberTestingHelpersFind.default);
 
-  /**
-    Like `find`, but throws an error if the element selector returns no results.
-  
-    Example:
-  
-    ```javascript
-    var $el = findWithAssert('.doesnt-exist'); // throws error
-    ```
-  
-    @method findWithAssert
-    @param {String} selector jQuery selector string for finding an element within
-    the DOM
-    @return {Object} jQuery object representing the results of the query
-    @throws {Error} throws error if jQuery object returned has a length of 0
-    @public
-  */
   _emberTestingTestHelpers.registerHelper('findWithAssert', _emberTestingHelpersFind_with_assert.default);
 
   /**
@@ -36556,6 +36521,23 @@ enifed('ember-testing/helpers/find', ['exports', 'ember-metal/property_get'], fu
   }
 });
 enifed('ember-testing/helpers/find_with_assert', ['exports'], function (exports) {
+  /**
+  @module ember
+  @submodule ember-testing
+  */
+  /**
+    Like `find`, but throws an error if the element selector returns no results.
+    Example:
+    ```javascript
+    var $el = findWithAssert('.doesnt-exist'); // throws error
+    ```
+    @method findWithAssert
+    @param {String} selector jQuery selector string for finding an element within
+    the DOM
+    @return {Object} jQuery object representing the results of the query
+    @throws {Error} throws error if jQuery object returned has a length of 0
+    @public
+  */
   'use strict';
 
   exports.default = findWithAssert;
@@ -36569,6 +36551,26 @@ enifed('ember-testing/helpers/find_with_assert', ['exports'], function (exports)
   }
 });
 enifed('ember-testing/helpers/key_event', ['exports'], function (exports) {
+  /**
+  @module ember
+  @submodule ember-testing
+  */
+  /**
+    Simulates a key event, e.g. `keypress`, `keydown`, `keyup` with the desired keyCode
+    Example:
+    ```javascript
+    keyEvent('.some-jQuery-selector', 'keypress', 13).then(function() {
+     // assert something
+    });
+    ```
+    @method keyEvent
+    @param {String} selector jQuery selector for finding element on the DOM
+    @param {String} type the type of key event, e.g. `keypress`, `keydown`, `keyup`
+    @param {Number} keyCode the keyCode of the simulated key event
+    @return {RSVP.Promise}
+    @since 1.5.0
+    @public
+  */
   'use strict';
 
   exports.default = keyEvent;
@@ -40369,7 +40371,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+b216f384";
+  exports.default = "2.9.0-alpha+23ecbcc6";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
