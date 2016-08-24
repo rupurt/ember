@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+c94d277b
+ * @version   2.9.0-alpha+ffde3384
  */
 
 var enifed, requireModule, require, Ember;
@@ -24183,6 +24183,10 @@ enifed('ember-routing/system/router', ['exports', 'ember-console', 'ember-metal/
         this._engineInstances = new _emberMetalEmpty_object.default();
         this._engineInfoByRoute = new _emberMetalEmpty_object.default();
       }
+
+      // avoid shaping issues with checks during `_setOutlets`
+      this.isDestroyed = false;
+      this.isDestroying = false;
     },
 
     /*
@@ -24306,6 +24310,13 @@ enifed('ember-routing/system/router', ['exports', 'ember-console', 'ember-metal/
     },
 
     _setOutlets: function () {
+      // This is triggered async during Ember.Route#willDestroy.
+      // If the router is also being destroyed we do not want to
+      // to create another this._toplevelView (and leak the renderer)
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       var handlerInfos = this.router.currentHandlerInfos;
       var route = undefined;
       var defaultParentState = undefined;
@@ -37605,7 +37616,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+c94d277b";
+  exports.default = "2.9.0-alpha+ffde3384";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
