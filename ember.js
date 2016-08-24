@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+fa7d1522
+ * @version   2.9.0-alpha+02996860
  */
 
 var enifed, requireModule, require, Ember;
@@ -9870,9 +9870,10 @@ enifed('ember-glimmer/modifiers/action', ['exports', 'ember-metal/debug', 'ember
         if (actionNameRef[_emberGlimmerHelpersAction.INVOKE]) {
           actionName = actionNameRef;
         } else {
+          var actionLabel = actionNameRef._propertyKey;
           actionName = actionNameRef.value();
 
-          _emberMetalDebug.assert('You specified a quoteless path to the {{action}} helper ' + 'which did not resolve to an action name (a string). ' + 'Perhaps you meant to use a quoted actionName? (e.g. {{action \'save\'}}).', typeof actionName === 'string' || typeof actionName === 'function');
+          _emberMetalDebug.assert('You specified a quoteless path, `' + actionLabel + '`, to the ' + '{{action}} helper which did not resolve to an action name (a ' + 'string). Perhaps you meant to use a quoted actionName? (e.g. ' + '{{action "' + actionLabel + '"}}).', typeof actionName === 'string' || typeof actionName === 'function');
         }
       }
 
@@ -40435,7 +40436,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+fa7d1522";
+  exports.default = "2.9.0-alpha+02996860";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
@@ -51065,6 +51066,7 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
 
   var normalizePath = _routeRecognizerNormalizer.default.normalizePath;
   var normalizeSegment = _routeRecognizerNormalizer.default.normalizeSegment;
+  var encodePathSegment = _routeRecognizerNormalizer.default.encodePathSegment;
 
   var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
 
@@ -51130,7 +51132,7 @@ enifed('route-recognizer', ['exports', 'route-recognizer/dsl', 'route-recognizer
 
     generate: function (params) {
       if (RouteRecognizer.ENCODE_AND_DECODE_PATH_SEGMENTS) {
-        return encodeURIComponent(params[this.name]);
+        return encodePathSegment(params[this.name]);
       } else {
         return params[this.name];
       }
@@ -51869,9 +51871,50 @@ enifed('route-recognizer/normalizer', ['exports'], function (exports) {
     return decodeURIComponentExcept(segment, reservedHex);
   }
 
+  function encodeURIComponentExcept(string, reservedChars) {
+    var pieces = [];
+    var separators = [];
+    var currentPiece = '';
+    var idx;
+
+    for (idx = 0; idx < string.length; idx++) {
+      var char = string[idx];
+      if (reservedChars.indexOf(char) === -1) {
+        currentPiece += char;
+      } else {
+        pieces.push(currentPiece);
+        separators.push(char);
+        currentPiece = '';
+      }
+    }
+    if (currentPiece.length) {
+      pieces.push(currentPiece);
+      separators.push('');
+    }
+
+    pieces = pieces.map(encodeURIComponent);
+    var encoded = '';
+    for (idx = 0; idx < pieces.length; idx++) {
+      encoded += pieces[idx] + separators[idx];
+    }
+
+    return encoded;
+  }
+
+  // Do not encode these characters when generating dynamic path segments
+  // See https://tools.ietf.org/html/rfc3986#section-3.3
+  var reservedSegmentChars = ["!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "=", // sub-delims
+  ":", "@" // others explicitly allowed by RFC 3986
+  ];
+  function encodePathSegment(segment) {
+    segment = '' + segment; // coerce to string
+    return encodeURIComponentExcept(segment, reservedSegmentChars);
+  }
+
   var Normalizer = {
     normalizeSegment: normalizeSegment,
-    normalizePath: normalizePath
+    normalizePath: normalizePath,
+    encodePathSegment: encodePathSegment
   };
 
   exports.default = Normalizer;
