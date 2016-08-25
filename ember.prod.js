@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+59ea7827
+ * @version   2.9.0-alpha+ac07da7b
  */
 
 var enifed, requireModule, require, Ember;
@@ -9329,7 +9329,13 @@ enifed('ember-glimmer/renderer', ['exports', 'ember-glimmer/utils/references', '
     };
 
     Renderer.prototype.getBounds = function getBounds(view) {
-      return view[_emberGlimmerComponent.BOUNDS];
+      var bounds = view[_emberGlimmerComponent.BOUNDS];
+
+      var parentElement = bounds.parentElement();
+      var firstNode = bounds.firstNode();
+      var lastNode = bounds.lastNode();
+
+      return { parentElement: parentElement, firstNode: firstNode, lastNode: lastNode };
     };
 
     Renderer.prototype._renderRoot = function _renderRoot(root, template, self, parentElement, dynamicScope) {
@@ -36629,8 +36635,8 @@ enifed('ember-views/system/utils', ['exports'], function (exports) {
     var bounds = getViewBounds(view);
 
     var range = document.createRange();
-    range.setStartBefore(bounds.firstNode());
-    range.setEndAfter(bounds.lastNode());
+    range.setStartBefore(bounds.firstNode);
+    range.setEndAfter(bounds.lastNode);
 
     return range;
   }
@@ -37599,7 +37605,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+59ea7827";
+  exports.default = "2.9.0-alpha+ac07da7b";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
