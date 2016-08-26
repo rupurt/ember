@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+ac07da7b
+ * @version   2.9.0-alpha+b70c72d7
  */
 
 var enifed, requireModule, require, Ember;
@@ -51617,6 +51617,35 @@ enifed('ember-runtime/tests/system/array_proxy/arranged_content_test', ['exports
   QUnit.test('firstObject - returns first arranged object', function () {
     equal(array.get('firstObject'), '5', 'returns first arranged object');
   });
+
+  QUnit.test('arrangedContentArray{Will,Did}Change are called when the arranged content changes', function () {
+    // The behaviour covered by this test may change in the future if we decide
+    // that built-in array methods are not overridable.
+
+    var willChangeCallCount = 0;
+    var didChangeCallCount = 0;
+
+    var content = _emberRuntimeSystemNative_array.A([1, 2, 3]);
+    _emberRuntimeSystemArray_proxy.default.extend({
+      arrangedContentArrayWillChange: function () {
+        willChangeCallCount++;
+        this._super.apply(this, arguments);
+      },
+      arrangedContentArrayDidChange: function () {
+        didChangeCallCount++;
+        this._super.apply(this, arguments);
+      }
+    }).create({ content: content });
+
+    equal(willChangeCallCount, 0);
+    equal(didChangeCallCount, 0);
+
+    content.pushObject(4);
+    content.pushObject(5);
+
+    equal(willChangeCallCount, 2);
+    equal(didChangeCallCount, 2);
+  });
 });
 enifed('ember-runtime/tests/system/array_proxy/content_change_test', ['exports', 'ember-metal/property_set', 'ember-runtime/computed/computed_macros', 'ember-metal/run_loop', 'ember-runtime/system/array_proxy', 'ember-runtime/system/native_array'], function (exports, _emberMetalProperty_set, _emberRuntimeComputedComputed_macros, _emberMetalRun_loop, _emberRuntimeSystemArray_proxy, _emberRuntimeSystemNative_array) {
   'use strict';
@@ -51712,6 +51741,35 @@ enifed('ember-runtime/tests/system/array_proxy/content_change_test', ['exports',
     _emberMetalProperty_set.set(proxy2, 'content', proxy1);
 
     ok(true, 'No exception was raised');
+  });
+
+  QUnit.test('arrayContent{Will,Did}Change are called when the content changes', function () {
+    // The behaviour covered by this test may change in the future if we decide
+    // that built-in array methods are not overridable.
+
+    var willChangeCallCount = 0;
+    var didChangeCallCount = 0;
+
+    var content = _emberRuntimeSystemNative_array.A([1, 2, 3]);
+    _emberRuntimeSystemArray_proxy.default.extend({
+      arrayContentWillChange: function () {
+        willChangeCallCount++;
+        this._super.apply(this, arguments);
+      },
+      arrayContentDidChange: function () {
+        didChangeCallCount++;
+        this._super.apply(this, arguments);
+      }
+    }).create({ content: content });
+
+    equal(willChangeCallCount, 0);
+    equal(didChangeCallCount, 0);
+
+    content.pushObject(4);
+    content.pushObject(5);
+
+    equal(willChangeCallCount, 2);
+    equal(didChangeCallCount, 2);
   });
 });
 enifed('ember-runtime/tests/system/array_proxy/content_update_test', ['exports', 'ember-metal/computed', 'ember-runtime/system/array_proxy', 'ember-runtime/system/native_array'], function (exports, _emberMetalComputed, _emberRuntimeSystemArray_proxy, _emberRuntimeSystemNative_array) {
