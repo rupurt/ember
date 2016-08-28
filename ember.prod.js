@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+8a49ddd7
+ * @version   2.9.0-alpha+ba0803de
  */
 
 var enifed, requireModule, require, Ember;
@@ -35041,8 +35041,11 @@ enifed('ember-views/index', ['exports', 'ember-runtime', 'ember-views/system/jqu
 
   var ViewUtils = _emberRuntime.default.ViewUtils = {};
   ViewUtils.isSimpleClick = _emberViewsSystemUtils.isSimpleClick;
+  ViewUtils.getViewBounds = _emberViewsSystemUtils.getViewBounds;
   ViewUtils.getViewClientRects = _emberViewsSystemUtils.getViewClientRects;
   ViewUtils.getViewBoundingClientRect = _emberViewsSystemUtils.getViewBoundingClientRect;
+  ViewUtils.getRootViews = _emberViewsSystemUtils.getRootViews;
+  ViewUtils.getChildViews = _emberViewsSystemUtils.getChildViews;
 
   _emberRuntime.default.TextSupport = _emberViewsMixinsText_support.default;
   _emberRuntime.default.ComponentLookup = _emberViewsComponent_lookup.default;
@@ -36789,8 +36792,8 @@ enifed('ember-views/system/utils', ['exports', 'ember-metal/utils', 'container/o
   exports.STYLE_WARNING = STYLE_WARNING;
   /**
     @private
-    @method getChildViews
-    @param {Ember.View} view
+    @method getRootViews
+    @param {Object} owner
   */
 
   function getRootViews(owner) {
@@ -37856,7 +37859,7 @@ enifed('ember/index', ['exports', 'require', 'ember-metal', 'ember-runtime', 'em
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+8a49ddd7";
+  exports.default = "2.9.0-alpha+ba0803de";
 });
 enifed('glimmer-reference/index', ['exports', 'glimmer-reference/lib/reference', 'glimmer-reference/lib/const', 'glimmer-reference/lib/validators', 'glimmer-reference/lib/utils', 'glimmer-reference/lib/iterable'], function (exports, _glimmerReferenceLibReference, _glimmerReferenceLibConst, _glimmerReferenceLibValidators, _glimmerReferenceLibUtils, _glimmerReferenceLibIterable) {
   'use strict';
