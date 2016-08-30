@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-alpha+2910fceb
+ * @version   2.9.0-alpha+15c11d1d
  */
 
 var enifed, requireModule, require, Ember;
@@ -11790,7 +11790,7 @@ enifed('ember-template-compiler/system/register-plugin', ['exports', 'ember-temp
   var registerPlugin = _compiler.registerPlugin;
   exports.default = registerPlugin;
 });
-enifed('ember-templates/compat', ['exports', 'ember-metal/core', 'ember-templates/template', 'ember-templates/string', 'ember-runtime/system/string', 'ember-metal/features', 'ember-templates/make-bound-helper'], function (exports, _emberMetalCore, _emberTemplatesTemplate, _emberTemplatesString, _emberRuntimeSystemString, _emberMetalFeatures, _emberTemplatesMakeBoundHelper) {
+enifed('ember-templates/compat', ['exports', 'ember-metal/core', 'ember-templates/template', 'ember-templates/string', 'ember-templates/dom-helper', 'ember-runtime/system/string', 'ember-metal/features', 'ember-templates/make-bound-helper'], function (exports, _emberMetalCore, _emberTemplatesTemplate, _emberTemplatesString, _emberTemplatesDomHelper, _emberRuntimeSystemString, _emberMetalFeatures, _emberTemplatesMakeBoundHelper) {
   'use strict';
 
   var EmberHandlebars = _emberMetalCore.default.Handlebars = _emberMetalCore.default.Handlebars || {};
@@ -11805,6 +11805,7 @@ enifed('ember-templates/compat', ['exports', 'ember-metal/core', 'ember-template
   });
 
   EmberHTMLBars.template = EmberHandlebars.template = _emberTemplatesTemplate.default;
+  EmberHTMLBars.DOMHelper = _emberTemplatesDomHelper.default;
   EmberHandleBarsUtils.escapeExpression = _emberTemplatesString.escapeExpression;
   _emberRuntimeSystemString.default.htmlSafe = _emberTemplatesString.htmlSafe;
 
@@ -11866,6 +11867,17 @@ enifed('ember-templates/components/text_field', ['exports', 'ember-metal/feature
       return _require.default('ember-glimmer/components/text_field').default;
     } else {
       return _require.default('ember-htmlbars/components/text_field').default;
+    }
+  })();
+});
+enifed('ember-templates/dom-helper', ['exports', 'ember-metal/features', 'require'], function (exports, _emberMetalFeatures, _require) {
+  'use strict';
+
+  exports.default = (function () {
+    if (true) {
+      return _require.default('ember-glimmer/dom').NodeDOMTreeConstruction;
+    } else {
+      return _require.default('ember-htmlbars/system/dom-helper').default;
     }
   })();
 });
@@ -12050,7 +12062,7 @@ enifed("ember/features", ["exports"], function (exports) {
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-alpha+2910fceb";
+  exports.default = "2.9.0-alpha+15c11d1d";
 });
 enifed('glimmer-compiler/index', ['exports', 'glimmer-compiler/lib/compiler', 'glimmer-compiler/lib/template-compiler', 'glimmer-compiler/lib/template-visitor'], function (exports, _glimmerCompilerLibCompiler, _glimmerCompilerLibTemplateCompiler, _glimmerCompilerLibTemplateVisitor) {
   'use strict';
