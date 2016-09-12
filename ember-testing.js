@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.1-alpha+cf016851
+ * @version   2.10.0-alpha+a18dc8f5
  */
 
 var enifed, requireModule, require, Ember;
@@ -525,6 +525,10 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
     Object.seal(obj);
   });
 
+  _emberMetal.setDebugFunction('debugFreeze', function debugFreeze(obj) {
+    Object.freeze(obj);
+  });
+
   _emberMetal.setDebugFunction('deprecate', _emberDebugDeprecate.default);
 
   _emberMetal.setDebugFunction('warn', _emberDebugWarn.default);
@@ -798,7 +802,7 @@ enifed('ember-testing/adapters/adapter', ['exports', 'ember-runtime'], function 
     }
   });
 });
-enifed('ember-testing/adapters/qunit', ['exports', 'ember-testing/adapters/adapter', 'ember-metal'], function (exports, _emberTestingAdaptersAdapter, _emberMetal) {
+enifed('ember-testing/adapters/qunit', ['exports', 'ember-utils', 'ember-testing/adapters/adapter'], function (exports, _emberUtils, _emberTestingAdaptersAdapter) {
   'use strict';
 
   /**
@@ -818,7 +822,7 @@ enifed('ember-testing/adapters/qunit', ['exports', 'ember-testing/adapters/adapt
       QUnit.start();
     },
     exception: function (error) {
-      ok(false, _emberMetal.inspect(error));
+      ok(false, _emberUtils.inspect(error));
     }
   });
 });
