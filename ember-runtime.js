@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.2-alpha+a7c49bf5
+ * @version   2.10.0-alpha+38434c8b
  */
 
 var enifed, requireModule, require, Ember;
@@ -4403,6 +4403,7 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
   exports.deprecateFunc = deprecateFunc;
   exports.runInDebug = runInDebug;
   exports.debugSeal = debugSeal;
+  exports.debugFreeze = debugFreeze;
   var debugFunctions = {
     assert: function () {},
     info: function () {},
@@ -4417,7 +4418,8 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
       return args[args.length - 1];
     },
     runInDebug: function () {},
-    debugSeal: function () {}
+    debugSeal: function () {},
+    debugFreeze: function () {}
   };
 
   exports.debugFunctions = debugFunctions;
@@ -4460,6 +4462,10 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
 
   function debugSeal() {
     return debugFunctions.debugSeal.apply(undefined, arguments);
+  }
+
+  function debugFreeze() {
+    return debugFunctions.debugFreeze.apply(undefined, arguments);
   }
 });
 enifed('ember-metal/dependent_keys', ['exports', 'ember-metal/watching'], function (exports, _emberMetalWatching) {
@@ -5225,6 +5231,8 @@ enifed('ember-metal/index', ['exports', 'require', 'ember-metal/core', 'ember-me
   exports.runInDebug = _emberMetalDebug.runInDebug;
   exports.setDebugFunction = _emberMetalDebug.setDebugFunction;
   exports.getDebugFunction = _emberMetalDebug.getDebugFunction;
+  exports.debugSeal = _emberMetalDebug.debugSeal;
+  exports.debugFreeze = _emberMetalDebug.debugFreeze;
   exports.instrument = _emberMetalInstrumentation.instrument;
   exports.flaggedInstrument = _emberMetalInstrumentation.flaggedInstrument;
   exports._instrumentStart = _emberMetalInstrumentation._instrumentStart;
@@ -19116,7 +19124,7 @@ enifed("ember/features", ["exports"], function (exports) {
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-beta.2-alpha+a7c49bf5";
+  exports.default = "2.10.0-alpha+38434c8b";
 });
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
