@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha+6dc97146
+ * @version   2.9.0-beta.2-alpha+a7c49bf5
  */
 
 var enifed, requireModule, require, Ember;
@@ -525,10 +525,6 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
     Object.seal(obj);
   });
 
-  _emberMetal.setDebugFunction('debugFreeze', function debugFreeze(obj) {
-    Object.freeze(obj);
-  });
-
   _emberMetal.setDebugFunction('deprecate', _emberDebugDeprecate.default);
 
   _emberMetal.setDebugFunction('warn', _emberDebugWarn.default);
@@ -614,7 +610,7 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
         // defer to whatever handler was registered before this one
         next(message, options);
       }
-    });
+    }
     ```
   
     The handler function takes the following arguments:
