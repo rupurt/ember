@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.2-alpha+043aad98
+ * @version   2.10.0-alpha+0fdc8295
  */
 
 var enifed, requireModule, require, Ember;
@@ -2808,27 +2808,15 @@ enifed('ember-metal/alias', ['exports', 'ember-utils', 'ember-metal/debug', 'emb
     return _emberMetalProperty_set.set(obj, this.altKey, value);
   };
 
-  AliasedProperty.prototype.willWatch = function (obj, keyName) {
-    _emberMetalDependent_keys.addDependentKeys(this, obj, keyName, _emberMetalMeta.meta(obj));
-  };
-
-  AliasedProperty.prototype.didUnwatch = function (obj, keyName) {
-    _emberMetalDependent_keys.removeDependentKeys(this, obj, keyName, _emberMetalMeta.meta(obj));
-  };
-
   AliasedProperty.prototype.setup = function (obj, keyName) {
     _emberMetalDebug.assert('Setting alias \'' + keyName + '\' on self', this.altKey !== keyName);
     var m = _emberMetalMeta.meta(obj);
-    if (m.peekWatching(keyName)) {
-      _emberMetalDependent_keys.addDependentKeys(this, obj, keyName, m);
-    }
+    _emberMetalDependent_keys.addDependentKeys(this, obj, keyName, m);
   };
 
   AliasedProperty.prototype.teardown = function (obj, keyName) {
     var m = _emberMetalMeta.meta(obj);
-    if (m.peekWatching(keyName)) {
-      _emberMetalDependent_keys.removeDependentKeys(this, obj, keyName, m);
-    }
+    _emberMetalDependent_keys.removeDependentKeys(this, obj, keyName, m);
   };
 
   AliasedProperty.prototype.readOnly = function () {
@@ -4403,6 +4391,7 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
   exports.deprecateFunc = deprecateFunc;
   exports.runInDebug = runInDebug;
   exports.debugSeal = debugSeal;
+  exports.debugFreeze = debugFreeze;
   var debugFunctions = {
     assert: function () {},
     info: function () {},
@@ -4417,7 +4406,8 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
       return args[args.length - 1];
     },
     runInDebug: function () {},
-    debugSeal: function () {}
+    debugSeal: function () {},
+    debugFreeze: function () {}
   };
 
   exports.debugFunctions = debugFunctions;
@@ -4460,6 +4450,10 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
 
   function debugSeal() {
     return debugFunctions.debugSeal.apply(undefined, arguments);
+  }
+
+  function debugFreeze() {
+    return debugFunctions.debugFreeze.apply(undefined, arguments);
   }
 });
 enifed('ember-metal/dependent_keys', ['exports', 'ember-metal/watching'], function (exports, _emberMetalWatching) {
@@ -5225,6 +5219,8 @@ enifed('ember-metal/index', ['exports', 'require', 'ember-metal/core', 'ember-me
   exports.runInDebug = _emberMetalDebug.runInDebug;
   exports.setDebugFunction = _emberMetalDebug.setDebugFunction;
   exports.getDebugFunction = _emberMetalDebug.getDebugFunction;
+  exports.debugSeal = _emberMetalDebug.debugSeal;
+  exports.debugFreeze = _emberMetalDebug.debugFreeze;
   exports.instrument = _emberMetalInstrumentation.instrument;
   exports.flaggedInstrument = _emberMetalInstrumentation.flaggedInstrument;
   exports._instrumentStart = _emberMetalInstrumentation._instrumentStart;
@@ -19116,7 +19112,7 @@ enifed("ember/features", ["exports"], function (exports) {
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-beta.2-alpha+043aad98";
+  exports.default = "2.10.0-alpha+0fdc8295";
 });
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
