@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.3-alpha+f4646d3a
+ * @version   2.10.0-alpha+6ea3ed0c
  */
 
 var enifed, requireModule, require, Ember;
@@ -7864,6 +7864,28 @@ babelHelpers.inherits(_class, _ApplicationTest);
       });
     };
 
+    _class.prototype['@test it allows a transition during route activate'] = function testItAllowsATransitionDuringRouteActivate(assert) {
+      var _this12 = this;
+
+      this.router.map(function () {
+        this.route('a');
+      });
+
+      this.registerRoute('index', _emberRouting.Route.extend({
+        activate: function () {
+          this.transitionTo('a');
+        }
+      }));
+
+      this.registerTemplate('a', 'Hello from A!');
+
+      return this.visit('/').then(function () {
+        _this12.assertComponentElement(_this12.firstChild, {
+          content: 'Hello from A!'
+        });
+      });
+    };
+
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.ApplicationTest));
 });
@@ -14204,6 +14226,31 @@ babelHelpers.inherits(_class, _RenderingTest);
       this.teardown();
 
       this.assert.ok(true, 'no errors during teardown');
+    };
+
+    _class.prototype['@test setting a property in willDestroyElement does not assert (GH#14273)'] = function testSettingAPropertyInWillDestroyElementDoesNotAssertGH14273(assert) {
+      assert.expect(2);
+
+      this.registerComponent('foo-bar', {
+        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
+          init: function () {
+            this._super.apply(this, arguments);
+            this.showFoo = true;
+          },
+
+          willDestroyElement: function () {
+            this.set('showFoo', false);
+            assert.ok(true, 'willDestroyElement was fired');
+            this._super.apply(this, arguments);
+          }
+        }),
+
+        template: '{{#if showFoo}}things{{/if}}'
+      });
+
+      this.render('{{foo-bar}}');
+
+      this.assertText('things');
     };
 
     _class.prototype['@test using didInitAttrs as an event is deprecated'] = function testUsingDidInitAttrsAsAnEventIsDeprecated(assert) {
@@ -31924,7 +31971,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertText = function assertText(text) {
-      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content');
+      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content should be: `' + text + '`');
     };
 
     TestCase.prototype.assertInnerHTML = function assertInnerHTML(html) {
@@ -31932,7 +31979,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertHTML = function assertHTML(html) {
-      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content');
+      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content should be: `' + html + '`');
     };
 
     TestCase.prototype.assertElement = function assertElement(node, _ref) {
