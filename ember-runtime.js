@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.3-alpha+a543a71d
+ * @version   2.10.0-alpha+e34ed31a
  */
 
 var enifed, requireModule, require, Ember;
@@ -4391,6 +4391,7 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
   exports.deprecateFunc = deprecateFunc;
   exports.runInDebug = runInDebug;
   exports.debugSeal = debugSeal;
+  exports.debugFreeze = debugFreeze;
   var debugFunctions = {
     assert: function () {},
     info: function () {},
@@ -4405,7 +4406,8 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
       return args[args.length - 1];
     },
     runInDebug: function () {},
-    debugSeal: function () {}
+    debugSeal: function () {},
+    debugFreeze: function () {}
   };
 
   exports.debugFunctions = debugFunctions;
@@ -4448,6 +4450,10 @@ enifed("ember-metal/debug", ["exports"], function (exports) {
 
   function debugSeal() {
     return debugFunctions.debugSeal.apply(undefined, arguments);
+  }
+
+  function debugFreeze() {
+    return debugFunctions.debugFreeze.apply(undefined, arguments);
   }
 });
 enifed('ember-metal/dependent_keys', ['exports', 'ember-metal/watching'], function (exports, _emberMetalWatching) {
@@ -5213,6 +5219,8 @@ enifed('ember-metal/index', ['exports', 'require', 'ember-metal/core', 'ember-me
   exports.runInDebug = _emberMetalDebug.runInDebug;
   exports.setDebugFunction = _emberMetalDebug.setDebugFunction;
   exports.getDebugFunction = _emberMetalDebug.getDebugFunction;
+  exports.debugSeal = _emberMetalDebug.debugSeal;
+  exports.debugFreeze = _emberMetalDebug.debugFreeze;
   exports.instrument = _emberMetalInstrumentation.instrument;
   exports.flaggedInstrument = _emberMetalInstrumentation.flaggedInstrument;
   exports._instrumentStart = _emberMetalInstrumentation._instrumentStart;
@@ -6412,14 +6420,23 @@ enifed('ember-metal/merge', ['exports'], function (exports) {
     return original;
   }
 });
-enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'ember-metal/meta_listeners'], function (exports, _emberUtils, _emberMetalFeatures, _emberMetalMeta_listeners) {
+enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'ember-metal/meta_listeners', 'ember-metal/debug'], function (exports, _emberUtils, _emberMetalFeatures, _emberMetalMeta_listeners, _emberMetalDebug) {
   'no use strict';
   // Remove "use strict"; from transpiled module until
   // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
 
+  exports.Meta = Meta;
   exports.meta = meta;
-  exports.peekMeta = peekMeta;
-  exports.deleteMeta = deleteMeta;
+
+  var counters = {
+    peekCalls: 0,
+    peekParentCalls: 0,
+    peekPrototypeWalks: 0,
+    setCalls: 0,
+    deleteCalls: 0,
+    metaCalls: 0,
+    metaInstantiated: 0
+  };
 
   /**
   @module ember-metal
@@ -6468,6 +6485,10 @@ enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'e
   var META_FIELD = '__ember_meta__';
 
   function Meta(obj, parentMeta) {
+    _emberMetalDebug.runInDebug(function () {
+      return counters.metaInstantiated++;
+    });
+
     this._cache = undefined;
     this._weak = undefined;
     this._watching = undefined;
@@ -6775,20 +6796,103 @@ enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'e
     };
   }
 
-  // choose the one appropriate for given platform
-  var setMeta = function (obj, meta) {
-    // if `null` already, just set it to the new value
-    // otherwise define property first
-    if (obj[META_FIELD] !== null) {
-      if (obj.__defineNonEnumerable) {
-        obj.__defineNonEnumerable(EMBER_META_PROPERTY);
-      } else {
-        Object.defineProperty(obj, META_FIELD, META_DESC);
-      }
+  var HAS_NATIVE_WEAKMAP = (function () {
+    // detect if `WeakMap` is even present
+    var hasWeakMap = typeof WeakMap === 'function';
+    if (!hasWeakMap) {
+      return false;
     }
 
-    obj[META_FIELD] = meta;
-  };
+    var instance = new WeakMap();
+    // use `Object`'s `.toString` directly to prevent us from detecting
+    // polyfills as native weakmaps
+    return Object.prototype.toString.call(instance) === '[object WeakMap]';
+  })();
+
+  var setMeta = undefined,
+      peekMeta = undefined,
+      deleteMeta = undefined;
+
+  // choose the one appropriate for given platform
+  if (HAS_NATIVE_WEAKMAP) {
+    (function () {
+      var getPrototypeOf = Object.getPrototypeOf;
+      var metaStore = new WeakMap();
+
+      exports.setMeta = setMeta = function WeakMap_setMeta(obj, meta) {
+        _emberMetalDebug.runInDebug(function () {
+          return counters.setCalls++;
+        });
+        metaStore.set(obj, meta);
+      };
+
+      exports.peekMeta = peekMeta = function WeakMap_peekMeta(obj) {
+        _emberMetalDebug.runInDebug(function () {
+          return counters.peekCalls++;
+        });
+
+        return metaStore.get(obj);
+      };
+
+      exports.peekMeta = peekMeta = function WeakMap_peekParentMeta(obj) {
+        var pointer = obj;
+        var meta = undefined;
+        while (pointer) {
+          meta = metaStore.get(pointer);
+          // jshint loopfunc:true
+          _emberMetalDebug.runInDebug(function () {
+            return counters.peekCalls++;
+          });
+          // stop if we find a `null` value, since
+          // that means the meta was deleted
+          // any other truthy value is a "real" meta
+          if (meta === null || meta) {
+            return meta;
+          }
+
+          pointer = getPrototypeOf(pointer);
+          _emberMetalDebug.runInDebug(function () {
+            return counters.peakPrototypeWalks++;
+          });
+        }
+      };
+
+      exports.deleteMeta = deleteMeta = function WeakMap_deleteMeta(obj) {
+        _emberMetalDebug.runInDebug(function () {
+          return counters.deleteCalls++;
+        });
+
+        // set value to `null` so that we can detect
+        // a deleted meta in peekMeta later
+        metaStore.set(obj, null);
+      };
+    })();
+  } else {
+    exports.setMeta = setMeta = function Fallback_setMeta(obj, meta) {
+      // if `null` already, just set it to the new value
+      // otherwise define property first
+      if (obj[META_FIELD] !== null) {
+        if (obj.__defineNonEnumerable) {
+          obj.__defineNonEnumerable(EMBER_META_PROPERTY);
+        } else {
+          Object.defineProperty(obj, META_FIELD, META_DESC);
+        }
+      }
+
+      obj[META_FIELD] = meta;
+    };
+
+    exports.peekMeta = peekMeta = function Fallback_peekMeta(obj) {
+      return obj[META_FIELD];
+    };
+
+    exports.deleteMeta = deleteMeta = function Fallback_deleteMeta(obj) {
+      if (typeof obj[META_FIELD] !== 'object') {
+        return;
+      }
+      obj[META_FIELD] = null;
+    };
+  }
 
   /**
     Retrieves the meta hash for an object. If `writable` is true ensures the
@@ -6810,6 +6914,10 @@ enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'e
   */
 
   function meta(obj) {
+    _emberMetalDebug.runInDebug(function () {
+      return counters.metaCalls++;
+    });
+
     var maybeMeta = peekMeta(obj);
     var parent = undefined;
 
@@ -6826,16 +6934,10 @@ enifed('ember-metal/meta', ['exports', 'ember-utils', 'ember-metal/features', 'e
     return newMeta;
   }
 
-  function peekMeta(obj) {
-    return obj[META_FIELD];
-  }
-
-  function deleteMeta(obj) {
-    if (typeof obj[META_FIELD] !== 'object') {
-      return;
-    }
-    obj[META_FIELD] = null;
-  }
+  exports.peekMeta = peekMeta;
+  exports.setMeta = setMeta;
+  exports.deleteMeta = deleteMeta;
+  exports.counters = counters;
 });
 enifed('ember-metal/meta_listeners', ['exports'], function (exports) {
   /*
@@ -19099,7 +19201,7 @@ enifed("ember/features", ["exports"], function (exports) {
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.9.0-beta.3-alpha+a543a71d";
+  exports.default = "2.10.0-alpha+e34ed31a";
 });
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
