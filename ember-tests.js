@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha+7d1a7085
+ * @version   2.9.0-beta.4-alpha+79d440e2
  */
 
 var enifed, requireModule, require, Ember;
@@ -7952,28 +7952,6 @@ babelHelpers.classCallCheck(this, _class);
       });
     };
 
-    _class.prototype['@test it allows a transition during route activate'] = function testItAllowsATransitionDuringRouteActivate(assert) {
-      var _this12 = this;
-
-      this.router.map(function () {
-        this.route('a');
-      });
-
-      this.registerRoute('index', _emberRouting.Route.extend({
-        activate: function () {
-          this.transitionTo('a');
-        }
-      }));
-
-      this.registerTemplate('a', 'Hello from A!');
-
-      return this.visit('/').then(function () {
-        _this12.assertComponentElement(_this12.firstChild, {
-          content: 'Hello from A!'
-        });
-      });
-    };
-
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.ApplicationTest));
 });
@@ -11670,25 +11648,6 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('so much layout wat hey');
     };
 
-    _class.prototype['@test layout supports computed property'] = function testLayoutSupportsComputedProperty() {
-      var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
-        elementId: 'blahzorz',
-        layout: _emberMetal.computed(function () {
-          return _emberGlimmerTestsUtilsHelpers.compile('so much layout wat {{lulz}}');
-        }),
-        init: function () {
-          this._super.apply(this, arguments);
-          this.lulz = 'heyo';
-        }
-      });
-
-      this.registerComponent('foo-bar', { ComponentClass: FooBarComponent });
-
-      this.render('{{foo-bar}}');
-
-      this.assertText('so much layout wat heyo');
-    };
-
     _class.prototype['@test passing undefined elementId results in a default elementId'] = function testPassingUndefinedElementIdResultsInADefaultElementId(assert) {
       var _this4 = this;
 
@@ -14439,31 +14398,6 @@ babelHelpers.classCallCheck(this, _class);
       this.teardown();
 
       this.assert.ok(true, 'no errors during teardown');
-    };
-
-    _class.prototype['@test setting a property in willDestroyElement does not assert (GH#14273)'] = function testSettingAPropertyInWillDestroyElementDoesNotAssertGH14273(assert) {
-      assert.expect(2);
-
-      this.registerComponent('foo-bar', {
-        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
-          init: function () {
-            this._super.apply(this, arguments);
-            this.showFoo = true;
-          },
-
-          willDestroyElement: function () {
-            this.set('showFoo', false);
-            assert.ok(true, 'willDestroyElement was fired');
-            this._super.apply(this, arguments);
-          }
-        }),
-
-        template: '{{#if showFoo}}things{{/if}}'
-      });
-
-      this.render('{{foo-bar}}');
-
-      this.assertText('things');
     };
 
     _class.prototype['@test using didInitAttrs as an event is deprecated'] = function testUsingDidInitAttrsAsAnEventIsDeprecated(assert) {
@@ -18302,7 +18236,7 @@ enifed('ember-glimmer/tests/integration/components/utils-test', ['exports', 'emb
       var firstNode = _getViewBounds2.firstNode;
       var lastNode = _getViewBounds2.lastNode;
 
-      assert.equal(parentElement, this.element, 'a tagless component should have the right parentElement');
+      assert.equal(parentElement, this.element, 'a regular component should have the right parentElement');
       assert.equal(firstNode, this.$('#start-node')[0], 'a tagless component should have a range enclosing all of its nodes');
       assert.equal(lastNode, this.$('#before-end-node')[0].nextSibling, 'a tagless component should have a range enclosing all of its nodes');
     };
@@ -30403,11 +30337,7 @@ enifed('ember-glimmer/tests/integration/syntax/each-test', ['exports', 'ember-me
   'use strict';
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each content as |value|}}\n        {{value}}-\n        {{#each options as |option|}}\n          {{option.value}}:{{option.label}}\n        {{/each}}\n      {{/each}}\n      '], ['\n      {{#each content as |value|}}\n        {{value}}-\n        {{#each options as |option|}}\n          {{option.value}}:{{option.label}}\n        {{/each}}\n      {{/each}}\n      ']),
-      _templateObject2 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}'], ['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}']),
-      _templateObject3 = babelHelpers.taggedTemplateLiteralLoose(['\n        <h1>{{page.title}}</h1>\n\n        <ul id="posts">\n          {{#each model as |post|}}\n            <li>{{post.title}}</li>\n          {{/each}}\n        </ul>\n      '], ['\n        <h1>{{page.title}}</h1>\n\n        <ul id="posts">\n          {{#each model as |post|}}\n            <li>{{post.title}}</li>\n          {{/each}}\n        </ul>\n      ']),
-      _templateObject4 = babelHelpers.taggedTemplateLiteralLoose(['\n        <h1>Blog Posts</h1>\n\n        <ul id="posts">\n          <li>Rails is omakase</li>\n          <li>Ember is omakase</li>\n        </ul>\n      '], ['\n        <h1>Blog Posts</h1>\n\n        <ul id="posts">\n          <li>Rails is omakase</li>\n          <li>Ember is omakase</li>\n        </ul>\n      ']),
-      _templateObject5 = babelHelpers.taggedTemplateLiteralLoose(['\n          <h1>Essays</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        '], ['\n          <h1>Essays</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        ']),
-      _templateObject6 = babelHelpers.taggedTemplateLiteralLoose(['\n          <h1>Think Pieces™</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        '], ['\n          <h1>Think Pieces™</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        ']);
+      _templateObject2 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}'], ['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}']);
 
   var ArrayLike = (function () {
     function ArrayLike(content) {
@@ -31542,84 +31472,6 @@ babelHelpers.classCallCheck(this, _class10);
 
     return _class10;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
-
-  /* globals MutationObserver: false */
-  if (typeof MutationObserver === 'function') {
-    _emberGlimmerTestsUtilsTestCase.moduleFor('Syntax test: {{#each as}} DOM mutation test', (function (_RenderingTest4) {
-babelHelpers.inherits(_class11, _RenderingTest4);
-
-      function _class11() {
-babelHelpers.classCallCheck(this, _class11);
-
-        _RenderingTest4.call(this);
-        this.observer = null;
-      }
-
-      _class11.prototype.observe = function observe(element) {
-        var observer = this.observer = new MutationObserver(function () {});
-        observer.observe(element, { childList: true });
-      };
-
-      _class11.prototype.teardown = function teardown() {
-        if (this.observer) {
-          this.observer.disconnect();
-        }
-
-        _RenderingTest4.prototype.teardown.call(this);
-      };
-
-      _class11.prototype.assertNoMutation = function assertNoMutation() {
-        this.assert.deepEqual(this.observer.takeRecords(), [], 'Expected no mutations');
-      };
-
-      _class11.prototype.expectMutations = function expectMutations() {
-        this.assert.ok(this.observer.takeRecords().length > 0, 'Expected some mutations');
-      };
-
-      _class11.prototype['@test {{#each}} should not mutate a subtree when the array has not changed [GH #14332]'] = function testEachShouldNotMutateASubtreeWhenTheArrayHasNotChangedGH14332(assert) {
-        var _this25 = this;
-
-        var page = { title: 'Blog Posts' };
-
-        var model = [{ title: 'Rails is omakase' }, { title: 'Ember is omakase' }];
-
-        this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject3), { page: page, model: model });
-
-        this.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject4));
-
-        this.observe(this.$('#posts')[0]);
-
-        // MutationObserver is async
-        return _emberRuntime.RSVP.Promise.resolve(function () {
-          _this25.assertStableRerender();
-        }).then(function () {
-          _this25.assertNoMutation();
-
-          _this25.runTask(function () {
-            return _emberMetal.set(_this25.context, 'page', { title: 'Essays' });
-          });
-
-          _this25.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5));
-        }).then(function () {
-          // 'page' and 'model' is keyed off the same object, so we do expect Glimmer
-          // to re-iterate the list
-          _this25.expectMutations();
-
-          _this25.runTask(function () {
-            return _emberMetal.set(_this25.context.page, 'title', 'Think Pieces™');
-          });
-
-          _this25.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject6));
-        }).then(function () {
-          // The last set is localized to the `page` object, so we do not expect Glimmer
-          // to re-iterate the list
-          _this25.assertNoMutation();
-        });
-      };
-
-      return _class11;
-    })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
-  }
 });
 enifed('ember-glimmer/tests/integration/syntax/if-unless-test', ['exports', 'ember-glimmer/tests/utils/helpers', 'ember-runtime', 'ember-metal', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-glimmer/tests/utils/shared-conditional-tests'], function (exports, _emberGlimmerTestsUtilsHelpers, _emberRuntime, _emberMetal, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberGlimmerTestsUtilsSharedConditionalTests) {
   'use strict';
@@ -32791,7 +32643,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertText = function assertText(text) {
-      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content should be: `' + text + '`');
+      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content');
     };
 
     TestCase.prototype.assertInnerHTML = function assertInnerHTML(html) {
@@ -32799,7 +32651,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertHTML = function assertHTML(html) {
-      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content should be: `' + html + '`');
+      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content');
     };
 
     TestCase.prototype.assertElement = function assertElement(node, _ref) {
@@ -56195,6 +56047,7 @@ enifed('ember-runtime/tests/system/object/destroy_test', ['exports', 'ember-meta
     });
 
     meta = _emberMetal.peekMeta(obj);
+    ok(!meta, 'meta is destroyed after run loop finishes');
     ok(get(obj, 'isDestroyed'), 'object is destroyed after run loop finishes');
   });
 
