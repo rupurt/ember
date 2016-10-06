@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha+d3ceb224
+ * @version   2.9.0-beta.4-alpha+d43685df
  */
 
 var enifed, requireModule, require, Ember;
@@ -525,10 +525,6 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
     Object.seal(obj);
   });
 
-  _emberMetal.setDebugFunction('debugFreeze', function debugFreeze(obj) {
-    Object.freeze(obj);
-  });
-
   _emberMetal.setDebugFunction('deprecate', _emberDebugDeprecate.default);
 
   _emberMetal.setDebugFunction('warn', _emberDebugWarn.default);
@@ -614,7 +610,7 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
         // defer to whatever handler was registered before this one
         next(message, options);
       }
-    });
+    }
     ```
   
     The handler function takes the following arguments:
@@ -2151,6 +2147,12 @@ enifed('ember-testing/test/promise', ['exports', 'ember-runtime', 'ember-testing
       @param {String} label An optional string for identifying the promise.
     */
 
+    TestPromise.resolve = function resolve(val) {
+      return new TestPromise(function (resolve) {
+        return resolve(val);
+      });
+    };
+
     TestPromise.prototype.then = function then(onFulfillment) {
       var _RSVP$Promise$prototype$then;
 
@@ -2185,8 +2187,10 @@ enifed('ember-testing/test/promise', ['exports', 'ember-runtime', 'ember-testing
     @since 1.2.0
   */
 
-  function resolve(result, label) {
-    return TestPromise.resolve(result, label);
+  function resolve(result) {
+    return new TestPromise(function (resolve) {
+      return resolve(result);
+    });
   }
 
   function getLastPromise() {
