@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.9.0-beta.4-alpha+0ae7a758
+ * @version   2.10.0-alpha+70c30db0
  */
 
 var enifed, requireModule, require, Ember;
@@ -2001,7 +2001,6 @@ enifed('ember-application/tests/system/application_test', ['exports', 'ember', '
     _emberApplicationTestsTestHelpersRegistryCheck.verifyRegistration(application, _container.privatize(_templateObject));
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(application, 'router', '_bucketCache', _container.privatize(_templateObject));
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(application, 'route', '_bucketCache', _container.privatize(_templateObject));
-    _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(application, 'controller', '_bucketCache', _container.privatize(_templateObject));
 
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(application, 'route', 'router', 'router:main');
 
@@ -3732,7 +3731,6 @@ enifed('ember-application/tests/system/engine_test', ['exports', 'ember-environm
 
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(engine, 'router', '_bucketCache', _container.privatize(_templateObject));
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(engine, 'route', '_bucketCache', _container.privatize(_templateObject));
-    _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(engine, 'controller', '_bucketCache', _container.privatize(_templateObject));
 
     _emberApplicationTestsTestHelpersRegistryCheck.verifyInjection(engine, 'route', 'router', 'router:main');
 
@@ -7952,6 +7950,28 @@ babelHelpers.classCallCheck(this, _class);
       });
     };
 
+    _class.prototype['@test it allows a transition during route activate'] = function testItAllowsATransitionDuringRouteActivate(assert) {
+      var _this12 = this;
+
+      this.router.map(function () {
+        this.route('a');
+      });
+
+      this.registerRoute('index', _emberRouting.Route.extend({
+        activate: function () {
+          this.transitionTo('a');
+        }
+      }));
+
+      this.registerTemplate('a', 'Hello from A!');
+
+      return this.visit('/').then(function () {
+        _this12.assertComponentElement(_this12.firstChild, {
+          content: 'Hello from A!'
+        });
+      });
+    };
+
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.ApplicationTest));
 });
@@ -11456,44 +11476,46 @@ enifed('ember-glimmer/tests/integration/components/curly-components-test', ['exp
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{foo-bar class="bar baz"}}\n      {{foo-bar classNames="bar baz"}}\n      {{foo-bar}}\n    '], ['\n      {{foo-bar class="bar baz"}}\n      {{foo-bar classNames="bar baz"}}\n      {{foo-bar}}\n    ']),
       _templateObject2 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#if cond1}}\n        {{#foo-bar id=1}}\n          {{#if cond2}}\n            {{#foo-bar id=2}}{{/foo-bar}}\n            {{#if cond3}}\n              {{#foo-bar id=3}}\n                {{#if cond4}}\n                  {{#foo-bar id=4}}\n                    {{#if cond5}}\n                      {{#foo-bar id=5}}{{/foo-bar}}\n                      {{#foo-bar id=6}}{{/foo-bar}}\n                      {{#foo-bar id=7}}{{/foo-bar}}\n                    {{/if}}\n                    {{#foo-bar id=8}}{{/foo-bar}}\n                  {{/foo-bar}}\n                {{/if}}\n              {{/foo-bar}}\n            {{/if}}\n          {{/if}}\n        {{/foo-bar}}\n      {{/if}}'], ['\n      {{#if cond1}}\n        {{#foo-bar id=1}}\n          {{#if cond2}}\n            {{#foo-bar id=2}}{{/foo-bar}}\n            {{#if cond3}}\n              {{#foo-bar id=3}}\n                {{#if cond4}}\n                  {{#foo-bar id=4}}\n                    {{#if cond5}}\n                      {{#foo-bar id=5}}{{/foo-bar}}\n                      {{#foo-bar id=6}}{{/foo-bar}}\n                      {{#foo-bar id=7}}{{/foo-bar}}\n                    {{/if}}\n                    {{#foo-bar id=8}}{{/foo-bar}}\n                  {{/foo-bar}}\n                {{/if}}\n              {{/foo-bar}}\n            {{/if}}\n          {{/if}}\n        {{/foo-bar}}\n      {{/if}}']),
       _templateObject3 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if isStream}}\n          true\n        {{else}}\n          false\n        {{/if}}\n      '], ['\n        {{#if isStream}}\n          true\n        {{else}}\n          false\n        {{/if}}\n      ']),
-      _templateObject4 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block someProp=prop}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block someProp=prop}}\n        In template\n      {{/with-block}}']),
-      _templateObject5 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each names as |name|}}\n          {{name}}\n        {{/each}}'], ['\n        {{#each names as |name|}}\n          {{name}}\n        {{/each}}']),
-      _templateObject6 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{sample-component "Foo" 4 "Bar" elementId="args-3"}}\n      {{sample-component "Foo" 4 "Bar" 5 "Baz" elementId="args-5"}}'], ['\n      {{sample-component "Foo" 4 "Bar" elementId="args-3"}}\n      {{sample-component "Foo" 4 "Bar" 5 "Baz" elementId="args-5"}}']),
-      _templateObject7 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{sample-component "one" "two" elementId="two-positional"}}\n      {{sample-component "one" second="two" elementId="one-positional"}}\n      {{sample-component first="one" second="two" elementId="no-positional"}}'], ['\n      {{sample-component "one" "two" elementId="two-positional"}}\n      {{sample-component "one" second="two" elementId="one-positional"}}\n      {{sample-component first="one" second="two" elementId="no-positional"}}']),
-      _templateObject8 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each n as |name|}}\n          {{name}}\n        {{/each}}'], ['\n        {{#each n as |name|}}\n          {{name}}\n        {{/each}}']),
-      _templateObject9 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-template name="with-block"}}\n        [In block - {{name}}]\n      {{/with-template}}\n      {{with-template name="without-block"}}'], ['\n      {{#with-template name="with-block"}}\n        [In block - {{name}}]\n      {{/with-template}}\n      {{with-template name="without-block"}}']),
-      _templateObject10 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlock}}\n          {{yield}}\n        {{else}}\n          No Block!\n        {{/if}}'], ['\n        {{#if hasBlock}}\n          {{yield}}\n        {{else}}\n          No Block!\n        {{/if}}']),
-      _templateObject11 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block}}\n        In template\n      {{/with-block}}']),
-      _templateObject12 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          {{yield this}} - In Component\n        {{else}}\n          {{yield}} No Block!\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          {{yield this}} - In Component\n        {{else}}\n          {{yield}} No Block!\n        {{/if}}']),
-      _templateObject13 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block as |something|}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block as |something|}}\n        In template\n      {{/with-block}}']),
-      _templateObject14 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          {{yield this}}\n        {{else}}\n          {{yield}} No Block Param!\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          {{yield this}}\n        {{else}}\n          {{yield}} No Block Param!\n        {{/if}}']),
-      _templateObject15 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block}}\n        In block\n      {{/with-block}}'], ['\n      {{#with-block}}\n        In block\n      {{/with-block}}']),
-      _templateObject16 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if predicate}}\n          Yes:{{yield someValue}}\n        {{else}}\n          No:{{yield to="inverse"}}\n        {{/if}}'], ['\n        {{#if predicate}}\n          Yes:{{yield someValue}}\n        {{else}}\n          No:{{yield to="inverse"}}\n        {{/if}}']),
-      _templateObject17 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#my-if predicate=activated someValue=42 as |result|}}\n        Hello{{result}}\n      {{else}}\n        Goodbye\n      {{/my-if}}'], ['\n      {{#my-if predicate=activated someValue=42 as |result|}}\n        Hello{{result}}\n      {{else}}\n        Goodbye\n      {{/my-if}}']),
-      _templateObject18 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlock "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlock "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject19 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse}}{{else}}{{/check-inverse}}'], ['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse}}{{else}}{{/check-inverse}}']),
-      _templateObject20 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlock)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlock)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject21 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-block}}\n      {{#check-block}}{{/check-block}}'], ['\n      {{check-block}}\n      {{#check-block}}{{/check-block}}']),
-      _templateObject22 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlockParams "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlockParams "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject23 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse as |something|}}{{/check-inverse}}'], ['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse as |something|}}{{/check-inverse}}']),
-      _templateObject24 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlockParams)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlockParams)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject25 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-block}}{{/check-block}}\n      {{#check-block as |something|}}{{/check-block}}'], ['\n      {{#check-block}}{{/check-block}}\n      {{#check-block as |something|}}{{/check-block}}']),
-      _templateObject26 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlock}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if hasBlock}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject27 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-params}}{{/check-params}}\n      {{#check-params as |foo|}}{{/check-params}}'], ['\n      {{#check-params}}{{/check-params}}\n      {{#check-params as |foo|}}{{/check-params}}']),
-      _templateObject28 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
-      _templateObject29 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-attr}}\n      {{#check-attr}}{{/check-attr}}'], ['\n      {{check-attr}}\n      {{#check-attr}}{{/check-attr}}']),
-      _templateObject30 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr}}{{else}}{{/check-attr}}'], ['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr}}{{else}}{{/check-attr}}']),
-      _templateObject31 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr as |something|}}{{/check-attr}}'], ['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr as |something|}}{{/check-attr}}']),
-      _templateObject32 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-helper}}\n      {{#check-helper}}{{/check-helper}}'], ['\n      {{check-helper}}\n      {{#check-helper}}{{/check-helper}}']),
-      _templateObject33 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper}}{{else}}{{/check-helper}}'], ['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper}}{{else}}{{/check-helper}}']),
-      _templateObject34 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper as |something|}}{{/check-helper}}'], ['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper as |something|}}{{/check-helper}}']),
-      _templateObject35 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#x-outer}}\n        {{#if showInner}}\n          {{x-inner}}\n        {{/if}}\n      {{/x-outer}}'], ['\n      {{#x-outer}}\n        {{#if showInner}}\n          {{x-inner}}\n        {{/if}}\n      {{/x-outer}}']),
-      _templateObject36 = babelHelpers.taggedTemplateLiteralLoose(['\n        In layout. {{#each items as |item|}}\n          [{{child-non-block item=item}}]\n        {{/each}}'], ['\n        In layout. {{#each items as |item|}}\n          [{{child-non-block item=item}}]\n        {{/each}}']),
-      _templateObject37 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#some-clicky-thing classNames="baz"}}\n        Click Me\n      {{/some-clicky-thing}}'], ['\n      {{#some-clicky-thing classNames="baz"}}\n        Click Me\n      {{/some-clicky-thing}}']),
-      _templateObject38 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each blahzz as |p|}}\n          {{p}}\n        {{/each}}\n        - {{yield}}'], ['\n        {{#each blahzz as |p|}}\n          {{p}}\n        {{/each}}\n        - {{yield}}']),
-      _templateObject39 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#some-clicky-thing blahzz="baz"}}\n        Click Me\n      {{/some-clicky-thing}}'], ['\n      {{#some-clicky-thing blahzz="baz"}}\n        Click Me\n      {{/some-clicky-thing}}']),
-      _templateObject40 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#x-select value=value as |select|}}\n        {{#x-option value="1" select=select}}1{{/x-option}}\n        {{#x-option value="2" select=select}}2{{/x-option}}\n      {{/x-select}}\n    '], ['\n      {{#x-select value=value as |select|}}\n        {{#x-option value="1" select=select}}1{{/x-option}}\n        {{#x-option value="2" select=select}}2{{/x-option}}\n      {{/x-select}}\n    ']),
-      _templateObject41 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#list-items items=items as |thing|}}\n        |{{thing}}|\n\n        {{#if editMode}}\n          Remove {{thing}}\n        {{/if}}\n      {{/list-items}}\n    '], ['\n      {{#list-items items=items as |thing|}}\n        |{{thing}}|\n\n        {{#if editMode}}\n          Remove {{thing}}\n        {{/if}}\n      {{/list-items}}\n    ']);
+      _templateObject4 = babelHelpers.taggedTemplateLiteralLoose(['\n        Args: {{this.attrs.value}} | {{attrs.value}} | {{value}}\n        {{#each this.attrs.items as |item|}}\n          {{item}}\n        {{/each}}\n        {{#each attrs.items as |item|}}\n          {{item}}\n        {{/each}}\n        {{#each items as |item|}}\n          {{item}}\n        {{/each}}\n      '], ['\n        Args: {{this.attrs.value}} | {{attrs.value}} | {{value}}\n        {{#each this.attrs.items as |item|}}\n          {{item}}\n        {{/each}}\n        {{#each attrs.items as |item|}}\n          {{item}}\n        {{/each}}\n        {{#each items as |item|}}\n          {{item}}\n        {{/each}}\n      ']),
+      _templateObject5 = babelHelpers.taggedTemplateLiteralLoose(['Args: lul | lul | lul111'], ['Args: lul | lul | lul111']),
+      _templateObject6 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block someProp=prop}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block someProp=prop}}\n        In template\n      {{/with-block}}']),
+      _templateObject7 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each names as |name|}}\n          {{name}}\n        {{/each}}'], ['\n        {{#each names as |name|}}\n          {{name}}\n        {{/each}}']),
+      _templateObject8 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{sample-component "Foo" 4 "Bar" elementId="args-3"}}\n      {{sample-component "Foo" 4 "Bar" 5 "Baz" elementId="args-5"}}'], ['\n      {{sample-component "Foo" 4 "Bar" elementId="args-3"}}\n      {{sample-component "Foo" 4 "Bar" 5 "Baz" elementId="args-5"}}']),
+      _templateObject9 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{sample-component "one" "two" elementId="two-positional"}}\n      {{sample-component "one" second="two" elementId="one-positional"}}\n      {{sample-component first="one" second="two" elementId="no-positional"}}'], ['\n      {{sample-component "one" "two" elementId="two-positional"}}\n      {{sample-component "one" second="two" elementId="one-positional"}}\n      {{sample-component first="one" second="two" elementId="no-positional"}}']),
+      _templateObject10 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each n as |name|}}\n          {{name}}\n        {{/each}}'], ['\n        {{#each n as |name|}}\n          {{name}}\n        {{/each}}']),
+      _templateObject11 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-template name="with-block"}}\n        [In block - {{name}}]\n      {{/with-template}}\n      {{with-template name="without-block"}}'], ['\n      {{#with-template name="with-block"}}\n        [In block - {{name}}]\n      {{/with-template}}\n      {{with-template name="without-block"}}']),
+      _templateObject12 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlock}}\n          {{yield}}\n        {{else}}\n          No Block!\n        {{/if}}'], ['\n        {{#if hasBlock}}\n          {{yield}}\n        {{else}}\n          No Block!\n        {{/if}}']),
+      _templateObject13 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block}}\n        In template\n      {{/with-block}}']),
+      _templateObject14 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          {{yield this}} - In Component\n        {{else}}\n          {{yield}} No Block!\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          {{yield this}} - In Component\n        {{else}}\n          {{yield}} No Block!\n        {{/if}}']),
+      _templateObject15 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block as |something|}}\n        In template\n      {{/with-block}}'], ['\n      {{#with-block as |something|}}\n        In template\n      {{/with-block}}']),
+      _templateObject16 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          {{yield this}}\n        {{else}}\n          {{yield}} No Block Param!\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          {{yield this}}\n        {{else}}\n          {{yield}} No Block Param!\n        {{/if}}']),
+      _templateObject17 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with-block}}\n        In block\n      {{/with-block}}'], ['\n      {{#with-block}}\n        In block\n      {{/with-block}}']),
+      _templateObject18 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if predicate}}\n          Yes:{{yield someValue}}\n        {{else}}\n          No:{{yield to="inverse"}}\n        {{/if}}'], ['\n        {{#if predicate}}\n          Yes:{{yield someValue}}\n        {{else}}\n          No:{{yield to="inverse"}}\n        {{/if}}']),
+      _templateObject19 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#my-if predicate=activated someValue=42 as |result|}}\n        Hello{{result}}\n      {{else}}\n        Goodbye\n      {{/my-if}}'], ['\n      {{#my-if predicate=activated someValue=42 as |result|}}\n        Hello{{result}}\n      {{else}}\n        Goodbye\n      {{/my-if}}']),
+      _templateObject20 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlock "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlock "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject21 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse}}{{else}}{{/check-inverse}}'], ['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse}}{{else}}{{/check-inverse}}']),
+      _templateObject22 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlock)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlock)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject23 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-block}}\n      {{#check-block}}{{/check-block}}'], ['\n      {{check-block}}\n      {{#check-block}}{{/check-block}}']),
+      _templateObject24 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlockParams "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlockParams "inverse")}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject25 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse as |something|}}{{/check-inverse}}'], ['\n      {{#check-inverse}}{{/check-inverse}}\n      {{#check-inverse as |something|}}{{/check-inverse}}']),
+      _templateObject26 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if (hasBlockParams)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if (hasBlockParams)}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject27 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-block}}{{/check-block}}\n      {{#check-block as |something|}}{{/check-block}}'], ['\n      {{#check-block}}{{/check-block}}\n      {{#check-block as |something|}}{{/check-block}}']),
+      _templateObject28 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlock}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if hasBlock}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject29 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-params}}{{/check-params}}\n      {{#check-params as |foo|}}{{/check-params}}'], ['\n      {{#check-params}}{{/check-params}}\n      {{#check-params as |foo|}}{{/check-params}}']),
+      _templateObject30 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#if hasBlockParams}}\n          Yes\n        {{else}}\n          No\n        {{/if}}'], ['\n        {{#if hasBlockParams}}\n          Yes\n        {{else}}\n          No\n        {{/if}}']),
+      _templateObject31 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-attr}}\n      {{#check-attr}}{{/check-attr}}'], ['\n      {{check-attr}}\n      {{#check-attr}}{{/check-attr}}']),
+      _templateObject32 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr}}{{else}}{{/check-attr}}'], ['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr}}{{else}}{{/check-attr}}']),
+      _templateObject33 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr as |something|}}{{/check-attr}}'], ['\n      {{#check-attr}}{{/check-attr}}\n      {{#check-attr as |something|}}{{/check-attr}}']),
+      _templateObject34 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{check-helper}}\n      {{#check-helper}}{{/check-helper}}'], ['\n      {{check-helper}}\n      {{#check-helper}}{{/check-helper}}']),
+      _templateObject35 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper}}{{else}}{{/check-helper}}'], ['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper}}{{else}}{{/check-helper}}']),
+      _templateObject36 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper as |something|}}{{/check-helper}}'], ['\n      {{#check-helper}}{{/check-helper}}\n      {{#check-helper as |something|}}{{/check-helper}}']),
+      _templateObject37 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#x-outer}}\n        {{#if showInner}}\n          {{x-inner}}\n        {{/if}}\n      {{/x-outer}}'], ['\n      {{#x-outer}}\n        {{#if showInner}}\n          {{x-inner}}\n        {{/if}}\n      {{/x-outer}}']),
+      _templateObject38 = babelHelpers.taggedTemplateLiteralLoose(['\n        In layout. {{#each items as |item|}}\n          [{{child-non-block item=item}}]\n        {{/each}}'], ['\n        In layout. {{#each items as |item|}}\n          [{{child-non-block item=item}}]\n        {{/each}}']),
+      _templateObject39 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#some-clicky-thing classNames="baz"}}\n        Click Me\n      {{/some-clicky-thing}}'], ['\n      {{#some-clicky-thing classNames="baz"}}\n        Click Me\n      {{/some-clicky-thing}}']),
+      _templateObject40 = babelHelpers.taggedTemplateLiteralLoose(['\n        {{#each blahzz as |p|}}\n          {{p}}\n        {{/each}}\n        - {{yield}}'], ['\n        {{#each blahzz as |p|}}\n          {{p}}\n        {{/each}}\n        - {{yield}}']),
+      _templateObject41 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#some-clicky-thing blahzz="baz"}}\n        Click Me\n      {{/some-clicky-thing}}'], ['\n      {{#some-clicky-thing blahzz="baz"}}\n        Click Me\n      {{/some-clicky-thing}}']),
+      _templateObject42 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#x-select value=value as |select|}}\n        {{#x-option value="1" select=select}}1{{/x-option}}\n        {{#x-option value="2" select=select}}2{{/x-option}}\n      {{/x-select}}\n    '], ['\n      {{#x-select value=value as |select|}}\n        {{#x-option value="1" select=select}}1{{/x-option}}\n        {{#x-option value="2" select=select}}2{{/x-option}}\n      {{/x-select}}\n    ']),
+      _templateObject43 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#list-items items=items as |thing|}}\n        |{{thing}}|\n\n        {{#if editMode}}\n          Remove {{thing}}\n        {{/if}}\n      {{/list-items}}\n    '], ['\n      {{#list-items items=items as |thing|}}\n        |{{thing}}|\n\n        {{#if editMode}}\n          Remove {{thing}}\n        {{/if}}\n      {{/list-items}}\n    ']);
 
   _emberGlimmerTestsUtilsTestCase.moduleFor('Components test: curly components', (function (_RenderingTest) {
 babelHelpers.inherits(_class, _RenderingTest);
@@ -11646,6 +11668,25 @@ babelHelpers.classCallCheck(this, _class);
       this.render('{{foo-bar}}');
 
       this.assertText('so much layout wat hey');
+    };
+
+    _class.prototype['@test layout supports computed property'] = function testLayoutSupportsComputedProperty() {
+      var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
+        elementId: 'blahzorz',
+        layout: _emberMetal.computed(function () {
+          return _emberGlimmerTestsUtilsHelpers.compile('so much layout wat {{lulz}}');
+        }),
+        init: function () {
+          this._super.apply(this, arguments);
+          this.lulz = 'heyo';
+        }
+      });
+
+      this.registerComponent('foo-bar', { ComponentClass: FooBarComponent });
+
+      this.render('{{foo-bar}}');
+
+      this.assertText('so much layout wat heyo');
     };
 
     _class.prototype['@test passing undefined elementId results in a default elementId'] = function testPassingUndefinedElementIdResultsInADefaultElementId(assert) {
@@ -12803,8 +12844,38 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('In layout - someProp: wycats');
     };
 
-    _class.prototype['@test non-block with properties on self'] = function testNonBlockWithPropertiesOnSelf() {
+    _class.prototype['@test this.attrs.foo === attrs.foo === foo'] = function testThisAttrsFooAttrsFooFoo() {
       var _this37 = this;
+
+      this.registerComponent('foo-bar', {
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject4)
+      });
+
+      this.render('{{foo-bar value=model.value items=model.items}}', {
+        model: {
+          value: 'wat',
+          items: [1, 2, 3]
+        }
+      });
+
+      this.assertStableRerender();
+
+      this.runTask(function () {
+        _this37.context.set('model.value', 'lul');
+        _this37.context.set('model.items', [1]);
+      });
+
+      this.assertText(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5));
+
+      this.runTask(function () {
+        return _this37.context.set('model', { value: 'wat', items: [1, 2, 3] });
+      });
+
+      this.assertText('Args: wat | wat | wat123123123');
+    };
+
+    _class.prototype['@test non-block with properties on self'] = function testNonBlockWithPropertiesOnSelf() {
+      var _this38 = this;
 
       this.registerComponent('non-block', {
         template: 'In layout - someProp: {{someProp}}'
@@ -12817,64 +12888,32 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('In layout - someProp: something here');
 
       this.runTask(function () {
-        return _this37.rerender();
+        return _this38.rerender();
       });
 
       this.assertText('In layout - someProp: something here');
 
       this.runTask(function () {
-        return _this37.context.set('prop', 'something else');
+        return _this38.context.set('prop', 'something else');
       });
 
       this.assertText('In layout - someProp: something else');
 
       this.runTask(function () {
-        return _this37.context.set('prop', 'something here');
+        return _this38.context.set('prop', 'something here');
       });
 
       this.assertText('In layout - someProp: something here');
     };
 
     _class.prototype['@test block with properties on self'] = function testBlockWithPropertiesOnSelf() {
-      var _this38 = this;
+      var _this39 = this;
 
       this.registerComponent('with-block', {
         template: 'In layout - someProp: {{someProp}} - {{yield}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject4), {
-        prop: 'something here'
-      });
-
-      this.assertText('In layout - someProp: something here - In template');
-
-      this.runTask(function () {
-        return _this38.rerender();
-      });
-
-      this.assertText('In layout - someProp: something here - In template');
-
-      this.runTask(function () {
-        return _this38.context.set('prop', 'something else');
-      });
-
-      this.assertText('In layout - someProp: something else - In template');
-
-      this.runTask(function () {
-        return _this38.context.set('prop', 'something here');
-      });
-
-      this.assertText('In layout - someProp: something here - In template');
-    };
-
-    _class.prototype['@test block with properties on attrs'] = function testBlockWithPropertiesOnAttrs() {
-      var _this39 = this;
-
-      this.registerComponent('with-block', {
-        template: 'In layout - someProp: {{attrs.someProp}} - {{yield}}'
-      });
-
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject4), {
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject6), {
         prop: 'something here'
       });
 
@@ -12899,23 +12938,55 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('In layout - someProp: something here - In template');
     };
 
-    _class.prototype['@test static arbitrary number of positional parameters'] = function testStaticArbitraryNumberOfPositionalParameters(assert) {
+    _class.prototype['@test block with properties on attrs'] = function testBlockWithPropertiesOnAttrs() {
       var _this40 = this;
+
+      this.registerComponent('with-block', {
+        template: 'In layout - someProp: {{attrs.someProp}} - {{yield}}'
+      });
+
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject6), {
+        prop: 'something here'
+      });
+
+      this.assertText('In layout - someProp: something here - In template');
+
+      this.runTask(function () {
+        return _this40.rerender();
+      });
+
+      this.assertText('In layout - someProp: something here - In template');
+
+      this.runTask(function () {
+        return _this40.context.set('prop', 'something else');
+      });
+
+      this.assertText('In layout - someProp: something else - In template');
+
+      this.runTask(function () {
+        return _this40.context.set('prop', 'something here');
+      });
+
+      this.assertText('In layout - someProp: something here - In template');
+    };
+
+    _class.prototype['@test static arbitrary number of positional parameters'] = function testStaticArbitraryNumberOfPositionalParameters(assert) {
+      var _this41 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
           positionalParams: 'names'
         }),
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject7)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject6));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject8));
 
       assert.equal(this.$('#args-3').text(), 'Foo4Bar');
       assert.equal(this.$('#args-5').text(), 'Foo4Bar5Baz');
 
       this.runTask(function () {
-        return _this40.rerender();
+        return _this41.rerender();
       });
 
       assert.equal(this.$('#args-3').text(), 'Foo4Bar');
@@ -12923,30 +12994,30 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test arbitrary positional parameter conflict with hash parameter is reported'] = function testArbitraryPositionalParameterConflictWithHashParameterIsReported() {
-      var _this41 = this;
-
-      this.registerComponent('sample-component', {
-        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
-          positionalParams: 'names'
-        }),
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5)
-      });
-
-      expectAssertion(function () {
-        _this41.render('{{sample-component "Foo" 4 "Bar" names=numbers id="args-3"}}', {
-          numbers: [1, 2, 3]
-        });
-      }, 'You cannot specify positional parameters and the hash argument `names`.');
-    };
-
-    _class.prototype['@test can use hash parameter instead of arbitrary positional param [GH #12444]'] = function testCanUseHashParameterInsteadOfArbitraryPositionalParamGH12444(assert) {
       var _this42 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
           positionalParams: 'names'
         }),
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject7)
+      });
+
+      expectAssertion(function () {
+        _this42.render('{{sample-component "Foo" 4 "Bar" names=numbers id="args-3"}}', {
+          numbers: [1, 2, 3]
+        });
+      }, 'You cannot specify positional parameters and the hash argument `names`.');
+    };
+
+    _class.prototype['@test can use hash parameter instead of arbitrary positional param [GH #12444]'] = function testCanUseHashParameterInsteadOfArbitraryPositionalParamGH12444(assert) {
+      var _this43 = this;
+
+      this.registerComponent('sample-component', {
+        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
+          positionalParams: 'names'
+        }),
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject7)
       });
 
       this.render('{{sample-component names=things}}', {
@@ -12956,38 +13027,38 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Foo4Bar');
 
       this.runTask(function () {
-        return _this42.rerender();
+        return _this43.rerender();
       });
 
       this.assertText('Foo4Bar');
 
       this.runTask(function () {
-        return _this42.context.get('things').pushObject(5);
+        return _this43.context.get('things').pushObject(5);
       });
 
       this.assertText('Foo4Bar5');
 
       this.runTask(function () {
-        return _this42.context.get('things').shiftObject();
+        return _this43.context.get('things').shiftObject();
       });
 
       this.assertText('4Bar5');
 
       this.runTask(function () {
-        return _this42.context.get('things').clear();
+        return _this43.context.get('things').clear();
       });
 
       this.assertText('');
 
       this.runTask(function () {
-        return _this42.context.set('things', _emberRuntime.A(['Foo', 4, 'Bar']));
+        return _this43.context.set('things', _emberRuntime.A(['Foo', 4, 'Bar']));
       });
 
       this.assertText('Foo4Bar');
     };
 
     _class.prototype['@test can use hash parameter instead of positional param'] = function testCanUseHashParameterInsteadOfPositionalParam(assert) {
-      var _this43 = this;
+      var _this44 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -12997,14 +13068,14 @@ babelHelpers.classCallCheck(this, _class);
       });
 
       // TODO: Fix when id is implemented
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject7));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject9));
 
       assert.equal(this.$('#two-positional').text(), 'one - two');
       assert.equal(this.$('#one-positional').text(), 'one - two');
       assert.equal(this.$('#no-positional').text(), 'one - two');
 
       this.runTask(function () {
-        return _this43.rerender();
+        return _this44.rerender();
       });
 
       assert.equal(this.$('#two-positional').text(), 'one - two');
@@ -13013,13 +13084,13 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test dynamic arbitrary number of positional parameters'] = function testDynamicArbitraryNumberOfPositionalParameters(assert) {
-      var _this44 = this;
+      var _this45 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
           positionalParams: 'n'
         }),
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject8)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject10)
       });
 
       this.render('{{sample-component user1 user2}}', {
@@ -13030,33 +13101,33 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Foo4');
 
       this.runTask(function () {
-        return _this44.rerender();
+        return _this45.rerender();
       });
 
       this.assertText('Foo4');
 
       this.runTask(function () {
-        return _this44.context.set('user1', 'Bar');
+        return _this45.context.set('user1', 'Bar');
       });
 
       this.assertText('Bar4');
 
       this.runTask(function () {
-        return _this44.context.set('user2', '5');
+        return _this45.context.set('user2', '5');
       });
 
       this.assertText('Bar5');
 
       this.runTask(function () {
-        _this44.context.set('user1', 'Foo');
-        _this44.context.set('user2', 4);
+        _this45.context.set('user1', 'Foo');
+        _this45.context.set('user2', 4);
       });
 
       this.assertText('Foo4');
     };
 
     _class.prototype['@test with ariaRole specified'] = function testWithAriaRoleSpecified() {
-      var _this45 = this;
+      var _this46 = this;
 
       this.registerComponent('aria-test', {
         template: 'Here!'
@@ -13069,26 +13140,26 @@ babelHelpers.classCallCheck(this, _class);
       this.assertComponentElement(this.firstChild, { attrs: { role: 'main' } });
 
       this.runTask(function () {
-        return _this45.rerender();
+        return _this46.rerender();
       });
 
       this.assertComponentElement(this.firstChild, { attrs: { role: 'main' } });
 
       this.runTask(function () {
-        return _this45.context.set('role', 'input');
+        return _this46.context.set('role', 'input');
       });
 
       this.assertComponentElement(this.firstChild, { attrs: { role: 'input' } });
 
       this.runTask(function () {
-        return _this45.context.set('role', 'main');
+        return _this46.context.set('role', 'main');
       });
 
       this.assertComponentElement(this.firstChild, { attrs: { role: 'main' } });
     };
 
     _class.prototype['@test `template` specified in component is overriden by block'] = function testTemplateSpecifiedInComponentIsOverridenByBlock() {
-      var _this46 = this;
+      var _this47 = this;
 
       this.registerComponent('with-template', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -13097,69 +13168,33 @@ babelHelpers.classCallCheck(this, _class);
         template: '[In layout - {{name}}] {{yield}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject9), {
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject11), {
         name: 'Whoop, whoop!'
       });
 
       this.assertText('[In layout - with-block] [In block - Whoop, whoop!][In layout - without-block] ');
 
       this.runTask(function () {
-        return _this46.rerender();
+        return _this47.rerender();
       });
 
       this.assertText('[In layout - with-block] [In block - Whoop, whoop!][In layout - without-block] ');
 
       this.runTask(function () {
-        return _this46.context.set('name', 'Ole, ole');
+        return _this47.context.set('name', 'Ole, ole');
       });
 
       this.assertText('[In layout - with-block] [In block - Ole, ole][In layout - without-block] ');
 
       this.runTask(function () {
-        return _this46.context.set('name', 'Whoop, whoop!');
+        return _this47.context.set('name', 'Whoop, whoop!');
       });
 
       this.assertText('[In layout - with-block] [In block - Whoop, whoop!][In layout - without-block] ');
     };
 
     _class.prototype['@test hasBlock is true when block supplied'] = function testHasBlockIsTrueWhenBlockSupplied() {
-      var _this47 = this;
-
-      this.registerComponent('with-block', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject10)
-      });
-
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject11));
-
-      this.assertText('In template');
-
-      this.runTask(function () {
-        return _this47.rerender();
-      });
-
-      this.assertText('In template');
-    };
-
-    _class.prototype['@test hasBlock is false when no block supplied'] = function testHasBlockIsFalseWhenNoBlockSupplied() {
       var _this48 = this;
-
-      this.registerComponent('with-block', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject10)
-      });
-
-      this.render('{{with-block}}');
-
-      this.assertText('No Block!');
-
-      this.runTask(function () {
-        return _this48.rerender();
-      });
-
-      this.assertText('No Block!');
-    };
-
-    _class.prototype['@test hasBlockParams is true when block param supplied'] = function testHasBlockParamsIsTrueWhenBlockParamSupplied() {
-      var _this49 = this;
 
       this.registerComponent('with-block', {
         template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject12)
@@ -13167,16 +13202,34 @@ babelHelpers.classCallCheck(this, _class);
 
       this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject13));
 
-      this.assertText('In template - In Component');
+      this.assertText('In template');
+
+      this.runTask(function () {
+        return _this48.rerender();
+      });
+
+      this.assertText('In template');
+    };
+
+    _class.prototype['@test hasBlock is false when no block supplied'] = function testHasBlockIsFalseWhenNoBlockSupplied() {
+      var _this49 = this;
+
+      this.registerComponent('with-block', {
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject12)
+      });
+
+      this.render('{{with-block}}');
+
+      this.assertText('No Block!');
 
       this.runTask(function () {
         return _this49.rerender();
       });
 
-      this.assertText('In template - In Component');
+      this.assertText('No Block!');
     };
 
-    _class.prototype['@test hasBlockParams is false when no block param supplied'] = function testHasBlockParamsIsFalseWhenNoBlockParamSupplied() {
+    _class.prototype['@test hasBlockParams is true when block param supplied'] = function testHasBlockParamsIsTrueWhenBlockParamSupplied() {
       var _this50 = this;
 
       this.registerComponent('with-block', {
@@ -13185,17 +13238,35 @@ babelHelpers.classCallCheck(this, _class);
 
       this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject15));
 
-      this.assertText('In block No Block Param!');
+      this.assertText('In template - In Component');
 
       this.runTask(function () {
         return _this50.rerender();
+      });
+
+      this.assertText('In template - In Component');
+    };
+
+    _class.prototype['@test hasBlockParams is false when no block param supplied'] = function testHasBlockParamsIsFalseWhenNoBlockParamSupplied() {
+      var _this51 = this;
+
+      this.registerComponent('with-block', {
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject16)
+      });
+
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject17));
+
+      this.assertText('In block No Block Param!');
+
+      this.runTask(function () {
+        return _this51.rerender();
       });
 
       this.assertText('In block No Block Param!');
     };
 
     _class.prototype['@test static named positional parameters'] = function testStaticNamedPositionalParameters() {
-      var _this51 = this;
+      var _this52 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -13209,14 +13280,14 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Quint4');
 
       this.runTask(function () {
-        return _this51.rerender();
+        return _this52.rerender();
       });
 
       this.assertText('Quint4');
     };
 
     _class.prototype['@test dynamic named positional parameters'] = function testDynamicNamedPositionalParameters() {
-      var _this52 = this;
+      var _this53 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -13233,33 +13304,33 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Quint4');
 
       this.runTask(function () {
-        return _this52.rerender();
+        return _this53.rerender();
       });
 
       this.assertText('Quint4');
 
       this.runTask(function () {
-        return _this52.context.set('myName', 'Sergio');
+        return _this53.context.set('myName', 'Sergio');
       });
 
       this.assertText('Sergio4');
 
       this.runTask(function () {
-        return _this52.context.set('myAge', 2);
+        return _this53.context.set('myAge', 2);
       });
 
       this.assertText('Sergio2');
 
       this.runTask(function () {
-        _this52.context.set('myName', 'Quint');
-        _this52.context.set('myAge', 4);
+        _this53.context.set('myName', 'Quint');
+        _this53.context.set('myAge', 4);
       });
 
       this.assertText('Quint4');
     };
 
     _class.prototype['@test if a value is passed as a non-positional parameter, it raises an assertion'] = function testIfAValueIsPassedAsANonPositionalParameterItRaisesAnAssertion() {
-      var _this53 = this;
+      var _this54 = this;
 
       this.registerComponent('sample-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -13269,7 +13340,7 @@ babelHelpers.classCallCheck(this, _class);
       });
 
       expectAssertion(function () {
-        _this53.render('{{sample-component notMyName name=myName}}', {
+        _this54.render('{{sample-component notMyName name=myName}}', {
           myName: 'Quint',
           notMyName: 'Sergio'
         });
@@ -13277,32 +13348,32 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test yield to inverse'] = function testYieldToInverse() {
-      var _this54 = this;
+      var _this55 = this;
 
       this.registerComponent('my-if', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject16)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject18)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject17), {
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject19), {
         activated: true
       });
 
       this.assertText('Yes:Hello42');
 
       this.runTask(function () {
-        return _this54.rerender();
+        return _this55.rerender();
       });
 
       this.assertText('Yes:Hello42');
 
       this.runTask(function () {
-        return _this54.context.set('activated', false);
+        return _this55.context.set('activated', false);
       });
 
       this.assertText('No:Goodbye');
 
       this.runTask(function () {
-        return _this54.context.set('activated', true);
+        return _this55.context.set('activated', true);
       });
 
       this.assertText('Yes:Hello42');
@@ -13310,19 +13381,6 @@ babelHelpers.classCallCheck(this, _class);
 
     _class.prototype['@test expression hasBlock inverse'] = function testExpressionHasBlockInverse(assert) {
       this.registerComponent('check-inverse', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject18)
-      });
-
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject19));
-
-      this.assertComponentElement(this.firstChild, { content: 'No' });
-      this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
-
-      this.assertStableRerender();
-    };
-
-    _class.prototype['@test expression hasBlock default'] = function testExpressionHasBlockDefault(assert) {
-      this.registerComponent('check-block', {
         template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject20)
       });
 
@@ -13334,12 +13392,25 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
     };
 
-    _class.prototype['@test expression hasBlockParams inverse'] = function testExpressionHasBlockParamsInverse(assert) {
-      this.registerComponent('check-inverse', {
+    _class.prototype['@test expression hasBlock default'] = function testExpressionHasBlockDefault(assert) {
+      this.registerComponent('check-block', {
         template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject22)
       });
 
       this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject23));
+
+      this.assertComponentElement(this.firstChild, { content: 'No' });
+      this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
+
+      this.assertStableRerender();
+    };
+
+    _class.prototype['@test expression hasBlockParams inverse'] = function testExpressionHasBlockParamsInverse(assert) {
+      this.registerComponent('check-inverse', {
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject24)
+      });
+
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject25));
 
       this.assertComponentElement(this.firstChild, { content: 'No' });
       this.assertComponentElement(this.nthChild(1), { content: 'No' });
@@ -13349,10 +13420,10 @@ babelHelpers.classCallCheck(this, _class);
 
     _class.prototype['@test expression hasBlockParams default'] = function testExpressionHasBlockParamsDefault(assert) {
       this.registerComponent('check-block', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject24)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject26)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject25));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject27));
 
       this.assertComponentElement(this.firstChild, { content: 'No' });
       this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
@@ -13362,10 +13433,10 @@ babelHelpers.classCallCheck(this, _class);
 
     _class.prototype['@test non-expression hasBlock'] = function testNonExpressionHasBlock(assert) {
       this.registerComponent('check-block', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject26)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject28)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject21));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject23));
 
       this.assertComponentElement(this.firstChild, { content: 'No' });
       this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
@@ -13375,10 +13446,10 @@ babelHelpers.classCallCheck(this, _class);
 
     _class.prototype['@test expression hasBlockParams'] = function testExpressionHasBlockParams(assert) {
       this.registerComponent('check-params', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject24)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject26)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject27));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject29));
 
       this.assertComponentElement(this.firstChild, { content: 'No' });
       this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
@@ -13388,10 +13459,10 @@ babelHelpers.classCallCheck(this, _class);
 
     _class.prototype['@test non-expression hasBlockParams'] = function testNonExpressionHasBlockParams(assert) {
       this.registerComponent('check-params', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject28)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject30)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject27));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject29));
 
       this.assertComponentElement(this.firstChild, { content: 'No' });
       this.assertComponentElement(this.nthChild(1), { content: 'Yes' });
@@ -13404,7 +13475,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '<button name={{hasBlock}}></button>'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject29));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject31));
 
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[0], 'button', { name: 'false' }, '');
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[1], 'button', { name: 'true' }, '');
@@ -13417,7 +13488,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '<button name={{hasBlock "inverse"}}></button>'
       }, '');
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject30));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject32));
 
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[0], 'button', { name: 'false' }, '');
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[1], 'button', { name: 'true' }, '');
@@ -13430,7 +13501,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '<button name={{hasBlockParams}}></button>'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject31));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject33));
 
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[0], 'button', { name: 'false' }, '');
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[1], 'button', { name: 'true' }, '');
@@ -13443,7 +13514,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '<button name={{hasBlockParams "inverse"}}></button>'
       }, '');
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject31));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject33));
 
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[0], 'button', { name: 'false' }, '');
       _emberGlimmerTestsUtilsTestHelpers.equalsElement(this.$('button')[1], 'button', { name: 'false' }, '');
@@ -13456,7 +13527,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if hasBlock "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject32));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject34));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'true' });
@@ -13469,7 +13540,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if (hasBlock) "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject32));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject34));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'true' });
@@ -13482,7 +13553,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if (hasBlock "inverse") "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject33));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject35));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'true' });
@@ -13495,7 +13566,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if hasBlockParams "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject34));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject36));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'true' });
@@ -13508,7 +13579,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if (hasBlockParams) "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject34));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject36));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'true' });
@@ -13521,7 +13592,7 @@ babelHelpers.classCallCheck(this, _class);
         template: '{{if (hasBlockParams "inverse") "true" "false"}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject34));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject36));
 
       this.assertComponentElement(this.firstChild, { content: 'false' });
       this.assertComponentElement(this.nthChild(1), { content: 'false' });
@@ -13530,7 +13601,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test component in template of a yielding component should have the proper parentView'] = function testComponentInTemplateOfAYieldingComponentShouldHaveTheProperParentView(assert) {
-      var _this55 = this;
+      var _this56 = this;
 
       var outer = undefined,
           innerTemplate = undefined,
@@ -13571,7 +13642,7 @@ babelHelpers.classCallCheck(this, _class);
       assert.equal(outer.parentView, this.context, 'x-outer receives the ambient scope as its parentView');
 
       this.runTask(function () {
-        return _this55.rerender();
+        return _this56.rerender();
       });
 
       assert.equal(innerTemplate.parentView, outer, 'receives the wrapping component as its parentView in template blocks');
@@ -13580,7 +13651,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test newly-added sub-components get correct parentView'] = function testNewlyAddedSubComponentsGetCorrectParentView(assert) {
-      var _this56 = this;
+      var _this57 = this;
 
       var outer = undefined,
           inner = undefined;
@@ -13603,34 +13674,34 @@ babelHelpers.classCallCheck(this, _class);
         })
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject35), {
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject37), {
         showInner: false
       });
 
       assert.equal(outer.parentView, this.context, 'x-outer receives the ambient scope as its parentView');
 
       this.runTask(function () {
-        return _this56.rerender();
+        return _this57.rerender();
       });
 
       assert.equal(outer.parentView, this.context, 'x-outer receives the ambient scope as its parentView (after rerender)');
 
       this.runTask(function () {
-        return _this56.context.set('showInner', true);
+        return _this57.context.set('showInner', true);
       });
 
       assert.equal(outer.parentView, this.context, 'x-outer receives the ambient scope as its parentView');
       assert.equal(inner.parentView, outer, 'receives the wrapping component as its parentView in template blocks');
 
       this.runTask(function () {
-        return _this56.context.set('showInner', false);
+        return _this57.context.set('showInner', false);
       });
 
       assert.equal(outer.parentView, this.context, 'x-outer receives the ambient scope as its parentView');
     };
 
     _class.prototype['@test when a property is changed during children\'s rendering'] = function testWhenAPropertyIsChangedDuringChildrenSRendering(assert) {
-      var _this57 = this;
+      var _this58 = this;
 
       if (false) {
         expectDeprecation(/modified value twice on <\(.+> in a single render/);
@@ -13677,7 +13748,7 @@ babelHelpers.classCallCheck(this, _class);
       assert.equal(this.$('#middle-value').text(), '', 'initial render of middle (observers do not run during init)');
 
       this.runTask(function () {
-        return _this57.rerender();
+        return _this58.rerender();
       });
 
       assert.equal(this.$('#inner-value').text(), '1', 'initial render of inner');
@@ -13685,7 +13756,7 @@ babelHelpers.classCallCheck(this, _class);
 
       if (!false) {
         expectAssertion(function () {
-          _this57.runTask(function () {
+          _this58.runTask(function () {
             return outer.set('value', 2);
           });
         }, /modified value twice on <\(.+> in a single render/);
@@ -13716,7 +13787,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test when a shared dependency is changed during children\'s rendering'] = function testWhenASharedDependencyIsChangedDuringChildrenSRendering(assert) {
-      var _this58 = this;
+      var _this59 = this;
 
       if (false) {
         expectDeprecation(/modified wrapper.content twice on <Ember.Object.+> in a single render/);
@@ -13753,7 +13824,7 @@ babelHelpers.classCallCheck(this, _class);
 
       if (!false) {
         expectAssertion(function () {
-          _this58.render('{{x-outer}}');
+          _this59.render('{{x-outer}}');
         }, /modified wrapper.content twice on <Ember.Object.+> in a single render/);
 
         return;
@@ -13765,7 +13836,7 @@ babelHelpers.classCallCheck(this, _class);
       assert.equal(this.$('#outer-value').text(), '1', 'initial render of outer');
 
       this.runTask(function () {
-        return _this58.rerender();
+        return _this59.rerender();
       });
 
       assert.equal(this.$('#inner-value').text(), '1', 're-render of inner');
@@ -13794,10 +13865,10 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test non-block with each rendering child components'] = function testNonBlockWithEachRenderingChildComponents() {
-      var _this59 = this;
+      var _this60 = this;
 
       this.registerComponent('non-block', {
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject36)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject38)
       });
 
       this.registerComponent('child-non-block', {
@@ -13811,32 +13882,32 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('In layout. [Child: Tom.][Child: Dick.][Child: Harry.]');
 
       this.runTask(function () {
-        return _this59.rerender();
+        return _this60.rerender();
       });
 
       this.assertText('In layout. [Child: Tom.][Child: Dick.][Child: Harry.]');
 
       this.runTask(function () {
-        return _this59.context.get('items').pushObject('Sergio');
+        return _this60.context.get('items').pushObject('Sergio');
       });
 
       this.assertText('In layout. [Child: Tom.][Child: Dick.][Child: Harry.][Child: Sergio.]');
 
       this.runTask(function () {
-        return _this59.context.get('items').shiftObject();
+        return _this60.context.get('items').shiftObject();
       });
 
       this.assertText('In layout. [Child: Dick.][Child: Harry.][Child: Sergio.]');
 
       this.runTask(function () {
-        return _this59.context.set('items', _emberRuntime.A(['Tom', 'Dick', 'Harry']));
+        return _this60.context.set('items', _emberRuntime.A(['Tom', 'Dick', 'Harry']));
       });
 
       this.assertText('In layout. [Child: Tom.][Child: Dick.][Child: Harry.]');
     };
 
     _class.prototype['@test specifying classNames results in correct class'] = function testSpecifyingClassNamesResultsInCorrectClass(assert) {
-      var _this60 = this;
+      var _this61 = this;
 
       var clickyThing = undefined;
 
@@ -13851,7 +13922,7 @@ babelHelpers.classCallCheck(this, _class);
         })
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject37));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject39));
 
       // TODO: ember-view is no longer viewable in the classNames array. Bug or
       // feature?
@@ -13863,7 +13934,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertComponentElement(this.firstChild, { tagName: 'button', attrs: { 'class': _emberGlimmerTestsUtilsTestHelpers.classes(expectedClassNames.join(' ')) } });
 
       this.runTask(function () {
-        return _this60.rerender();
+        return _this61.rerender();
       });
 
       assert.ok(this.$('button').is('.foo.bar.baz.ember-view'), 'the element has the correct classes: ' + this.$('button').attr('class') + ' (rerender)');
@@ -13873,7 +13944,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test specifying custom concatenatedProperties avoids clobbering'] = function testSpecifyingCustomConcatenatedPropertiesAvoidsClobbering(assert) {
-      var _this61 = this;
+      var _this62 = this;
 
       var clickyThing = undefined;
       this.registerComponent('some-clicky-thing', {
@@ -13885,22 +13956,22 @@ babelHelpers.classCallCheck(this, _class);
             clickyThing = this;
           }
         }),
-        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject38)
+        template: _emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject40)
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject39));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject41));
 
       this.assertText('blarkporybaz- Click Me');
 
       this.runTask(function () {
-        return _this61.rerender();
+        return _this62.rerender();
       });
 
       this.assertText('blarkporybaz- Click Me');
     };
 
     _class.prototype['@test a two way binding flows upstream when consumed in the template'] = function testATwoWayBindingFlowsUpstreamWhenConsumedInTheTemplate() {
-      var _this62 = this;
+      var _this63 = this;
 
       var component = undefined;
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -13923,7 +13994,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('initial value - initial value');
 
       this.runTask(function () {
-        return _this62.rerender();
+        return _this63.rerender();
       });
 
       this.assertText('initial value - initial value');
@@ -13949,14 +14020,14 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText(' - ');
 
       this.runTask(function () {
-        _this62.component.set('localBar', 'initial value');
+        _this63.component.set('localBar', 'initial value');
       });
 
       this.assertText('initial value - initial value');
     };
 
     _class.prototype['@test a two way binding flows upstream through a CP when consumed in the template'] = function testATwoWayBindingFlowsUpstreamThroughACPWhenConsumedInTheTemplate() {
-      var _this63 = this;
+      var _this64 = this;
 
       var component = undefined;
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -13990,7 +14061,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('initial value - initial value');
 
       this.runTask(function () {
-        return _this63.rerender();
+        return _this64.rerender();
       });
 
       this.assertText('initial value - initial value');
@@ -14002,14 +14073,14 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('updated value - updated value');
 
       this.runTask(function () {
-        _this63.component.set('localBar', 'initial value');
+        _this64.component.set('localBar', 'initial value');
       });
 
       this.assertText('initial value - initial value');
     };
 
     _class.prototype['@test a two way binding flows upstream through a CP without template consumption'] = function testATwoWayBindingFlowsUpstreamThroughACPWithoutTemplateConsumption() {
-      var _this64 = this;
+      var _this65 = this;
 
       var component = undefined;
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -14042,7 +14113,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('initial value');
 
       this.runTask(function () {
-        return _this64.rerender();
+        return _this65.rerender();
       });
 
       this.assertText('initial value');
@@ -14054,14 +14125,14 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('updated value');
 
       this.runTask(function () {
-        _this64.component.set('localBar', 'initial value');
+        _this65.component.set('localBar', 'initial value');
       });
 
       this.assertText('initial value');
     };
 
     _class.prototype['@test services can be injected into components'] = function testServicesCanBeInjectedIntoComponents() {
-      var _this65 = this;
+      var _this66 = this;
 
       var service = undefined;
       this.registerService('name', _emberRuntime.Service.extend({
@@ -14084,7 +14155,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Jackson');
 
       this.runTask(function () {
-        return _this65.rerender();
+        return _this66.rerender();
       });
 
       this.assertText('Jackson');
@@ -14103,7 +14174,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test can access `actions` hash via `_actions` [DEPRECATED]'] = function testCanAccessActionsHashVia_actionsDEPRECATED() {
-      var _this66 = this;
+      var _this67 = this;
 
       var component = undefined;
 
@@ -14127,12 +14198,12 @@ babelHelpers.classCallCheck(this, _class);
       this.assert.strictEqual(component.actions.derp, derp);
 
       expectDeprecation(function () {
-        _this66.assert.strictEqual(component._actions.derp, derp);
+        _this67.assert.strictEqual(component._actions.derp, derp);
       }, 'Usage of `_actions` is deprecated, use `actions` instead.');
     };
 
     _class.prototype['@test throws if `this._super` is not called from `init`'] = function testThrowsIfThis_superIsNotCalledFromInit() {
-      var _this67 = this;
+      var _this68 = this;
 
       this.registerComponent('foo-bar', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -14141,16 +14212,16 @@ babelHelpers.classCallCheck(this, _class);
       });
 
       expectAssertion(function () {
-        _this67.render('{{foo-bar}}');
+        _this68.render('{{foo-bar}}');
       }, /You must call `this._super\(...arguments\);` when implementing `init` in a component. Please update .* to call `this._super` from `init`/);
     };
 
     _class.prototype['@test should toggle visibility with isVisible'] = function testShouldToggleVisibilityWithIsVisible(assert) {
-      var _this68 = this;
+      var _this69 = this;
 
       var assertStyle = function (expected) {
         var matcher = _emberGlimmerTestsUtilsTestHelpers.styles(expected);
-        var actual = _this68.firstChild.getAttribute('style');
+        var actual = _this69.firstChild.getAttribute('style');
 
         assert.pushResult({
           result: matcher.match(actual),
@@ -14173,18 +14244,18 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
 
       this.runTask(function () {
-        _emberMetal.set(_this68.context, 'visible', true);
+        _emberMetal.set(_this69.context, 'visible', true);
       });
       assertStyle('');
 
       this.runTask(function () {
-        _emberMetal.set(_this68.context, 'visible', false);
+        _emberMetal.set(_this69.context, 'visible', false);
       });
       assertStyle('display: none;');
     };
 
     _class.prototype['@test isVisible does not overwrite component style'] = function testIsVisibleDoesNotOverwriteComponentStyle(assert) {
-      var _this69 = this;
+      var _this70 = this;
 
       this.registerComponent('foo-bar', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -14207,7 +14278,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
 
       this.runTask(function () {
-        _emberMetal.set(_this69.context, 'visible', true);
+        _emberMetal.set(_this70.context, 'visible', true);
       });
 
       this.assertComponentElement(this.firstChild, {
@@ -14216,7 +14287,7 @@ babelHelpers.classCallCheck(this, _class);
       });
 
       this.runTask(function () {
-        _emberMetal.set(_this69.context, 'visible', false);
+        _emberMetal.set(_this70.context, 'visible', false);
       });
 
       this.assertComponentElement(this.firstChild, {
@@ -14226,11 +14297,11 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test adds isVisible binding when style binding is missing and other bindings exist'] = function testAddsIsVisibleBindingWhenStyleBindingIsMissingAndOtherBindingsExist(assert) {
-      var _this70 = this;
+      var _this71 = this;
 
       var assertStyle = function (expected) {
         var matcher = _emberGlimmerTestsUtilsTestHelpers.styles(expected);
-        var actual = _this70.firstChild.getAttribute('style');
+        var actual = _this71.firstChild.getAttribute('style');
 
         assert.pushResult({
           result: matcher.match(actual),
@@ -14258,14 +14329,14 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
 
       this.runTask(function () {
-        _emberMetal.set(_this70.context, 'visible', true);
+        _emberMetal.set(_this71.context, 'visible', true);
       });
 
       assertStyle('');
 
       this.runTask(function () {
-        _emberMetal.set(_this70.context, 'visible', false);
-        _emberMetal.set(_this70.context, 'foo', 'woo');
+        _emberMetal.set(_this71.context, 'visible', false);
+        _emberMetal.set(_this71.context, 'foo', 'woo');
       });
 
       assertStyle('display: none;');
@@ -14273,14 +14344,14 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test it can use readDOMAttr to read input value'] = function testItCanUseReadDOMAttrToReadInputValue() {
-      var _this71 = this;
+      var _this72 = this;
 
       var component = undefined;
       var assertElement = function (expectedValue) {
         // value is a property, not an attribute
-        _this71.assertHTML('<input class="ember-view" id="' + component.elementId + '">');
-        _this71.assert.equal(_this71.firstChild.value, expectedValue, 'value property is correct');
-        _this71.assert.equal(_emberMetal.get(component, 'value'), expectedValue, 'component.get("value") is correct');
+        _this72.assertHTML('<input class="ember-view" id="' + component.elementId + '">');
+        _this72.assert.equal(_this72.firstChild.value, expectedValue, 'value property is correct');
+        _this72.assert.equal(_emberMetal.get(component, 'value'), expectedValue, 'component.get("value") is correct');
       };
 
       this.registerComponent('one-way-input', {
@@ -14309,15 +14380,15 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
 
       this.runTask(function () {
-        _this71.firstChild.value = 'bar';
-        _this71.$('input').trigger('change');
+        _this72.firstChild.value = 'bar';
+        _this72.$('input').trigger('change');
       });
 
       assertElement('bar');
 
       this.runTask(function () {
-        _this71.firstChild.value = 'foo';
-        _this71.$('input').trigger('change');
+        _this72.firstChild.value = 'foo';
+        _this72.$('input').trigger('change');
       });
 
       assertElement('foo');
@@ -14329,8 +14400,8 @@ babelHelpers.classCallCheck(this, _class);
       assertElement('bar');
 
       this.runTask(function () {
-        _this71.firstChild.value = 'foo';
-        _this71.$('input').trigger('change');
+        _this72.firstChild.value = 'foo';
+        _this72.$('input').trigger('change');
       });
 
       assertElement('foo');
@@ -14393,15 +14464,40 @@ babelHelpers.classCallCheck(this, _class);
         })
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject40));
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject42));
 
       this.teardown();
 
       this.assert.ok(true, 'no errors during teardown');
     };
 
+    _class.prototype['@test setting a property in willDestroyElement does not assert (GH#14273)'] = function testSettingAPropertyInWillDestroyElementDoesNotAssertGH14273(assert) {
+      assert.expect(2);
+
+      this.registerComponent('foo-bar', {
+        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
+          init: function () {
+            this._super.apply(this, arguments);
+            this.showFoo = true;
+          },
+
+          willDestroyElement: function () {
+            this.set('showFoo', false);
+            assert.ok(true, 'willDestroyElement was fired');
+            this._super.apply(this, arguments);
+          }
+        }),
+
+        template: '{{#if showFoo}}things{{/if}}'
+      });
+
+      this.render('{{foo-bar}}');
+
+      this.assertText('things');
+    };
+
     _class.prototype['@test using didInitAttrs as an event is deprecated'] = function testUsingDidInitAttrsAsAnEventIsDeprecated(assert) {
-      var _this72 = this;
+      var _this73 = this;
 
       this.registerComponent('foo-bar', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -14412,12 +14508,12 @@ babelHelpers.classCallCheck(this, _class);
       });
 
       expectDeprecation(function () {
-        _this72.render('{{foo-bar}}');
+        _this73.render('{{foo-bar}}');
       }, /didInitAttrs called/);
     };
 
     _class.prototype['@test returning `true` from an action does not bubble if `target` is not specified (GH#14275)'] = function testReturningTrueFromAnActionDoesNotBubbleIfTargetIsNotSpecifiedGH14275(assert) {
-      var _this73 = this;
+      var _this74 = this;
 
       this.registerComponent('display-toggle', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -14441,12 +14537,12 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Show');
 
       this.runTask(function () {
-        return _this73.$('button').click();
+        return _this74.$('button').click();
       });
     };
 
     _class.prototype['@test returning `true` from an action bubbles to the `target` if specified'] = function testReturningTrueFromAnActionBubblesToTheTargetIfSpecified(assert) {
-      var _this74 = this;
+      var _this75 = this;
 
       assert.expect(4);
 
@@ -14473,18 +14569,18 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('Show');
 
       this.runTask(function () {
-        return _this74.$('button').click();
+        return _this75.$('button').click();
       });
     };
 
     _class.prototype['@test component yielding in an {{#each}} has correct block values after rerendering (GH#14284)'] = function testComponentYieldingInAnEachHasCorrectBlockValuesAfterRerenderingGH14284() {
-      var _this75 = this;
+      var _this76 = this;
 
       this.registerComponent('list-items', {
         template: '{{#each items as |item|}}{{yield item}}{{/each}}'
       });
 
-      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject41), {
+      this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject43), {
         editMode: false,
         items: ['foo', 'bar', 'qux', 'baz']
       });
@@ -14494,13 +14590,13 @@ babelHelpers.classCallCheck(this, _class);
       this.assertStableRerender();
 
       this.runTask(function () {
-        return _emberMetal.set(_this75.context, 'editMode', true);
+        return _emberMetal.set(_this76.context, 'editMode', true);
       });
 
       this.assertText('|foo|Remove foo|bar|Remove bar|qux|Remove qux|baz|Remove baz');
 
       this.runTask(function () {
-        return _emberMetal.set(_this75.context, 'editMode', false);
+        return _emberMetal.set(_this76.context, 'editMode', false);
       });
 
       this.assertText('|foo||bar||qux||baz|');
@@ -15531,6 +15627,35 @@ babelHelpers.classCallCheck(this, _class);
       this.assertText('baz');
     };
 
+    _class.prototype['@test does not throw an error if `tagName` is an empty string and `id` is bound property specified via template'] = function testDoesNotThrowAnErrorIfTagNameIsAnEmptyStringAndIdIsBoundPropertySpecifiedViaTemplate() {
+      var _this7 = this;
+
+      var template = '{{id}}';
+      var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
+        tagName: ''
+      });
+
+      this.registerComponent('foo-bar', { ComponentClass: FooBarComponent, template: template });
+
+      this.render('{{#foo-bar id=fooBarId}}{{/foo-bar}}', { fooBarId: 'baz' });
+
+      this.assertText('baz');
+
+      this.assertStableRerender();
+
+      this.runTask(function () {
+        return _emberMetal.set(_this7.context, 'fooBarId', 'qux');
+      });
+
+      this.assertText('qux');
+
+      this.runTask(function () {
+        return _emberMetal.set(_this7.context, 'fooBarId', 'baz');
+      });
+
+      this.assertText('baz');
+    };
+
     _class.prototype['@test does not throw an error if `tagName` is an empty string and `id` is specified via template and passed to child component'] = function testDoesNotThrowAnErrorIfTagNameIsAnEmptyStringAndIdIsSpecifiedViaTemplateAndPassedToChildComponent() {
       var fooBarTemplate = '{{#baz-child id=id}}{{/baz-child}}';
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -15546,7 +15671,7 @@ babelHelpers.classCallCheck(this, _class);
     };
 
     _class.prototype['@test throws an error if when $() is accessed on component where `tagName` is an empty string'] = function testThrowsAnErrorIfWhen$IsAccessedOnComponentWhereTagNameIsAnEmptyString() {
-      var _this7 = this;
+      var _this8 = this;
 
       var template = 'hit dem folks';
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -15560,12 +15685,12 @@ babelHelpers.classCallCheck(this, _class);
       this.registerComponent('foo-bar', { ComponentClass: FooBarComponent, template: template });
 
       expectAssertion(function () {
-        _this7.render('{{#foo-bar}}{{/foo-bar}}');
+        _this8.render('{{#foo-bar}}{{/foo-bar}}');
       }, /You cannot access this.\$\(\) on a component with `tagName: \'\'` specified/);
     };
 
     _class.prototype['@test renders a contained view with omitted start tag and tagless parent view context'] = function testRendersAContainedViewWithOmittedStartTagAndTaglessParentViewContext() {
-      var _this8 = this;
+      var _this9 = this;
 
       this.registerComponent('root-component', {
         ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend({
@@ -15594,7 +15719,7 @@ babelHelpers.classCallCheck(this, _class);
       this.assertElement(this.firstChild.firstElementChild, { tagName: 'span' });
 
       this.runTask(function () {
-        return _this8.rerender();
+        return _this9.rerender();
       });
 
       this.assertElement(this.firstChild, { tagName: 'section' });
@@ -16797,7 +16922,7 @@ babelHelpers.classCallCheck(this, _class3);
 // Sync hooks
 
 // Async hooks
-enifed('ember-glimmer/tests/integration/components/link-to-test', ['exports', 'ember-glimmer/tests/utils/test-case', 'ember-runtime', 'ember-routing', 'ember-metal', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/test-helpers'], function (exports, _emberGlimmerTestsUtilsTestCase, _emberRuntime, _emberRouting, _emberMetal, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsTestHelpers) {
+enifed('ember-glimmer/tests/integration/components/link-to-test', ['exports', 'ember-glimmer/tests/utils/test-case', 'ember-runtime', 'ember-metal', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/test-helpers'], function (exports, _emberGlimmerTestsUtilsTestCase, _emberRuntime, _emberMetal, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsTestHelpers) {
   'use strict';
 
   _emberGlimmerTestsUtilsTestCase.moduleFor('Link-to component', (function (_ApplicationTest) {
@@ -16975,24 +17100,11 @@ enifed('ember-glimmer/tests/integration/components/link-to-test', ['exports', 'e
 
       _ApplicationTest2.apply(this, arguments);
 
-      if (false) {
-        this.registerRoute('index', _emberRouting.Route.extend({
-          queryParams: {
-            foo: {
-              defaultValue: '123'
-            },
-            bar: {
-              defaultValue: 'yes'
-            }
-          }
-        }));
-      } else {
-        this.registerController('index', _emberRuntime.Controller.extend({
-          queryParams: ['foo'],
-          foo: '123',
-          bar: 'yes'
-        }));
-      }
+      this.registerController('index', _emberRuntime.Controller.extend({
+        queryParams: ['foo'],
+        foo: '123',
+        bar: 'yes'
+      }));
     }
 
     _class2.prototype['@test populates href with fully supplied query param values'] = function testPopulatesHrefWithFullySuppliedQueryParamValues(assert) {
@@ -17161,8 +17273,26 @@ enifed('ember-glimmer/tests/integration/components/local-lookup-test', ['exports
       this.assertText('yall finished or yall done?');
     };
 
-    _class.prototype['@test it can lookup a local helper'] = function testItCanLookupALocalHelper() {
+    _class.prototype['@test it can local lookup a dynamic component from a passed named argument'] = function testItCanLocalLookupADynamicComponentFromAPassedNamedArgument() {
       var _this6 = this;
+
+      this.registerComponent('parent-foo', { template: 'yall finished {{global-biz baz=(component \'local-bar\')}}' });
+      this.registerComponent('global-biz', { template: 'or {{component baz}}' });
+      this.registerComponent('parent-foo/local-bar', { template: 'yall done?' });
+
+      this.render('{{parent-foo}}');
+
+      this.assertText('yall finished or yall done?');
+
+      this.runTask(function () {
+        return _this6.rerender();
+      });
+
+      this.assertText('yall finished or yall done?');
+    };
+
+    _class.prototype['@test it can lookup a local helper'] = function testItCanLookupALocalHelper() {
+      var _this7 = this;
 
       this.registerHelper('x-outer/x-helper', function () {
         return 'Who dis?';
@@ -17174,14 +17304,14 @@ enifed('ember-glimmer/tests/integration/components/local-lookup-test', ['exports
       this.assertText('Who dat? Who dis?', 'Initial render works');
 
       this.runTask(function () {
-        return _this6.rerender();
+        return _this7.rerender();
       });
 
       this.assertText('Who dat? Who dis?', 'Re-render works');
     };
 
     _class.prototype['@test it overrides global helper lookup'] = function testItOverridesGlobalHelperLookup() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.registerHelper('x-outer/x-helper', function () {
         return 'Who dis?';
@@ -17198,24 +17328,24 @@ enifed('ember-glimmer/tests/integration/components/local-lookup-test', ['exports
       this.assertText('Who dat? Who dis? I dunno', 'Initial render works');
 
       this.runTask(function () {
-        return _this7.rerender();
+        return _this8.rerender();
       });
 
       this.assertText('Who dat? Who dis? I dunno', 'Re-render works');
     };
 
     _class.prototype['@test lookup without match issues standard assertion (with local helper name)'] = function testLookupWithoutMatchIssuesStandardAssertionWithLocalHelperName() {
-      var _this8 = this;
+      var _this9 = this;
 
       this.registerComponent('x-outer', { template: '{{#x-inner}}Hi!{{/x-inner}}' });
 
       expectAssertion(function () {
-        _this8.render('{{x-outer}}');
+        _this9.render('{{x-outer}}');
       }, /A helper named "x-inner" could not be found/);
     };
 
     _class.prototype['@test overrides global lookup'] = function testOverridesGlobalLookup() {
-      var _this9 = this;
+      var _this10 = this;
 
       this.registerComponent('x-outer', { template: '{{#x-inner}}Hi!{{/x-inner}}' });
       this.registerComponent('x-outer/x-inner', { template: 'Nested template says (from local): {{yield}}' });
@@ -17226,7 +17356,7 @@ enifed('ember-glimmer/tests/integration/components/local-lookup-test', ['exports
       this.assertText('Nested template says (from global): Hi! Nested template says (from local): Hi! Nested template says (from local): Hi!');
 
       this.runTask(function () {
-        return _this9.rerender();
+        return _this10.rerender();
       });
 
       this.assertText('Nested template says (from global): Hi! Nested template says (from local): Hi! Nested template says (from local): Hi!');
@@ -18245,7 +18375,7 @@ enifed('ember-glimmer/tests/integration/components/utils-test', ['exports', 'emb
       var firstNode = _getViewBounds2.firstNode;
       var lastNode = _getViewBounds2.lastNode;
 
-      assert.equal(parentElement, this.element, 'a regular component should have the right parentElement');
+      assert.equal(parentElement, this.element, 'a tagless component should have the right parentElement');
       assert.equal(firstNode, this.$('#start-node')[0], 'a tagless component should have a range enclosing all of its nodes');
       assert.equal(lastNode, this.$('#before-end-node')[0].nextSibling, 'a tagless component should have a range enclosing all of its nodes');
     };
@@ -30402,7 +30532,11 @@ enifed('ember-glimmer/tests/integration/syntax/each-test', ['exports', 'ember-me
   'use strict';
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each content as |value|}}\n        {{value}}-\n        {{#each options as |option|}}\n          {{option.value}}:{{option.label}}\n        {{/each}}\n      {{/each}}\n      '], ['\n      {{#each content as |value|}}\n        {{value}}-\n        {{#each options as |option|}}\n          {{option.value}}:{{option.label}}\n        {{/each}}\n      {{/each}}\n      ']),
-      _templateObject2 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}'], ['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}']);
+      _templateObject2 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}'], ['\n      {{#each foo.bar.baz as |thing|}}\n        {{thing}}\n      {{/each}}']),
+      _templateObject3 = babelHelpers.taggedTemplateLiteralLoose(['\n        <h1>{{page.title}}</h1>\n\n        <ul id="posts">\n          {{#each model as |post|}}\n            <li>{{post.title}}</li>\n          {{/each}}\n        </ul>\n      '], ['\n        <h1>{{page.title}}</h1>\n\n        <ul id="posts">\n          {{#each model as |post|}}\n            <li>{{post.title}}</li>\n          {{/each}}\n        </ul>\n      ']),
+      _templateObject4 = babelHelpers.taggedTemplateLiteralLoose(['\n        <h1>Blog Posts</h1>\n\n        <ul id="posts">\n          <li>Rails is omakase</li>\n          <li>Ember is omakase</li>\n        </ul>\n      '], ['\n        <h1>Blog Posts</h1>\n\n        <ul id="posts">\n          <li>Rails is omakase</li>\n          <li>Ember is omakase</li>\n        </ul>\n      ']),
+      _templateObject5 = babelHelpers.taggedTemplateLiteralLoose(['\n          <h1>Essays</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        '], ['\n          <h1>Essays</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        ']),
+      _templateObject6 = babelHelpers.taggedTemplateLiteralLoose(['\n          <h1>Think Pieces™</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        '], ['\n          <h1>Think Pieces™</h1>\n\n          <ul id="posts">\n            <li>Rails is omakase</li>\n            <li>Ember is omakase</li>\n          </ul>\n        ']);
 
   var ArrayLike = (function () {
     function ArrayLike(content) {
@@ -31537,6 +31671,84 @@ babelHelpers.classCallCheck(this, _class10);
 
     return _class10;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
+
+  /* globals MutationObserver: false */
+  if (typeof MutationObserver === 'function') {
+    _emberGlimmerTestsUtilsTestCase.moduleFor('Syntax test: {{#each as}} DOM mutation test', (function (_RenderingTest4) {
+babelHelpers.inherits(_class11, _RenderingTest4);
+
+      function _class11() {
+babelHelpers.classCallCheck(this, _class11);
+
+        _RenderingTest4.call(this);
+        this.observer = null;
+      }
+
+      _class11.prototype.observe = function observe(element) {
+        var observer = this.observer = new MutationObserver(function () {});
+        observer.observe(element, { childList: true });
+      };
+
+      _class11.prototype.teardown = function teardown() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+
+        _RenderingTest4.prototype.teardown.call(this);
+      };
+
+      _class11.prototype.assertNoMutation = function assertNoMutation() {
+        this.assert.deepEqual(this.observer.takeRecords(), [], 'Expected no mutations');
+      };
+
+      _class11.prototype.expectMutations = function expectMutations() {
+        this.assert.ok(this.observer.takeRecords().length > 0, 'Expected some mutations');
+      };
+
+      _class11.prototype['@test {{#each}} should not mutate a subtree when the array has not changed [GH #14332]'] = function testEachShouldNotMutateASubtreeWhenTheArrayHasNotChangedGH14332(assert) {
+        var _this25 = this;
+
+        var page = { title: 'Blog Posts' };
+
+        var model = [{ title: 'Rails is omakase' }, { title: 'Ember is omakase' }];
+
+        this.render(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject3), { page: page, model: model });
+
+        this.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject4));
+
+        this.observe(this.$('#posts')[0]);
+
+        // MutationObserver is async
+        return _emberRuntime.RSVP.Promise.resolve(function () {
+          _this25.assertStableRerender();
+        }).then(function () {
+          _this25.assertNoMutation();
+
+          _this25.runTask(function () {
+            return _emberMetal.set(_this25.context, 'page', { title: 'Essays' });
+          });
+
+          _this25.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject5));
+        }).then(function () {
+          // 'page' and 'model' is keyed off the same object, so we do expect Glimmer
+          // to re-iterate the list
+          _this25.expectMutations();
+
+          _this25.runTask(function () {
+            return _emberMetal.set(_this25.context.page, 'title', 'Think Pieces™');
+          });
+
+          _this25.assertHTML(_emberGlimmerTestsUtilsAbstractTestCase.strip(_templateObject6));
+        }).then(function () {
+          // The last set is localized to the `page` object, so we do not expect Glimmer
+          // to re-iterate the list
+          _this25.assertNoMutation();
+        });
+      };
+
+      return _class11;
+    })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
+  }
 });
 enifed('ember-glimmer/tests/integration/syntax/if-unless-test', ['exports', 'ember-glimmer/tests/utils/helpers', 'ember-runtime', 'ember-metal', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-glimmer/tests/utils/shared-conditional-tests'], function (exports, _emberGlimmerTestsUtilsHelpers, _emberRuntime, _emberMetal, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberGlimmerTestsUtilsSharedConditionalTests) {
   'use strict';
@@ -32708,7 +32920,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertText = function assertText(text) {
-      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content');
+      this.assert.strictEqual(this.textValue(), text, '#qunit-fixture content should be: `' + text + '`');
     };
 
     TestCase.prototype.assertInnerHTML = function assertInnerHTML(html) {
@@ -32716,7 +32928,7 @@ enifed('ember-glimmer/tests/utils/abstract-test-case', ['exports', 'ember-utils'
     };
 
     TestCase.prototype.assertHTML = function assertHTML(html) {
-      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content');
+      _emberGlimmerTestsUtilsTestHelpers.equalTokens(this.element, html, '#qunit-fixture content should be: `' + html + '`');
     };
 
     TestCase.prototype.assertElement = function assertElement(node, _ref) {
@@ -56112,7 +56324,6 @@ enifed('ember-runtime/tests/system/object/destroy_test', ['exports', 'ember-meta
     });
 
     meta = _emberMetal.peekMeta(obj);
-    ok(!meta, 'meta is destroyed after run loop finishes');
     ok(get(obj, 'isDestroyed'), 'object is destroyed after run loop finishes');
   });
 
@@ -62533,20 +62744,10 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
   });
 
   QUnit.test('{{link-to}} populates href with default query param values even without query-params object', function () {
-    if (false) {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        }
-      });
-    } else {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-    }
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
+    });
 
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' id='the-link'}}Index{{/link-to}}"));
     bootApplication();
@@ -62554,20 +62755,10 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
   });
 
   QUnit.test('{{link-to}} populates href with default query param values with empty query-params object', function () {
-    if (false) {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        }
-      });
-    } else {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-    }
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
+    });
 
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' (query-params) id='the-link'}}Index{{/link-to}}"));
     bootApplication();
@@ -62579,24 +62770,11 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
       this.route('about');
     });
 
-    if (false) {
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          },
-          bar: {
-            defaultValue: 'yes'
-          }
-        }
-      });
-    } else {
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['foo', 'bar'],
-        foo: '123',
-        bar: 'yes'
-      });
-    }
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['foo', 'bar'],
+      foo: '123',
+      bar: 'yes'
+    });
 
     _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{#link-to (query-params foo=\'456\' bar=\'NAW\') id=\'the-link\'}}Index{{/link-to}}'));
     bootApplication();
@@ -62614,24 +62792,11 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
       this.route('about');
     });
 
-    if (false) {
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          },
-          bar: {
-            defaultValue: 'yes'
-          }
-        }
-      });
-    } else {
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['foo', 'bar'],
-        foo: '123',
-        bar: 'yes'
-      });
-    }
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['foo', 'bar'],
+      foo: '123',
+      bar: 'yes'
+    });
 
     _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{link-to "Index" (query-params foo=\'456\' bar=\'NAW\') id=\'the-link\'}}'));
     bootApplication();
@@ -62961,807 +63126,410 @@ enifed('ember/tests/helpers/link_to_test/link_to_with_query_params_test', ['expo
     _emberGlimmer.setTemplates({});
   }
 
-  if (false) {
-    QUnit.module('The {{link-to}} helper: invoking with query params when defined on a route', {
-      setup: function () {
-        _emberMetal.run(function () {
-          sharedSetup();
-          App.IndexController = _emberRuntime.Controller.extend({
-            boundThing: 'OMG'
-          });
+  QUnit.module('The {{link-to}} helper: invoking with query params', {
+    setup: function () {
+      _emberMetal.run(function () {
+        sharedSetup();
 
-          App.IndexRoute = _emberRouting.Route.extend({
-            queryParams: {
-              foo: {
-                defaultValue: '123'
-              },
-              bar: {
-                defaultValue: 'abc'
-              },
-              abool: {
-                defaultValue: true
-              }
-            }
-          });
-
-          App.AboutRoute = _emberRouting.Route.extend({
-            queryParams: {
-              baz: {
-                defaultValue: 'alex'
-              },
-              bat: {
-                defaultValue: 'borf'
-              }
-            }
-          });
-
-          registry.unregister('router:main');
-          registry.register('router:main', Router);
+        App.IndexController = _emberRuntime.Controller.extend({
+          queryParams: ['foo', 'bar', 'abool'],
+          foo: '123',
+          bar: 'abc',
+          boundThing: 'OMG',
+          abool: true
         });
-      },
 
-      teardown: sharedTeardown
-    });
-
-    // jscs:disable
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked (empty query-params obj)", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' (query-params) id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test('link-to with no params throws', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to id='the-link'}}Index{{/link-to}}"));
-      expectAssertion(function () {
-        bootApplication();
-      }, /one or more/);
-    });
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked (empty query-params obj, inferred route)", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params) id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test('updates controller QP properties on current route when invoked', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' (query-params foo='456') id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
-    });
-
-    QUnit.test('updates controller QP properties on current route when invoked (inferred route)', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='456') id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
-    });
-
-    QUnit.test('updates controller QP properties on other route after transitioning to that route', function () {
-      Router.map(function () {
-        this.route('about');
-      });
-
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'about' (query-params baz='lol') id='the-link'}}About{{/link-to}}"));
-      bootApplication();
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/about?baz=lol');
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var aboutController = container.lookup('controller:about');
-      deepEqual(aboutController.getProperties('baz', 'bat'), { baz: 'lol', bat: 'borf' }, 'about controller QP properties updated');
-
-      equal(container.lookup('controller:application').get('currentPath'), 'about');
-    });
-
-    QUnit.test('supplied QP properties can be bound', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo=boundThing) id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      var indexController = container.lookup('controller:index');
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=OMG');
-      _emberMetal.run(indexController, 'set', 'boundThing', 'ASL');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=ASL');
-    });
-
-    QUnit.test('supplied QP properties can be bound (booleans)', function () {
-      var indexController = container.lookup('controller:index');
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params abool=boundThing) id='the-link'}}Index{{/link-to}}"));
-
-      bootApplication();
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=OMG');
-      _emberMetal.run(indexController, 'set', 'boundThing', false);
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=false');
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-
-      deepEqual(indexController.getProperties('foo', 'bar', 'abool'), { foo: '123', bar: 'abc', abool: false });
-    });
-
-    QUnit.test('href updates when unsupplied controller QP props change', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='lol') id='the-link'}}Index{{/link-to}}"));
-
-      bootApplication();
-
-      var indexController = container.lookup('controller:index');
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=lol');
-      _emberMetal.run(indexController, 'set', 'bar', 'BORF');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
-      _emberMetal.run(indexController, 'set', 'foo', 'YEAH');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
-    });
-
-    QUnit.test('The {{link-to}} with only query params always transitions to the current route with the query params applied', function () {
-      // Test harness for bug #12033
-
-      _emberGlimmer.setTemplate('cars', _emberTemplateCompiler.compile("{{#link-to 'cars.create' id='create-link'}}Create new car{{/link-to}} " + "{{#link-to (query-params page='2') id='page2-link'}}Page 2{{/link-to}}" + '{{outlet}}'));
-
-      _emberGlimmer.setTemplate('cars/create', _emberTemplateCompiler.compile("{{#link-to 'cars' id='close-link'}}Close create form{{/link-to}}"));
-
-      Router.map(function () {
-        this.route('cars', function () {
-          this.route('create');
+        App.AboutController = _emberRuntime.Controller.extend({
+          queryParams: ['baz', 'bat'],
+          baz: 'alex',
+          bat: 'borf'
         });
+
+        registry.unregister('router:main');
+        registry.register('router:main', Router);
       });
+    },
 
-      App.CarsRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: { defaultValue: 1 }
-        }
-      });
+    teardown: sharedTeardown
+  });
 
-      bootApplication();
+  QUnit.test('doesn\'t update controller QP properties on current route when invoked', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to \'index\' id=\'the-link\'}}Index{{/link-to}}'));
+    bootApplication();
 
-      _emberMetal.run(function () {
-        return router.handleURL('/cars/create');
-      });
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var indexController = container.lookup('controller:index');
+    deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
+  });
 
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.create');
-        _emberViews.jQuery('#close-link').click();
-      });
+  QUnit.test('doesn\'t update controller QP properties on current route when invoked (empty query-params obj)', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to \'index\' (query-params) id=\'the-link\'}}Index{{/link-to}}'));
+    bootApplication();
 
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.index');
-        equal(router.get('url'), '/cars');
-        equal(container.lookup('controller:cars').get('page'), 1, 'The page query-param is 1');
-        _emberViews.jQuery('#page2-link').click();
-      });
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var indexController = container.lookup('controller:index');
+    deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
+  });
 
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.index', 'The active route is still cars');
-        equal(router.get('url'), '/cars?page=2', 'The url has been updated');
-        equal(container.lookup('controller:cars').get('page'), 2, 'The query params have been updated');
+  QUnit.test('link-to with no params throws', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to id=\'the-link\'}}Index{{/link-to}}'));
+    expectAssertion(function () {
+      return bootApplication();
+    }, /one or more/);
+  });
+
+  QUnit.test('doesn\'t update controller QP properties on current route when invoked (empty query-params obj, inferred route)', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to (query-params) id=\'the-link\'}}Index{{/link-to}}'));
+    bootApplication();
+
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var indexController = container.lookup('controller:index');
+    deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
+  });
+
+  QUnit.test('updates controller QP properties on current route when invoked', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to \'index\' (query-params foo=\'456\') id=\'the-link\'}}Index{{/link-to}}'));
+    bootApplication();
+
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var indexController = container.lookup('controller:index');
+    deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
+  });
+
+  QUnit.test('updates controller QP properties on current route when invoked (inferred route)', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to (query-params foo=\'456\') id=\'the-link\'}}Index{{/link-to}}'));
+    bootApplication();
+
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var indexController = container.lookup('controller:index');
+    deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
+  });
+
+  QUnit.test('updates controller QP properties on other route after transitioning to that route', function () {
+    Router.map(function () {
+      this.route('about');
+    });
+
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to \'about\' (query-params baz=\'lol\') id=\'the-link\'}}About{{/link-to}}'));
+    bootApplication();
+
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/about?baz=lol');
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+    var aboutController = container.lookup('controller:about');
+    deepEqual(aboutController.getProperties('baz', 'bat'), { baz: 'lol', bat: 'borf' }, 'about controller QP properties updated');
+
+    equal(container.lookup('controller:application').get('currentPath'), 'about');
+  });
+
+  QUnit.test('supplied QP properties can be bound', function () {
+    var indexController = container.lookup('controller:index');
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to (query-params foo=boundThing) id=\'the-link\'}}Index{{/link-to}}'));
+
+    bootApplication();
+
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=OMG');
+    _emberMetal.run(indexController, 'set', 'boundThing', 'ASL');
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=ASL');
+  });
+
+  QUnit.test('supplied QP properties can be bound (booleans)', function () {
+    var indexController = container.lookup('controller:index');
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to (query-params abool=boundThing) id=\'the-link\'}}Index{{/link-to}}'));
+
+    bootApplication();
+
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=OMG');
+    _emberMetal.run(indexController, 'set', 'boundThing', false);
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=false');
+
+    _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
+
+    deepEqual(indexController.getProperties('foo', 'bar', 'abool'), { foo: '123', bar: 'abc', abool: false });
+  });
+
+  QUnit.test('href updates when unsupplied controller QP props change', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('{{#link-to (query-params foo=\'lol\') id=\'the-link\'}}Index{{/link-to}}'));
+
+    bootApplication();
+    var indexController = container.lookup('controller:index');
+
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=lol');
+    _emberMetal.run(indexController, 'set', 'bar', 'BORF');
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
+    _emberMetal.run(indexController, 'set', 'foo', 'YEAH');
+    equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
+  });
+
+  QUnit.test('The {{link-to}} with only query params always transitions to the current route with the query params applied', function () {
+    // Test harness for bug #12033
+
+    _emberGlimmer.setTemplate('cars', _emberTemplateCompiler.compile('\n    {{#link-to \'cars.create\' id=\'create-link\'}}Create new car{{/link-to}}\n    {{#link-to (query-params page=\'2\') id=\'page2-link\'}}Page 2{{/link-to}}\n    {{outlet}}\n  '));
+
+    _emberGlimmer.setTemplate('cars/create', _emberTemplateCompiler.compile('{{#link-to \'cars\' id=\'close-link\'}}Close create form{{/link-to}}'));
+
+    Router.map(function () {
+      this.route('cars', function () {
+        this.route('create');
       });
     });
 
-    QUnit.test('The {{link-to}} applies activeClass when query params are not changed', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='cat') id='cat-link'}}Index{{/link-to}} " + "{{#link-to (query-params foo='dog') id='dog-link'}}Index{{/link-to}} " + "{{#link-to 'index' id='change-nothing'}}Index{{/link-to}}"));
-
-      _emberGlimmer.setTemplate('search', _emberTemplateCompiler.compile("{{#link-to (query-params search='same') id='same-search'}}Index{{/link-to}} " + "{{#link-to (query-params search='change') id='change-search'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' archive=true) id='same-search-add-archive'}}Index{{/link-to}} " + "{{#link-to (query-params archive=true) id='only-add-archive'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' archive=true) id='both-same'}}Index{{/link-to}} " + "{{#link-to (query-params search='different' archive=true) id='change-one'}}Index{{/link-to}} " + "{{#link-to (query-params search='different' archive=false) id='remove-one'}}Index{{/link-to}} " + '{{outlet}}'));
-
-      _emberGlimmer.setTemplate('search/results', _emberTemplateCompiler.compile("{{#link-to (query-params sort='title') id='same-sort-child-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='same') id='same-search-parent-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='change') id='change-search-parent-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' sort='title') id='same-search-same-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' sort='author') id='same-search-different-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params search='change' sort='title') id='change-search-same-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params foo='dog') id='dog-link'}}Index{{/link-to}} "));
-
-      Router.map(function () {
-        this.route('search', function () {
-          this.route('results');
-        });
-      });
-
-      App.SearchRoute = _emberRouting.Route.extend({
-        queryParams: {
-          search: {
-            defaultValue: ''
-          },
-          archive: {
-            defaultValue: false
-          }
-        }
-      });
-
-      App.SearchResultsRoute = _emberRouting.Route.extend({
-        queryParams: {
-          sort: {
-            defaultValue: 'title'
-          },
-          showDetails: {
-            defaultValue: true
-          }
-        }
-      });
-
-      bootApplication();
-
-      //Basic tests
-      shouldNotBeActive('#cat-link');
-      shouldNotBeActive('#dog-link');
-      _emberMetal.run(router, 'handleURL', '/?foo=cat');
-      shouldBeActive('#cat-link');
-      shouldNotBeActive('#dog-link');
-      _emberMetal.run(router, 'handleURL', '/?foo=dog');
-      shouldBeActive('#dog-link');
-      shouldNotBeActive('#cat-link');
-      shouldBeActive('#change-nothing');
-
-      //Multiple params
-      _emberMetal.run(function () {
-        return router.handleURL('/search?search=same');
-      });
-
-      shouldBeActive('#same-search');
-      shouldNotBeActive('#change-search');
-      shouldNotBeActive('#same-search-add-archive');
-      shouldNotBeActive('#only-add-archive');
-      shouldNotBeActive('#remove-one');
-
-      _emberMetal.run(function () {
-        return router.handleURL('/search?search=same&archive=true');
-      });
-
-      shouldBeActive('#both-same');
-      shouldNotBeActive('#change-one');
-
-      //Nested Controllers
-      _emberMetal.run(function () {
-        // Note: this is kind of a strange case; sort's default value is 'title',
-        // so this URL shouldn't have been generated in the first place, but
-        // we should also be able to gracefully handle these cases.
-        router.handleURL('/search/results?search=same&sort=title&showDetails=true');
-      });
-      //shouldBeActive('#same-sort-child-only');
-      shouldBeActive('#same-search-parent-only');
-      shouldNotBeActive('#change-search-parent-only');
-      shouldBeActive('#same-search-same-sort-child-and-parent');
-      shouldNotBeActive('#same-search-different-sort-child-and-parent');
-      shouldNotBeActive('#change-search-same-sort-child-and-parent');
+    App.CarsController = _emberRuntime.Controller.extend({
+      queryParams: ['page'],
+      page: 1
     });
 
-    QUnit.test('The {{link-to}} applies active class when query-param is number', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params page=pageNumber) id='page-link'}}Index{{/link-to}} "));
+    bootApplication();
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: {
-            defaultValue: 1
-          }
-        }
-      });
+    var carsController = container.lookup('controller:cars');
 
-      App.IndexController = _emberRuntime.Controller.extend({
-        pageNumber: 5
-      });
-
-      bootApplication();
-
-      shouldNotBeActive('#page-link');
-      _emberMetal.run(router, 'handleURL', '/?page=5');
-      shouldBeActive('#page-link');
+    _emberMetal.run(function () {
+      return router.handleURL('/cars/create');
     });
 
-    QUnit.test('The {{link-to}} applies active class when query-param is array', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params pages=pagesArray) id='array-link'}}Index{{/link-to}} " + "{{#link-to (query-params pages=biggerArray) id='bigger-link'}}Index{{/link-to}} " + "{{#link-to (query-params pages=emptyArray) id='empty-link'}}Index{{/link-to}} "));
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          pages: {
-            defaultValue: []
-          }
-        }
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        pagesArray: [1, 2],
-        biggerArray: [1, 2, 3],
-        emptyArray: []
-      });
-
-      bootApplication();
-
-      shouldNotBeActive('#array-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%5D');
-      shouldBeActive('#array-link');
-      shouldNotBeActive('#bigger-link');
-      shouldNotBeActive('#empty-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B2%2C1%5D');
-      shouldNotBeActive('#array-link');
-      shouldNotBeActive('#bigger-link');
-      shouldNotBeActive('#empty-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%2C3%5D');
-      shouldBeActive('#bigger-link');
-      shouldNotBeActive('#array-link');
-      shouldNotBeActive('#empty-link');
+    _emberMetal.run(function () {
+      equal(router.currentRouteName, 'cars.create');
+      _emberViews.jQuery('#close-link').click();
     });
 
-    QUnit.test('The {{link-to}} helper applies active class to parent route', function () {
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-        });
-      });
-
-      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'parent' id='parent-link'}}Parent{{/link-to}} " + "{{#link-to 'parent.child' id='parent-child-link'}}Child{{/link-to}} " + "{{#link-to 'parent' (query-params foo=cat) id='parent-link-qp'}}Parent{{/link-to}} " + '{{outlet}}'));
-
-      App.ParentChildRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'bar'
-          }
-        }
-      });
-
-      bootApplication();
-      shouldNotBeActive('#parent-link');
-      shouldNotBeActive('#parent-child-link');
-      shouldNotBeActive('#parent-link-qp');
-      _emberMetal.run(router, 'handleURL', '/parent/child?foo=dog');
-      shouldBeActive('#parent-link');
-      shouldNotBeActive('#parent-link-qp');
+    _emberMetal.run(function () {
+      equal(router.currentRouteName, 'cars.index');
+      equal(router.get('url'), '/cars');
+      equal(carsController.get('page'), 1, 'The page query-param is 1');
+      _emberViews.jQuery('#page2-link').click();
     });
 
-    QUnit.test('The {{link-to}} helper disregards query-params in activeness computation when current-when specified', function () {
-      App.Router.map(function () {
-        this.route('parent');
-      });
-
-      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'parent' (query-params page=1) current-when='parent' id='app-link'}}Parent{{/link-to}} {{outlet}}"));
-      _emberGlimmer.setTemplate('parent', _emberTemplateCompiler.compile("{{#link-to 'parent' (query-params page=1) current-when='parent' id='parent-link'}}Parent{{/link-to}} {{outlet}}"));
-
-      App.ParentRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: {
-            defaultValue: 1
-          }
-        }
-      });
-
-      bootApplication();
-      equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
-      shouldNotBeActive('#app-link');
-
-      _emberMetal.run(router, 'handleURL', '/parent?page=2');
-      equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
-      shouldBeActive('#app-link');
-      equal(_emberViews.jQuery('#parent-link').attr('href'), '/parent');
-      shouldBeActive('#parent-link');
-
-      var parentController = container.lookup('controller:parent');
-      equal(parentController.get('page'), 2);
-      _emberMetal.run(parentController, 'set', 'page', 3);
-      equal(router.get('location.path'), '/parent?page=3');
-      shouldBeActive('#app-link');
-      shouldBeActive('#parent-link');
-
-      _emberViews.jQuery('#app-link').click();
-      equal(router.get('location.path'), '/parent');
+    _emberMetal.run(function () {
+      equal(router.currentRouteName, 'cars.index', 'The active route is still cars');
+      equal(router.get('url'), '/cars?page=2', 'The url has been updated');
+      equal(carsController.get('page'), 2, 'The query params have been updated');
     });
-  } else {
-    QUnit.module('The {{link-to}} helper: invoking with query params', {
-      setup: function () {
-        _emberMetal.run(function () {
-          sharedSetup();
+  });
 
-          App.IndexController = _emberRuntime.Controller.extend({
-            queryParams: ['foo', 'bar', 'abool'],
-            foo: '123',
-            bar: 'abc',
-            boundThing: 'OMG',
-            abool: true
-          });
+  QUnit.test('The {{link-to}} applies activeClass when query params are not changed', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('\n    {{#link-to (query-params foo=\'cat\') id=\'cat-link\'}}Index{{/link-to}}\n    {{#link-to (query-params foo=\'dog\') id=\'dog-link\'}}Index{{/link-to}}\n    {{#link-to \'index\' id=\'change-nothing\'}}Index{{/link-to}}\n  '));
 
-          App.AboutController = _emberRuntime.Controller.extend({
-            queryParams: ['baz', 'bat'],
-            baz: 'alex',
-            bat: 'borf'
-          });
+    _emberGlimmer.setTemplate('search', _emberTemplateCompiler.compile('\n    {{#link-to (query-params search=\'same\') id=\'same-search\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'change\') id=\'change-search\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'same\' archive=true) id=\'same-search-add-archive\'}}Index{{/link-to}}\n    {{#link-to (query-params archive=true) id=\'only-add-archive\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'same\' archive=true) id=\'both-same\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'different\' archive=true) id=\'change-one\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'different\' archive=false) id=\'remove-one\'}}Index{{/link-to}}\n    {{outlet}}\n  '));
 
-          registry.unregister('router:main');
-          registry.register('router:main', Router);
-        });
-      },
+    _emberGlimmer.setTemplate('search/results', _emberTemplateCompiler.compile('\n    {{#link-to (query-params sort=\'title\') id=\'same-sort-child-only\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'same\') id=\'same-search-parent-only\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'change\') id=\'change-search-parent-only\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'same\' sort=\'title\') id=\'same-search-same-sort-child-and-parent\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'same\' sort=\'author\') id=\'same-search-different-sort-child-and-parent\'}}Index{{/link-to}}\n    {{#link-to (query-params search=\'change\' sort=\'title\') id=\'change-search-same-sort-child-and-parent\'}}Index{{/link-to}}\n    {{#link-to (query-params foo=\'dog\') id=\'dog-link\'}}Index{{/link-to}}\n  '));
 
-      teardown: sharedTeardown
-    });
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked (empty query-params obj)", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' (query-params) id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test('link-to with no params throws', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to id='the-link'}}Index{{/link-to}}"));
-      expectAssertion(function () {
-        return bootApplication();
-      }, /one or more/);
-    });
-
-    QUnit.test("doesn't update controller QP properties on current route when invoked (empty query-params obj, inferred route)", function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params) id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '123', bar: 'abc' }, 'controller QP properties not');
-    });
-
-    QUnit.test('updates controller QP properties on current route when invoked', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'index' (query-params foo='456') id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
-    });
-
-    QUnit.test('updates controller QP properties on current route when invoked (inferred route)', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='456') id='the-link'}}Index{{/link-to}}"));
-      bootApplication();
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var indexController = container.lookup('controller:index');
-      deepEqual(indexController.getProperties('foo', 'bar'), { foo: '456', bar: 'abc' }, 'controller QP properties updated');
-    });
-
-    QUnit.test('updates controller QP properties on other route after transitioning to that route', function () {
-      Router.map(function () {
-        this.route('about');
-      });
-
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to 'about' (query-params baz='lol') id='the-link'}}About{{/link-to}}"));
-      bootApplication();
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/about?baz=lol');
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-      var aboutController = container.lookup('controller:about');
-      deepEqual(aboutController.getProperties('baz', 'bat'), { baz: 'lol', bat: 'borf' }, 'about controller QP properties updated');
-
-      equal(container.lookup('controller:application').get('currentPath'), 'about');
-    });
-
-    QUnit.test('supplied QP properties can be bound', function () {
-      var indexController = container.lookup('controller:index');
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo=boundThing) id='the-link'}}Index{{/link-to}}"));
-
-      bootApplication();
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=OMG');
-      _emberMetal.run(indexController, 'set', 'boundThing', 'ASL');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=ASL');
-    });
-
-    QUnit.test('supplied QP properties can be bound (booleans)', function () {
-      var indexController = container.lookup('controller:index');
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params abool=boundThing) id='the-link'}}Index{{/link-to}}"));
-
-      bootApplication();
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=OMG');
-      _emberMetal.run(indexController, 'set', 'boundThing', false);
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?abool=false');
-
-      _emberMetal.run(_emberViews.jQuery('#the-link'), 'click');
-
-      deepEqual(indexController.getProperties('foo', 'bar', 'abool'), { foo: '123', bar: 'abc', abool: false });
-    });
-
-    QUnit.test('href updates when unsupplied controller QP props change', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='lol') id='the-link'}}Index{{/link-to}}"));
-
-      bootApplication();
-      var indexController = container.lookup('controller:index');
-
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?foo=lol');
-      _emberMetal.run(indexController, 'set', 'bar', 'BORF');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
-      _emberMetal.run(indexController, 'set', 'foo', 'YEAH');
-      equal(_emberViews.jQuery('#the-link').attr('href'), '/?bar=BORF&foo=lol');
-    });
-
-    QUnit.test('The {{link-to}} with only query params always transitions to the current route with the query params applied', function () {
-      // Test harness for bug #12033
-
-      _emberGlimmer.setTemplate('cars', _emberTemplateCompiler.compile("{{#link-to 'cars.create' id='create-link'}}Create new car{{/link-to}} " + "{{#link-to (query-params page='2') id='page2-link'}}Page 2{{/link-to}}" + '{{outlet}}'));
-
-      _emberGlimmer.setTemplate('cars/create', _emberTemplateCompiler.compile("{{#link-to 'cars' id='close-link'}}Close create form{{/link-to}}"));
-
-      Router.map(function () {
-        this.route('cars', function () {
-          this.route('create');
-        });
-      });
-
-      App.CarsController = _emberRuntime.Controller.extend({
-        queryParams: ['page'],
-        page: 1
-      });
-
-      bootApplication();
-
-      var carsController = container.lookup('controller:cars');
-
-      _emberMetal.run(function () {
-        return router.handleURL('/cars/create');
-      });
-
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.create');
-        _emberViews.jQuery('#close-link').click();
-      });
-
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.index');
-        equal(router.get('url'), '/cars');
-        equal(carsController.get('page'), 1, 'The page query-param is 1');
-        _emberViews.jQuery('#page2-link').click();
-      });
-
-      _emberMetal.run(function () {
-        equal(router.currentRouteName, 'cars.index', 'The active route is still cars');
-        equal(router.get('url'), '/cars?page=2', 'The url has been updated');
-        equal(carsController.get('page'), 2, 'The query params have been updated');
+    Router.map(function () {
+      this.route('search', function () {
+        this.route('results');
       });
     });
 
-    QUnit.test('The {{link-to}} applies activeClass when query params are not changed', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params foo='cat') id='cat-link'}}Index{{/link-to}} " + "{{#link-to (query-params foo='dog') id='dog-link'}}Index{{/link-to}} " + "{{#link-to 'index' id='change-nothing'}}Index{{/link-to}}"));
-
-      _emberGlimmer.setTemplate('search', _emberTemplateCompiler.compile("{{#link-to (query-params search='same') id='same-search'}}Index{{/link-to}} " + "{{#link-to (query-params search='change') id='change-search'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' archive=true) id='same-search-add-archive'}}Index{{/link-to}} " + "{{#link-to (query-params archive=true) id='only-add-archive'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' archive=true) id='both-same'}}Index{{/link-to}} " + "{{#link-to (query-params search='different' archive=true) id='change-one'}}Index{{/link-to}} " + "{{#link-to (query-params search='different' archive=false) id='remove-one'}}Index{{/link-to}} " + '{{outlet}}'));
-
-      _emberGlimmer.setTemplate('search/results', _emberTemplateCompiler.compile("{{#link-to (query-params sort='title') id='same-sort-child-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='same') id='same-search-parent-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='change') id='change-search-parent-only'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' sort='title') id='same-search-same-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params search='same' sort='author') id='same-search-different-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params search='change' sort='title') id='change-search-same-sort-child-and-parent'}}Index{{/link-to}} " + "{{#link-to (query-params foo='dog') id='dog-link'}}Index{{/link-to}} "));
-
-      Router.map(function () {
-        this.route('search', function () {
-          this.route('results');
-        });
-      });
-
-      App.SearchController = _emberRuntime.Controller.extend({
-        queryParams: ['search', 'archive'],
-        search: '',
-        archive: false
-      });
-
-      App.SearchResultsController = _emberRuntime.Controller.extend({
-        queryParams: ['sort', 'showDetails'],
-        sort: 'title',
-        showDetails: true
-      });
-
-      bootApplication();
-
-      //Basic tests
-      shouldNotBeActive('#cat-link');
-      shouldNotBeActive('#dog-link');
-      _emberMetal.run(router, 'handleURL', '/?foo=cat');
-      shouldBeActive('#cat-link');
-      shouldNotBeActive('#dog-link');
-      _emberMetal.run(router, 'handleURL', '/?foo=dog');
-      shouldBeActive('#dog-link');
-      shouldNotBeActive('#cat-link');
-      shouldBeActive('#change-nothing');
-
-      //Multiple params
-      _emberMetal.run(function () {
-        return router.handleURL('/search?search=same');
-      });
-      shouldBeActive('#same-search');
-      shouldNotBeActive('#change-search');
-      shouldNotBeActive('#same-search-add-archive');
-      shouldNotBeActive('#only-add-archive');
-      shouldNotBeActive('#remove-one');
-
-      _emberMetal.run(function () {
-        return router.handleURL('/search?search=same&archive=true');
-      });
-
-      shouldBeActive('#both-same');
-      shouldNotBeActive('#change-one');
-
-      //Nested Controllers
-      _emberMetal.run(function () {
-        // Note: this is kind of a strange case; sort's default value is 'title',
-        // so this URL shouldn't have been generated in the first place, but
-        // we should also be able to gracefully handle these cases.
-        router.handleURL('/search/results?search=same&sort=title&showDetails=true');
-      });
-      //shouldBeActive('#same-sort-child-only');
-      shouldBeActive('#same-search-parent-only');
-      shouldNotBeActive('#change-search-parent-only');
-      shouldBeActive('#same-search-same-sort-child-and-parent');
-      shouldNotBeActive('#same-search-different-sort-child-and-parent');
-      shouldNotBeActive('#change-search-same-sort-child-and-parent');
+    App.SearchController = _emberRuntime.Controller.extend({
+      queryParams: ['search', 'archive'],
+      search: '',
+      archive: false
     });
 
-    QUnit.test('The {{link-to}} applies active class when query-param is number', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params page=pageNumber) id='page-link'}}Index{{/link-to}} "));
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['page'],
-        page: 1,
-        pageNumber: 5
-      });
-
-      bootApplication();
-
-      shouldNotBeActive('#page-link');
-      _emberMetal.run(router, 'handleURL', '/?page=5');
-      shouldBeActive('#page-link');
+    App.SearchResultsController = _emberRuntime.Controller.extend({
+      queryParams: ['sort', 'showDetails'],
+      sort: 'title',
+      showDetails: true
     });
 
-    QUnit.test('The {{link-to}} applies active class when query-param is array', function () {
-      _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile("{{#link-to (query-params pages=pagesArray) id='array-link'}}Index{{/link-to}} " + "{{#link-to (query-params pages=biggerArray) id='bigger-link'}}Index{{/link-to}} " + "{{#link-to (query-params pages=emptyArray) id='empty-link'}}Index{{/link-to}} "));
+    bootApplication();
 
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['pages'],
-        pages: [],
-        pagesArray: [1, 2],
-        biggerArray: [1, 2, 3],
-        emptyArray: []
-      });
+    //Basic tests
+    shouldNotBeActive('#cat-link');
+    shouldNotBeActive('#dog-link');
+    _emberMetal.run(router, 'handleURL', '/?foo=cat');
+    shouldBeActive('#cat-link');
+    shouldNotBeActive('#dog-link');
+    _emberMetal.run(router, 'handleURL', '/?foo=dog');
+    shouldBeActive('#dog-link');
+    shouldNotBeActive('#cat-link');
+    shouldBeActive('#change-nothing');
 
-      bootApplication();
+    //Multiple params
+    _emberMetal.run(function () {
+      return router.handleURL('/search?search=same');
+    });
+    shouldBeActive('#same-search');
+    shouldNotBeActive('#change-search');
+    shouldNotBeActive('#same-search-add-archive');
+    shouldNotBeActive('#only-add-archive');
+    shouldNotBeActive('#remove-one');
 
-      shouldNotBeActive('#array-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%5D');
-      shouldBeActive('#array-link');
-      shouldNotBeActive('#bigger-link');
-      shouldNotBeActive('#empty-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B2%2C1%5D');
-      shouldNotBeActive('#array-link');
-      shouldNotBeActive('#bigger-link');
-      shouldNotBeActive('#empty-link');
-      _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%2C3%5D');
-      shouldBeActive('#bigger-link');
-      shouldNotBeActive('#array-link');
-      shouldNotBeActive('#empty-link');
+    _emberMetal.run(function () {
+      return router.handleURL('/search?search=same&archive=true');
     });
 
-    QUnit.test('The {{link-to}} helper applies active class to parent route', function () {
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-        });
-      });
+    shouldBeActive('#both-same');
+    shouldNotBeActive('#change-one');
 
-      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'parent' id='parent-link'}}Parent{{/link-to}} " + "{{#link-to 'parent.child' id='parent-child-link'}}Child{{/link-to}} " + "{{#link-to 'parent' (query-params foo=cat) id='parent-link-qp'}}Parent{{/link-to}} " + '{{outlet}}'));
+    //Nested Controllers
+    _emberMetal.run(function () {
+      // Note: this is kind of a strange case; sort's default value is 'title',
+      // so this URL shouldn't have been generated in the first place, but
+      // we should also be able to gracefully handle these cases.
+      router.handleURL('/search/results?search=same&sort=title&showDetails=true');
+    });
+    //shouldBeActive('#same-sort-child-only');
+    shouldBeActive('#same-search-parent-only');
+    shouldNotBeActive('#change-search-parent-only');
+    shouldBeActive('#same-search-same-sort-child-and-parent');
+    shouldNotBeActive('#same-search-different-sort-child-and-parent');
+    shouldNotBeActive('#change-search-same-sort-child-and-parent');
+  });
 
-      App.ParentChildController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'bar'
-      });
+  QUnit.test('The {{link-to}} applies active class when query-param is number', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('\n    {{#link-to (query-params page=pageNumber) id=\'page-link\'}}Index{{/link-to}}\n  '));
 
-      bootApplication();
-      shouldNotBeActive('#parent-link');
-      shouldNotBeActive('#parent-child-link');
-      shouldNotBeActive('#parent-link-qp');
-      _emberMetal.run(router, 'handleURL', '/parent/child?foo=dog');
-      shouldBeActive('#parent-link');
-      shouldNotBeActive('#parent-link-qp');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['page'],
+      page: 1,
+      pageNumber: 5
     });
 
-    QUnit.test('The {{link-to}} helper disregards query-params in activeness computation when current-when specified', function () {
-      App.Router.map(function () {
-        this.route('parent');
-      });
+    bootApplication();
 
-      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'parent' (query-params page=1) current-when='parent' id='app-link'}}Parent{{/link-to}} {{outlet}}"));
-      _emberGlimmer.setTemplate('parent', _emberTemplateCompiler.compile("{{#link-to 'parent' (query-params page=1) current-when='parent' id='parent-link'}}Parent{{/link-to}} {{outlet}}"));
+    shouldNotBeActive('#page-link');
+    _emberMetal.run(router, 'handleURL', '/?page=5');
+    shouldBeActive('#page-link');
+  });
 
-      App.ParentController = _emberRuntime.Controller.extend({
-        queryParams: ['page'],
-        page: 1
-      });
+  QUnit.test('The {{link-to}} applies active class when query-param is array', function () {
+    _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('\n    {{#link-to (query-params pages=pagesArray) id=\'array-link\'}}Index{{/link-to}}\n    {{#link-to (query-params pages=biggerArray) id=\'bigger-link\'}}Index{{/link-to}}\n    {{#link-to (query-params pages=emptyArray) id=\'empty-link\'}}Index{{/link-to}}\n  '));
 
-      bootApplication();
-      equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
-      shouldNotBeActive('#app-link');
-
-      _emberMetal.run(router, 'handleURL', '/parent?page=2');
-      equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
-      shouldBeActive('#app-link');
-      equal(_emberViews.jQuery('#parent-link').attr('href'), '/parent');
-      shouldBeActive('#parent-link');
-
-      var parentController = container.lookup('controller:parent');
-      equal(parentController.get('page'), 2);
-      _emberMetal.run(parentController, 'set', 'page', 3);
-      equal(router.get('location.path'), '/parent?page=3');
-      shouldBeActive('#app-link');
-      shouldBeActive('#parent-link');
-
-      _emberViews.jQuery('#app-link').click();
-      equal(router.get('location.path'), '/parent');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['pages'],
+      pages: [],
+      pagesArray: [1, 2],
+      biggerArray: [1, 2, 3],
+      emptyArray: []
     });
 
-    QUnit.test('link-to default query params while in active transition regression test', function () {
-      App.Router.map(function () {
-        this.route('foos');
-        this.route('bars');
+    bootApplication();
+
+    shouldNotBeActive('#array-link');
+    _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%5D');
+    shouldBeActive('#array-link');
+    shouldNotBeActive('#bigger-link');
+    shouldNotBeActive('#empty-link');
+    _emberMetal.run(router, 'handleURL', '/?pages=%5B2%2C1%5D');
+    shouldNotBeActive('#array-link');
+    shouldNotBeActive('#bigger-link');
+    shouldNotBeActive('#empty-link');
+    _emberMetal.run(router, 'handleURL', '/?pages=%5B1%2C2%2C3%5D');
+    shouldBeActive('#bigger-link');
+    shouldNotBeActive('#array-link');
+    shouldNotBeActive('#empty-link');
+  });
+
+  QUnit.test('The {{link-to}} helper applies active class to parent route', function () {
+    App.Router.map(function () {
+      this.route('parent', function () {
+        this.route('child');
       });
-      var foos = _emberRuntime.RSVP.defer();
-      var bars = _emberRuntime.RSVP.defer();
-
-      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('\n      {{link-to \'Foos\' \'foos\' id=\'foos-link\'}}\n      {{link-to \'Baz Foos\' \'foos\' (query-params baz=true) id=\'baz-foos-link\'}}\n      {{link-to \'Quux Bars\' \'bars\' (query-params quux=true) id=\'bars-link\'}}\n    '));
-
-      App.FoosController = _emberRuntime.Controller.extend({
-        queryParams: ['status'],
-        baz: false
-      });
-
-      App.FoosRoute = _emberRouting.Route.extend({
-        model: function () {
-          return foos.promise;
-        }
-      });
-
-      App.BarsController = _emberRuntime.Controller.extend({
-        queryParams: ['status'],
-        quux: false
-      });
-
-      App.BarsRoute = _emberRouting.Route.extend({
-        model: function () {
-          return bars.promise;
-        }
-      });
-
-      bootApplication();
-      equal(_emberViews.jQuery('#foos-link').attr('href'), '/foos');
-      equal(_emberViews.jQuery('#baz-foos-link').attr('href'), '/foos?baz=true');
-      equal(_emberViews.jQuery('#bars-link').attr('href'), '/bars?quux=true');
-
-      equal(router.get('location.path'), '');
-
-      shouldNotBeActive('#foos-link');
-      shouldNotBeActive('#baz-foos-link');
-      shouldNotBeActive('#bars-link');
-
-      _emberMetal.run(_emberViews.jQuery('#bars-link'), 'click');
-      shouldNotBeActive('#bars-link');
-
-      _emberMetal.run(_emberViews.jQuery('#foos-link'), 'click');
-      shouldNotBeActive('#foos-link');
-
-      _emberMetal.run(foos, 'resolve');
-
-      equal(router.get('location.path'), '/foos');
-      shouldBeActive('#foos-link');
     });
-  }
+
+    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('\n    {{#link-to \'parent\' id=\'parent-link\'}}Parent{{/link-to}}\n    {{#link-to \'parent.child\' id=\'parent-child-link\'}}Child{{/link-to}}\n    {{#link-to \'parent\' (query-params foo=cat) id=\'parent-link-qp\'}}Parent{{/link-to}}\n    {{outlet}}\n  '));
+
+    App.ParentChildController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'bar'
+    });
+
+    bootApplication();
+    shouldNotBeActive('#parent-link');
+    shouldNotBeActive('#parent-child-link');
+    shouldNotBeActive('#parent-link-qp');
+    _emberMetal.run(router, 'handleURL', '/parent/child?foo=dog');
+    shouldBeActive('#parent-link');
+    shouldNotBeActive('#parent-link-qp');
+  });
+
+  QUnit.test('The {{link-to}} helper disregards query-params in activeness computation when current-when specified', function () {
+    App.Router.map(function () {
+      this.route('parent');
+    });
+
+    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('\n    {{#link-to \'parent\' (query-params page=1) current-when=\'parent\' id=\'app-link\'}}Parent{{/link-to}} {{outlet}}\n  '));
+    _emberGlimmer.setTemplate('parent', _emberTemplateCompiler.compile('\n    {{#link-to \'parent\' (query-params page=1) current-when=\'parent\' id=\'parent-link\'}}Parent{{/link-to}} {{outlet}}\n  '));
+
+    App.ParentController = _emberRuntime.Controller.extend({
+      queryParams: ['page'],
+      page: 1
+    });
+
+    bootApplication();
+    equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
+    shouldNotBeActive('#app-link');
+
+    _emberMetal.run(router, 'handleURL', '/parent?page=2');
+    equal(_emberViews.jQuery('#app-link').attr('href'), '/parent');
+    shouldBeActive('#app-link');
+    equal(_emberViews.jQuery('#parent-link').attr('href'), '/parent');
+    shouldBeActive('#parent-link');
+
+    var parentController = container.lookup('controller:parent');
+    equal(parentController.get('page'), 2);
+    _emberMetal.run(parentController, 'set', 'page', 3);
+    equal(router.get('location.path'), '/parent?page=3');
+    shouldBeActive('#app-link');
+    shouldBeActive('#parent-link');
+
+    _emberViews.jQuery('#app-link').click();
+    equal(router.get('location.path'), '/parent');
+  });
+
+  QUnit.test('link-to default query params while in active transition regression test', function () {
+    App.Router.map(function () {
+      this.route('foos');
+      this.route('bars');
+    });
+    var foos = _emberRuntime.RSVP.defer();
+    var bars = _emberRuntime.RSVP.defer();
+
+    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('\n    {{link-to \'Foos\' \'foos\' id=\'foos-link\'}}\n    {{link-to \'Baz Foos\' \'foos\' (query-params baz=true) id=\'baz-foos-link\'}}\n    {{link-to \'Quux Bars\' \'bars\' (query-params quux=true) id=\'bars-link\'}}\n  '));
+
+    App.FoosController = _emberRuntime.Controller.extend({
+      queryParams: ['status'],
+      baz: false
+    });
+
+    App.FoosRoute = _emberRouting.Route.extend({
+      model: function () {
+        return foos.promise;
+      }
+    });
+
+    App.BarsController = _emberRuntime.Controller.extend({
+      queryParams: ['status'],
+      quux: false
+    });
+
+    App.BarsRoute = _emberRouting.Route.extend({
+      model: function () {
+        return bars.promise;
+      }
+    });
+
+    bootApplication();
+    equal(_emberViews.jQuery('#foos-link').attr('href'), '/foos');
+    equal(_emberViews.jQuery('#baz-foos-link').attr('href'), '/foos?baz=true');
+    equal(_emberViews.jQuery('#bars-link').attr('href'), '/bars?quux=true');
+
+    equal(router.get('location.path'), '');
+
+    shouldNotBeActive('#foos-link');
+    shouldNotBeActive('#baz-foos-link');
+    shouldNotBeActive('#bars-link');
+
+    _emberMetal.run(_emberViews.jQuery('#bars-link'), 'click');
+    shouldNotBeActive('#bars-link');
+
+    _emberMetal.run(_emberViews.jQuery('#foos-link'), 'click');
+    shouldNotBeActive('#foos-link');
+
+    _emberMetal.run(foos, 'resolve');
+
+    equal(router.get('location.path'), '/foos');
+    shouldBeActive('#foos-link');
+  });
 });
 enifed('ember/tests/homepage_example_test', ['exports', 'ember-routing', 'ember-metal', 'ember-application', 'ember-runtime', 'ember-template-compiler', 'ember-views', 'ember-glimmer'], function (exports, _emberRouting, _emberMetal, _emberApplication, _emberRuntime, _emberTemplateCompiler, _emberViews, _emberGlimmer) {
   'use strict';
@@ -67854,3211 +67622,1324 @@ enifed('ember/tests/routing/query_params_test', ['exports', 'ember-runtime', 'em
     }
   });
 
-  if (false) {
-    QUnit.test('Single query params can be set on the route', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
+  QUnit.test('Calling transitionTo does not lose query params already on the activeTransition', function () {
+    expect(2);
+    App.Router.map(function () {
+      this.route('parent', function () {
+        this.route('child');
+        this.route('sibling');
       });
+    });
 
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
+    App.ParentChildRoute = _emberRouting.Route.extend({
+      afterModel: function () {
+        ok(true, 'The after model hook was called');
+        this.transitionTo('parent.sibling');
+      }
+    });
+
+    App.ParentController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'bar'
+    });
+
+    startingURL = '/parent/child?foo=lol';
+    bootApplication();
+
+    var parentController = container.lookup('controller:parent');
+
+    equal(parentController.get('foo'), 'lol');
+  });
+
+  QUnit.test('Single query params can be set on the controller [DEPRECATED]', function () {
+    App.Router.map(function () {
+      this.route('home', { path: '/' });
+    });
+
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
+    });
+
+    bootApplication();
+
+    var controller = container.lookup('controller:home');
+
+    setAndFlush(controller, 'foo', '456');
+
+    equal(router.get('location.path'), '/?foo=456');
+
+    setAndFlush(controller, 'foo', '987');
+    equal(router.get('location.path'), '/?foo=987');
+  });
+
+  QUnit.test('Single query params can be set on the controller [DEPRECATED]', function () {
+    App.Router.map(function () {
+      this.route('home', { path: '/' });
+    });
+
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
+    });
+
+    bootApplication();
+
+    var controller = container.lookup('controller:home');
+
+    setAndFlush(controller, 'foo', '456');
+
+    equal(router.get('location.path'), '/?foo=456');
+
+    setAndFlush(controller, 'foo', '987');
+    equal(router.get('location.path'), '/?foo=987');
+  });
+
+  QUnit.test('Query params can map to different url keys configured on the controller [DEPRECATED]', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: [{ foo: 'other_foo', bar: { as: 'other_bar' } }],
+      foo: 'FOO',
+      bar: 'BAR'
+    });
+
+    bootApplication();
+    equal(router.get('location.path'), '');
+
+    var controller = container.lookup('controller:index');
+    setAndFlush(controller, 'foo', 'LEX');
+
+    equal(router.get('location.path'), '/?other_foo=LEX');
+    setAndFlush(controller, 'foo', 'WOO');
+    equal(router.get('location.path'), '/?other_foo=WOO');
+
+    _emberMetal.run(router, 'transitionTo', '/?other_foo=NAW');
+    equal(controller.get('foo'), 'NAW');
+
+    setAndFlush(controller, 'bar', 'NERK');
+    _emberMetal.run(router, 'transitionTo', '/?other_bar=NERK&other_foo=NAW');
+  });
+
+  QUnit.test('Routes have overridable serializeQueryParamKey hook', function () {
+    App.IndexRoute = _emberRouting.Route.extend({
+      serializeQueryParamKey: _emberRuntime.String.dasherize
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: 'funTimes',
+      funTimes: ''
+    });
+
+    bootApplication();
+    equal(router.get('location.path'), '');
+
+    var controller = container.lookup('controller:index');
+    setAndFlush(controller, 'funTimes', 'woot');
+
+    equal(router.get('location.path'), '/?fun-times=woot');
+  });
+
+  QUnit.test('No replaceURL occurs on startup because default values don\'t show up in URL', function () {
+    expect(0);
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
+    });
+
+    expectedReplaceURL = '/?foo=123';
+
+    bootApplication();
+  });
+
+  QUnit.test('Can override inherited QP behavior by specifying queryParams as a computed property', function () {
+    expect(0);
+    var SharedMixin = _emberMetal.Mixin.create({
+      queryParams: ['a'],
+      a: 0
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend(SharedMixin, {
+      queryParams: _emberMetal.computed(function () {
+        return ['c'];
+      }),
+      c: true
+    });
+
+    bootApplication();
+    var indexController = container.lookup('controller:index');
+
+    expectedReplaceURL = 'not gonna happen';
+    _emberMetal.run(indexController, 'set', 'a', 1);
+  });
+
+  QUnit.test('model hooks receives query params', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { omg: 'lol' });
+      }
+    });
+
+    bootApplication();
+
+    equal(router.get('location.path'), '');
+  });
+
+  QUnit.test('controllers won\'t be eagerly instantiated by internal query params logic', function () {
+    expect(10);
+    App.Router.map(function () {
+      this.route('cats', function () {
+        this.route('index', { path: '/' });
+      });
+      this.route('home', { path: '/' });
+      this.route('about');
+    });
+
+    App.register('template:home', _emberTemplateCompiler.compile("<h3>{{link-to 'About' 'about' (query-params lol='wat') id='link-to-about'}}</h3>"));
+    App.register('template:about', _emberTemplateCompiler.compile("<h3>{{link-to 'Home' 'home'  (query-params foo='naw')}}</h3>"));
+    App.register('template:cats.index', _emberTemplateCompiler.compile("<h3>{{link-to 'Cats' 'cats'  (query-params name='domino') id='cats-link'}}</h3>"));
+
+    var homeShouldBeCreated = false;
+    var aboutShouldBeCreated = false;
+    var catsIndexShouldBeCreated = false;
+
+    App.HomeRoute = _emberRouting.Route.extend({
+      setup: function () {
+        homeShouldBeCreated = true;
+        this._super.apply(this, arguments);
+      }
+    });
+
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123',
+      init: function () {
+        this._super.apply(this, arguments);
+        ok(homeShouldBeCreated, 'HomeController should be created at this time');
+      }
+    });
+
+    App.AboutRoute = _emberRouting.Route.extend({
+      setup: function () {
+        aboutShouldBeCreated = true;
+        this._super.apply(this, arguments);
+      }
+    });
+
+    App.AboutController = _emberRuntime.Controller.extend({
+      queryParams: ['lol'],
+      lol: 'haha',
+      init: function () {
+        this._super.apply(this, arguments);
+        ok(aboutShouldBeCreated, 'AboutController should be created at this time');
+      }
+    });
+
+    App.CatsIndexRoute = _emberRouting.Route.extend({
+      model: function () {
+        return [];
+      },
+      setup: function () {
+        catsIndexShouldBeCreated = true;
+        this._super.apply(this, arguments);
+      },
+      setupController: function (controller, context) {
+        controller.set('model', context);
+      }
+    });
+
+    App.CatsIndexController = _emberRuntime.Controller.extend({
+      queryParams: ['breed', 'name'],
+      breed: 'Golden',
+      name: null,
+      init: function () {
+        this._super.apply(this, arguments);
+        ok(catsIndexShouldBeCreated, 'CatsIndexController should be created at this time');
+      }
+    });
+
+    bootApplication();
+
+    equal(router.get('location.path'), '', 'url is correct');
+    var controller = container.lookup('controller:home');
+    setAndFlush(controller, 'foo', '456');
+    equal(router.get('location.path'), '/?foo=456', 'url is correct');
+    equal(_emberViews.jQuery('#link-to-about').attr('href'), '/about?lol=wat', 'link to about is correct');
+
+    _emberMetal.run(router, 'transitionTo', 'about');
+    equal(router.get('location.path'), '/about', 'url is correct');
+
+    _emberMetal.run(router, 'transitionTo', 'cats');
+
+    equal(router.get('location.path'), '/cats', 'url is correct');
+    equal(_emberViews.jQuery('#cats-link').attr('href'), '/cats?name=domino', 'link to cats is correct');
+    _emberMetal.run(_emberViews.jQuery('#cats-link'), 'click');
+    equal(router.get('location.path'), '/cats?name=domino', 'url is correct');
+  });
+
+  QUnit.test('query params have been set by the time setupController is called', function () {
+    expect(1);
+
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'wat'
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      setupController: function (controller) {
+        equal(controller.get('foo'), 'YEAH', 'controller\'s foo QP property set before setupController called');
+      }
+    });
+
+    startingURL = '/?foo=YEAH';
+    bootApplication();
+  });
+
+  QUnit.test('model hooks receives query params (overridden by incoming url value)', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { omg: 'yes' });
+      }
+    });
+
+    startingURL = '/?omg=yes';
+    bootApplication();
+
+    equal(router.get('location.path'), '/?omg=yes');
+  });
+
+  QUnit.test('Route#paramsFor fetches query params', function () {
+    expect(1);
+
+    App.Router.map(function () {
+      this.route('index', { path: '/:something' });
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'fooapp'
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params, transition) {
+        deepEqual(this.paramsFor('index'), { something: 'omg', foo: 'fooapp' }, 'could retrieve params for index');
+      }
+    });
+
+    startingURL = '/omg';
+    bootApplication();
+  });
+
+  QUnit.test('model hook can query prefix-less application params (overridden by incoming url value)', function () {
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['appomg'],
+      appomg: 'applol'
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { appomg: 'appyes' });
+      }
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { omg: 'yes' });
+        deepEqual(this.paramsFor('application'), { appomg: 'appyes' });
+      }
+    });
+
+    startingURL = '/?appomg=appyes&omg=yes';
+    bootApplication();
+
+    equal(router.get('location.path'), '/?appomg=appyes&omg=yes');
+  });
+
+  QUnit.test('Route#paramsFor fetches falsy query params', function () {
+    expect(1);
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: true
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params, transition) {
+        equal(params.foo, false);
+      }
+    });
+
+    startingURL = '/?foo=false';
+    bootApplication();
+  });
+
+  QUnit.test('model hook can query prefix-less application params', function () {
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['appomg'],
+      appomg: 'applol'
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { appomg: 'applol' });
+      }
+    });
+
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { omg: 'lol' });
+        deepEqual(this.paramsFor('application'), { appomg: 'applol' });
+      }
+    });
+
+    bootApplication();
+
+    equal(router.get('location.path'), '');
+  });
+
+  QUnit.test('can opt into full transition by setting refreshModel in route queryParams', function () {
+    expect(6);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['appomg'],
+      appomg: 'applol'
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    var appModelCount = 0;
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        appModelCount++;
+      }
+    });
+
+    var indexModelCount = 0;
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        omg: {
+          refreshModel: true
         }
-      });
+      },
+      model: function (params) {
+        indexModelCount++;
 
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      setAndFlush(controller, 'foo', '456');
-
-      equal(router.get('location.path'), '/?foo=456');
-
-      setAndFlush(controller, 'foo', '987');
-      equal(router.get('location.path'), '/?foo=987');
-    });
-
-    QUnit.test('a query param can have define a `type` for type casting', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: {
-            defaultValue: null,
-            type: 'number'
-          }
-        }
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      _emberMetal.run(router, 'transitionTo', 'home', { queryParams: { page: '4' } });
-      equal(controller.get('page'), 4);
-    });
-
-    QUnit.test('Query params can map to different url keys configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: { as: 'other_foo', defaultValue: 'FOO' },
-          bar: { as: 'other_bar', defaultValue: 'BAR' }
-        }
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:index');
-
-      setAndFlush(controller, 'foo', 'LEX');
-
-      equal(router.get('location.path'), '/?other_foo=LEX');
-      setAndFlush(controller, 'foo', 'WOO');
-      equal(router.get('location.path'), '/?other_foo=WOO');
-
-      _emberMetal.run(router, 'transitionTo', '/?other_foo=NAW');
-      equal(controller.get('foo'), 'NAW');
-
-      setAndFlush(controller, 'bar', 'NERK');
-      _emberMetal.run(router, 'transitionTo', '/?other_bar=NERK&other_foo=NAW');
-    });
-
-    QUnit.test('Routes have overridable serializeQueryParamKey hook and it works with route-configured query params', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          funTimes: {
-            defaultValue: ''
-          }
-        },
-        serializeQueryParamKey: _emberRuntime.String.dasherize
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:index');
-      setAndFlush(controller, 'funTimes', 'woot');
-
-      equal(router.get('location.path'), '/?fun-times=woot');
-    });
-
-    QUnit.test('No replaceURL occurs on startup when configured via Route because default values don\'t show up in URL', function () {
-      expect(0);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        }
-      });
-
-      expectedReplaceURL = '/?foo=123';
-
-      bootApplication();
-    });
-
-    QUnit.test('model hooks receives query params when configred on Route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
+        if (indexModelCount === 1) {
           deepEqual(params, { omg: 'lol' });
+        } else if (indexModelCount === 2) {
+          deepEqual(params, { omg: 'lex' });
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
+      }
     });
 
-    QUnit.test('model hooks receives query params (overridden by incoming url value) when configured on route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { omg: 'yes' });
-        }
-      });
+    bootApplication();
 
-      startingURL = '/?omg=yes';
-      bootApplication();
+    equal(appModelCount, 1);
+    equal(indexModelCount, 1);
 
-      equal(router.get('location.path'), '/?omg=yes');
+    var indexController = container.lookup('controller:index');
+    setAndFlush(indexController, 'omg', 'lex');
+
+    equal(appModelCount, 1);
+    equal(indexModelCount, 2);
+  });
+
+  QUnit.test('refreshModel does not cause a second transition during app boot ', function () {
+    expect(0);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['appomg'],
+      appomg: 'applol'
     });
 
-    QUnit.test('Route#paramsFor fetches query params when configured on the route', function () {
-      expect(1);
-
-      App.Router.map(function () {
-        this.route('index', { path: '/:something' });
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'fooapp'
-          }
-        },
-        model: function (params, transition) {
-          deepEqual(this.paramsFor('index'), { something: 'omg', foo: 'fooapp' }, 'could retrieve params for index');
-        }
-      });
-
-      startingURL = '/omg';
-      bootApplication();
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
     });
 
-    QUnit.test('Route#paramsFor fetches falsy query params when they\'re configured on the route', function () {
-      expect(1);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: true
-          }
-        },
-        model: function (params, transition) {
-          equal(params.foo, false);
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        omg: {
+          refreshModel: true
         }
-      });
-
-      startingURL = '/?foo=false';
-      bootApplication();
+      },
+      refresh: function () {
+        ok(false);
+      }
     });
 
-    QUnit.test('model hook can query prefix-less application params when they\'re configured on the route', function () {
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          appomg: {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { appomg: 'applol' });
-        }
-      });
+    startingURL = '/?appomg=hello&omg=world';
+    bootApplication();
+  });
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
+  QUnit.test('queryParams are updated when a controller property is set and the route is refreshed. Issue #13263  ', function () {
+    _emberGlimmer.setTemplates({
+      application: _emberTemplateCompiler.compile('<button id="test-button" {{action \'increment\'}}>Increment</button>' + '<span id="test-value">{{foo}}</span>' + '{{outlet}}')
+    });
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 1,
+      actions: {
+        increment: function () {
+          this.incrementProperty('foo');
+          this.send('refreshRoute');
+        }
+      }
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      actions: {
+        refreshRoute: function () {
+          this.refresh();
+        }
+      }
+    });
+
+    startingURL = '/';
+    bootApplication();
+    equal(_emberViews.jQuery('#test-value').text().trim(), '1');
+    equal(router.get('location.path'), '/', 'url is correct');
+    _emberMetal.run(_emberViews.jQuery('#test-button'), 'click');
+    equal(_emberViews.jQuery('#test-value').text().trim(), '2');
+    equal(router.get('location.path'), '/?foo=2', 'url is correct');
+    _emberMetal.run(_emberViews.jQuery('#test-button'), 'click');
+    equal(_emberViews.jQuery('#test-value').text().trim(), '3');
+    equal(router.get('location.path'), '/?foo=3', 'url is correct');
+  });
+
+  QUnit.test('Use Ember.get to retrieve query params \'refreshModel\' configuration', function () {
+    expect(6);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['appomg'],
+      appomg: 'applol'
+    });
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    var appModelCount = 0;
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        appModelCount++;
+      }
+    });
+
+    var indexModelCount = 0;
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: _emberRuntime.Object.create({
+        unknownProperty: function (keyName) {
+          return { refreshModel: true };
+        }
+      }),
+      model: function (params) {
+        indexModelCount++;
+
+        if (indexModelCount === 1) {
           deepEqual(params, { omg: 'lol' });
-          deepEqual(this.paramsFor('application'), { appomg: 'applol' });
+        } else if (indexModelCount === 2) {
+          deepEqual(params, { omg: 'lex' });
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
+      }
     });
 
-    QUnit.test('can opt into full transition by setting refreshModel in route queryParams when all configuration is in route', function () {
-      expect(6);
+    bootApplication();
 
-      var appModelCount = 0;
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          'appomg': {
-            defaultValue: 'applol'
-          }
+    equal(appModelCount, 1);
+    equal(indexModelCount, 1);
+
+    var indexController = container.lookup('controller:index');
+    setAndFlush(indexController, 'omg', 'lex');
+
+    equal(appModelCount, 1);
+    equal(indexModelCount, 2);
+  });
+
+  QUnit.test('can use refreshModel even w URL changes that remove QPs from address bar', function () {
+    expect(4);
+
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
+    });
+
+    var indexModelCount = 0;
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        omg: {
+          refreshModel: true
+        }
+      },
+      model: function (params) {
+        indexModelCount++;
+
+        var data = undefined;
+        if (indexModelCount === 1) {
+          data = 'foo';
+        } else if (indexModelCount === 2) {
+          data = 'lol';
+        }
+
+        deepEqual(params, { omg: data }, 'index#model receives right data');
+      }
+    });
+
+    startingURL = '/?omg=foo';
+    bootApplication();
+    handleURL('/');
+
+    var indexController = container.lookup('controller:index');
+    equal(indexController.get('omg'), 'lol');
+  });
+
+  QUnit.test('can opt into a replace query by specifying replace:true in the Router config hash', function () {
+    expect(2);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['alex'],
+      alex: 'matchneer'
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: {
+        alex: {
+          replace: true
+        }
+      }
+    });
+
+    bootApplication();
+
+    equal(router.get('location.path'), '');
+
+    var appController = container.lookup('controller:application');
+    expectedReplaceURL = '/?alex=wallace';
+    setAndFlush(appController, 'alex', 'wallace');
+  });
+
+  QUnit.test('Route query params config can be configured using property name instead of URL key', function () {
+    expect(2);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: [{ commitBy: 'commit_by' }]
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: {
+        commitBy: {
+          replace: true
+        }
+      }
+    });
+
+    bootApplication();
+
+    equal(router.get('location.path'), '');
+
+    var appController = container.lookup('controller:application');
+    expectedReplaceURL = '/?commit_by=igor_seb';
+    setAndFlush(appController, 'commitBy', 'igor_seb');
+  });
+
+  QUnit.test('An explicit replace:false on a changed QP always wins and causes a pushState', function () {
+    expect(3);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['alex', 'steely'],
+      alex: 'matchneer',
+      steely: 'dan'
+    });
+
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: {
+        alex: {
+          replace: true
         },
-        model: function (params) {
-          appModelCount++;
+        steely: {
+          replace: false
         }
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true,
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          if (indexModelCount === 1) {
-            deepEqual(params, { omg: 'lol' });
-          } else if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 1);
-
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 2);
+      }
     });
 
-    QUnit.test('refreshModel does not cause a second transition during app boot ', function () {
-      expect(0);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          appomg: {
-            defaultValue: 'applol'
-          }
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol',
-            refreshModel: true
-          }
-        },
-        refresh: function () {
-          ok(false);
-        }
-      });
+    bootApplication();
 
-      startingURL = '/?appomg=hello&omg=world';
-      bootApplication();
-    });
+    var appController = container.lookup('controller:application');
+    expectedPushURL = '/?alex=wallace&steely=jan';
+    _emberMetal.run(appController, 'setProperties', { alex: 'wallace', steely: 'jan' });
 
-    QUnit.test('can use refreshModel even w URL changes that remove QPs from address bar when QP configured on route', function () {
-      expect(4);
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol',
-            refreshModel: true
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          var data = undefined;
-          if (indexModelCount === 1) {
-            data = 'foo';
-          } else if (indexModelCount === 2) {
-            data = 'lol';
-          }
-
-          deepEqual(params, { omg: data }, 'index#model receives right data');
-        }
-      });
+    expectedPushURL = '/?alex=wallace&steely=fran';
+    _emberMetal.run(appController, 'setProperties', { steely: 'fran' });
 
-      startingURL = '/?omg=foo';
-      bootApplication();
-      handleURL('/');
+    expectedReplaceURL = '/?alex=sriracha&steely=fran';
+    _emberMetal.run(appController, 'setProperties', { alex: 'sriracha' });
+  });
 
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'lol');
-    });
+  QUnit.test('can opt into full transition by setting refreshModel in route queryParams when transitioning from child to parent', function () {
+    App.register('template:parent', _emberTemplateCompiler.compile('{{outlet}}'));
+    App.register('template:parent.child', _emberTemplateCompiler.compile('{{link-to \'Parent\' \'parent\' (query-params foo=\'change\') id=\'parent-link\'}}'));
 
-    QUnit.test('can opt into a replace query by specifying replace:true in the Router config hash when all configuration lives on route', function () {
-      expect(2);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            defaultValue: 'matchneer',
-            replace: true
-          }
-        }
+    App.Router.map(function () {
+      this.route('parent', function () {
+        this.route('child');
       });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?alex=wallace';
-      setAndFlush(appController, 'alex', 'wallace');
     });
 
-    QUnit.test('Route query params config can be configured using property name instead of URL key when configured on the route', function () {
-      expect(2);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          commitBy: {
-            as: 'commit_by',
-            replace: true
-          }
+    var parentModelCount = 0;
+    App.ParentRoute = _emberRouting.Route.extend({
+      model: function () {
+        parentModelCount++;
+      },
+      queryParams: {
+        foo: {
+          refreshModel: true
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?commit_by=igor_seb';
-      setAndFlush(appController, 'commitBy', 'igor_seb');
+      }
     });
-
-    QUnit.test('An explicit replace:false on a changed QP always wins and causes a pushState even when configuration is all on the route', function () {
-      expect(3);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            replace: true,
-            defaultValue: 'matchneer'
-          },
-          steely: {
-            replace: false,
-            defaultValue: 'dan'
-          }
-        }
-      });
 
-      bootApplication();
-
-      var appController = container.lookup('controller:application');
-      expectedPushURL = '/?alex=wallace&steely=jan';
-      _emberMetal.run(appController, 'setProperties', { alex: 'wallace', steely: 'jan' });
-
-      expectedPushURL = '/?alex=wallace&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { steely: 'fran' });
-
-      expectedReplaceURL = '/?alex=sriracha&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { alex: 'sriracha' });
+    App.ParentController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'abc'
     });
-
-    QUnit.skip('can opt into full transition by setting refreshModel in route queryParams when transitioning from child to parent when all configuration is on route', function () {
-      App.register('template:parent', _emberTemplateCompiler.compile('{{outlet}}'));
-      App.register('template:parent/child', _emberTemplateCompiler.compile("{{link-to 'Parent' 'parent' (query-params foo='change') id='parent-link'}}"));
-
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-        });
-      });
 
-      var parentModelCount = 0;
-      App.ParentRoute = _emberRouting.Route.extend({
-        model: function () {
-          parentModelCount++;
-        },
-        queryParams: {
-          foo: {
-            refreshModel: true,
-            defaultValue: 'abc'
-          }
-        }
-      });
+    startingURL = '/parent/child?foo=lol';
+    bootApplication();
 
-      startingURL = '/parent/child?foo=lol';
-      bootApplication();
+    equal(parentModelCount, 1);
 
-      equal(parentModelCount, 1);
+    container.lookup('controller:parent');
 
-      container.lookup('controller:parent');
+    _emberMetal.run(_emberViews.jQuery('#parent-link'), 'click');
 
-      _emberMetal.run(_emberViews.jQuery('#parent-link'), 'click');
+    equal(parentModelCount, 2);
+  });
 
-      equal(parentModelCount, 2);
+  QUnit.test('Use Ember.get to retrieve query params \'replace\' configuration', function () {
+    expect(2);
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['alex'],
+      alex: 'matchneer'
     });
 
-    QUnit.test('URL transitions that remove QPs still register as QP changes when configuration lives on the route', function () {
-      expect(2);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: _emberRuntime.Object.create({
+        unknownProperty: function (keyName) {
+          // We are simulating all qps requiring refresh
+          return { replace: true };
         }
-      });
-
-      startingURL = '/?omg=borf';
-      bootApplication();
-
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'borf');
-      _emberMetal.run(router, 'transitionTo', '/');
-      equal(indexController.get('omg'), 'lol');
+      })
     });
 
-    QUnit.test('Subresource naming style is supported when configuration is all on the route', function () {
-      App.Router.map(function () {
-        this.route('abc.def', { path: '/abcdef' }, function () {
-          this.route('zoo');
-        });
-      });
+    bootApplication();
 
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'A' 'abc.def' (query-params foo='123') id='one'}}{{link-to 'B' 'abc.def.zoo' (query-params foo='123' bar='456') id='two'}}{{outlet}}"));
+    equal(router.get('location.path'), '');
 
-      App.AbcDefRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: 'lol'
-        }
-      });
+    var appController = container.lookup('controller:application');
+    expectedReplaceURL = '/?alex=wallace';
+    setAndFlush(appController, 'alex', 'wallace');
+  });
 
-      App.AbcDefZooRoute = _emberRouting.Route.extend({
-        queryParams: {
-          bar: {
-            defaultValue: 'haha'
-          }
-        }
-      });
+  QUnit.test('can override incoming QP values in setupController', function () {
+    expect(3);
 
-      bootApplication();
-      equal(router.get('location.path'), '');
-      equal(_emberViews.jQuery('#one').attr('href'), '/abcdef?foo=123');
-      equal(_emberViews.jQuery('#two').attr('href'), '/abcdef/zoo?bar=456&foo=123');
-
-      _emberMetal.run(_emberViews.jQuery('#one'), 'click');
-      equal(router.get('location.path'), '/abcdef?foo=123');
-      _emberMetal.run(_emberViews.jQuery('#two'), 'click');
-      equal(router.get('location.path'), '/abcdef/zoo?bar=456&foo=123');
+    App.Router.map(function () {
+      this.route('about');
     });
-
-    QUnit.test('transitionTo supports query params when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'lol'
-          }
-        }
-      });
 
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
     });
 
-    QUnit.test('transitionTo supports query params (multiple) when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'lol'
-          },
-          bar: {
-            defaultValue: 'wat'
-          }
+    App.IndexRoute = _emberRouting.Route.extend({
+      setupController: function (controller) {
+        ok(true, 'setupController called');
+        controller.set('omg', 'OVERRIDE');
+      },
+      actions: {
+        queryParamsDidChange: function () {
+          ok(false, 'queryParamsDidChange shouldn\'t fire');
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
+      }
     });
 
-    QUnit.test('A default boolean value deserializes QPs as booleans rather than strings when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: false
-          }
-        },
-        model: function (params) {
-          equal(params.foo, true, 'model hook received foo as boolean true');
-        }
-      });
+    startingURL = '/about';
+    bootApplication();
+    equal(router.get('location.path'), '/about');
+    _emberMetal.run(router, 'transitionTo', 'index');
+    equal(router.get('location.path'), '/?omg=OVERRIDE');
+  });
 
-      startingURL = '/?foo=true';
-      bootApplication();
+  QUnit.test('can override incoming QP array values in setupController', function () {
+    expect(3);
 
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), true);
-
-      handleURL('/?foo=false');
-      equal(controller.get('foo'), false);
+    App.Router.map(function () {
+      this.route('about');
     });
-
-    QUnit.test('Query param without value are empty string when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: ''
-          }
-        }
-      });
 
-      startingURL = '/?foo=';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), '');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: ['lol']
     });
-
-    QUnit.test('Array query params can be set when configured on the route', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
 
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: []
-          }
+    App.IndexRoute = _emberRouting.Route.extend({
+      setupController: function (controller) {
+        ok(true, 'setupController called');
+        controller.set('omg', ['OVERRIDE']);
+      },
+      actions: {
+        queryParamsDidChange: function () {
+          ok(false, 'queryParamsDidChange shouldn\'t fire');
         }
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
+      }
+    });
 
-      setAndFlush(controller, 'foo', [1, 2]);
+    startingURL = '/about';
+    bootApplication();
+    equal(router.get('location.path'), '/about');
+    _emberMetal.run(router, 'transitionTo', 'index');
+    equal(router.get('location.path'), '/?omg=' + encodeURIComponent(JSON.stringify(['OVERRIDE'])));
+  });
 
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
+  QUnit.test('URL transitions that remove QPs still register as QP changes', function () {
+    expect(2);
 
-      setAndFlush(controller, 'foo', [3, 4]);
-      equal(router.get('location.path'), '/?foo=%5B3%2C4%5D');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg'],
+      omg: 'lol'
     });
-
-    QUnit.test('(de)serialization: arrays when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: [1]
-          }
-        }
-      });
 
-      bootApplication();
+    startingURL = '/?omg=borf';
+    bootApplication();
 
-      equal(router.get('location.path'), '');
+    var indexController = container.lookup('controller:index');
+    equal(indexController.get('omg'), 'borf');
+    _emberMetal.run(router, 'transitionTo', '/');
+    equal(indexController.get('omg'), 'lol');
+  });
 
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [2, 3] } });
-      equal(router.get('location.path'), '/?foo=%5B2%2C3%5D', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': [4, 5] } });
-      equal(router.get('location.path'), '/?foo=%5B4%2C5%5D', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [] } });
-      equal(router.get('location.path'), '/?foo=%5B%5D', 'longform supported');
+  QUnit.test('Subresource naming style is supported', function () {
+    App.Router.map(function () {
+      this.route('abc.def', { path: '/abcdef' }, function () {
+        this.route('zoo');
+      });
     });
 
-    QUnit.test('Url with array query param sets controller property to array when configuration occurs on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: ''
-          }
-        }
-      });
+    App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'A\' \'abc.def\' (query-params foo=\'123\') id=\'one\'}}{{link-to \'B\' \'abc.def.zoo\' (query-params foo=\'123\' bar=\'456\') id=\'two\'}}{{outlet}}'));
 
-      startingURL = '/?foo[]=1&foo[]=2&foo[]=3';
-      bootApplication();
+    App.AbcDefController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'lol'
+    });
 
-      var controller = container.lookup('controller:index');
-      deepEqual(controller.get('foo'), ['1', '2', '3']);
+    App.AbcDefZooController = _emberRuntime.Controller.extend({
+      queryParams: ['bar'],
+      bar: 'haha'
     });
 
-    QUnit.test('Url with array query param sets controller property to array when configuration occurs on the route and there is still a controller', function () {
-      App.IndexController = _emberRuntime.Controller.extend();
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: ''
-          }
-        }
-      });
+    bootApplication();
+    equal(router.get('location.path'), '');
+    equal(_emberViews.jQuery('#one').attr('href'), '/abcdef?foo=123');
+    equal(_emberViews.jQuery('#two').attr('href'), '/abcdef/zoo?bar=456&foo=123');
 
-      startingURL = '/?foo[]=1&foo[]=2&foo[]=3';
-      bootApplication();
+    _emberMetal.run(_emberViews.jQuery('#one'), 'click');
+    equal(router.get('location.path'), '/abcdef?foo=123');
+    _emberMetal.run(_emberViews.jQuery('#two'), 'click');
+    equal(router.get('location.path'), '/abcdef/zoo?bar=456&foo=123');
+  });
 
-      var controller = container.lookup('controller:index');
-      deepEqual(controller.get('foo'), ['1', '2', '3']);
+  QUnit.test('transitionTo supports query params', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: 'lol'
     });
 
-    QUnit.test('Array query params can be pushed/popped when configuration occurs on the route but there is still a controller', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
+    bootApplication();
 
-      App.HomeController = _emberRuntime.Controller.extend({
-        foo: _emberRuntime.A()
-      });
+    equal(router.get('location.path'), '');
 
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {}
-        }
-      });
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
+    equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
+    equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
+    equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
+    equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
+  });
 
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:home');
-
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'pushObject', 2);
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
-      deepEqual(controller.foo, [1, 2]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'unshiftObject', 'lol');
-      equal(router.get('location.path'), '/?foo=%5B%22lol%22%2C1%5D');
-      deepEqual(controller.foo, ['lol', 1]);
+  QUnit.test('transitionTo supports query params (multiple)', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo', 'bar'],
+      foo: 'lol',
+      bar: 'wat'
     });
-
-    QUnit.test('Overwriting with array with same content shouldn\'t refire update when configuration occurs on router but there is still a controller', function () {
-      expect(3);
-      var modelCount = 0;
-
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
 
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {}
-        },
-        model: function () {
-          modelCount++;
-        }
-      });
+    bootApplication();
 
-      App.HomeController = _emberRuntime.Controller.extend({
-        foo: _emberRuntime.A([1])
-      });
+    equal(router.get('location.path'), '');
 
-      bootApplication();
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
+    equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
+    equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
+    equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
+    equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
+  });
 
-      equal(modelCount, 1);
-      var controller = container.lookup('controller:home');
-      setAndFlush(controller, 'model', _emberRuntime.A([1]));
-      equal(modelCount, 1);
-      equal(router.get('location.path'), '');
+  QUnit.test('setting controller QP to empty string doesn\'t generate null in URL', function () {
+    expect(1);
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: '123'
     });
 
-    QUnit.test('A child of a resource route still defaults to parent route\'s model even if the child route has a query param when configuration occurs on the router', function () {
-      expect(1);
+    bootApplication();
+    var controller = container.lookup('controller:index');
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          woot: {}
-        }
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (p, trans) {
-          return { woot: true };
-        }
-      });
+    expectedPushURL = '/?foo=';
+    setAndFlush(controller, 'foo', '');
+  });
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        setupController: function (controller, model) {
-          deepEqual(model, { woot: true }, 'index route inherited model route from parent route');
+  QUnit.test('setting QP to empty string doesn\'t generate null in URL', function () {
+    expect(1);
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        foo: {
+          defaultValue: '123'
         }
-      });
-
-      bootApplication();
+      }
     });
 
-    QUnit.test('opting into replace does not affect transitions between routes when configuration occurs on the route', function () {
-      expect(5);
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'Foo' 'foo' id='foo-link'}}" + "{{link-to 'Bar' 'bar' id='bar-no-qp-link'}}" + "{{link-to 'Bar' 'bar' (query-params raytiley='isthebest') id='bar-link'}}" + '{{outlet}}'));
-      App.Router.map(function () {
-        this.route('foo');
-        this.route('bar');
-      });
+    bootApplication();
+    var controller = container.lookup('controller:index');
 
-      App.BarRoute = _emberRouting.Route.extend({
-        queryParams: {
-          raytiley: {
-            replace: true,
-            defaultValue: 'israd'
-          }
-        }
-      });
+    expectedPushURL = '/?foo=';
+    setAndFlush(controller, 'foo', '');
+  });
 
-      bootApplication();
-      var controller = container.lookup('controller:bar');
+  QUnit.test('A default boolean value deserializes QPs as booleans rather than strings', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: false
+    });
 
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
+    App.IndexRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        equal(params.foo, true, 'model hook received foo as boolean true');
+      }
+    });
 
-      expectedPushURL = '/bar';
-      _emberMetal.run(_emberViews.jQuery('#bar-no-qp-link'), 'click');
+    startingURL = '/?foo=true';
+    bootApplication();
 
-      expectedReplaceURL = '/bar?raytiley=woot';
-      setAndFlush(controller, 'raytiley', 'woot');
+    var controller = container.lookup('controller:index');
+    equal(controller.get('foo'), true);
 
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
+    handleURL('/?foo=false');
+    equal(controller.get('foo'), false);
+  });
 
-      expectedPushURL = '/bar?raytiley=isthebest';
-      _emberMetal.run(_emberViews.jQuery('#bar-link'), 'click');
+  QUnit.test('Query param without value are empty string', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: ''
     });
-
-    QUnit.test('Undefined isn\'t deserialized into a string when configuration occurs on the route', function () {
-      expect(3);
-      App.Router.map(function () {
-        this.route('example');
-      });
-
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'Example' 'example' id='the-link'}}"));
-
-      App.ExampleRoute = _emberRouting.Route.extend({
-        queryParams: {
-          // uncommon to not support default value, but should assume undefined.
-          foo: {
-            defaultValue: undefined
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { foo: undefined });
-        }
-      });
 
-      bootApplication();
+    startingURL = '/?foo=';
+    bootApplication();
 
-      var $link = _emberViews.jQuery('#the-link');
-      equal($link.attr('href'), '/example');
-      _emberMetal.run($link, 'click');
+    var controller = container.lookup('controller:index');
+    equal(controller.get('foo'), '');
+  });
 
-      var controller = container.lookup('controller:example');
-      equal(_emberMetal.get(controller, 'foo'), undefined);
+  QUnit.test('Array query params can be set', function () {
+    App.Router.map(function () {
+      this.route('home', { path: '/' });
     });
-
-    QUnit.test('query params have been set by the time setupController is called when configuration occurs on the router', function () {
-      expect(1);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'wat'
-          }
-        },
-        setupController: function (controller) {
-          equal(controller.get('foo'), 'YEAH', 'controller\'s foo QP property set before setupController called');
-        }
-      });
 
-      startingURL = '/?foo=YEAH';
-      bootApplication();
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: []
     });
 
-    QUnit.test('query params have been set by the time setupController is called when configuration occurs on the router and there is still a controller', function () {
-      expect(1);
-
-      App.ApplicationController = _emberRuntime.Controller.extend();
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'wat'
-          }
-        },
-        setupController: function (controller) {
-          equal(controller.get('foo'), 'YEAH', 'controller\'s foo QP property set before setupController called');
-        }
-      });
+    bootApplication();
 
-      startingURL = '/?foo=YEAH';
-      bootApplication();
-    });
+    var controller = container.lookup('controller:home');
 
-    QUnit.test('model hooks receives query params when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { omg: 'lol' });
-        }
-      });
+    setAndFlush(controller, 'foo', [1, 2]);
+
+    equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
 
-      bootApplication();
+    setAndFlush(controller, 'foo', [3, 4]);
+    equal(router.get('location.path'), '/?foo=%5B3%2C4%5D');
+  });
 
-      equal(router.get('location.path'), '');
+  QUnit.test('(de)serialization: arrays', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: [1]
     });
 
-    QUnit.test('Routes have overridable serializeQueryParamKey hook when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          funTimes: {
-            defaultValue: ''
-          }
-        },
-        serializeQueryParamKey: _emberRuntime.String.dasherize
-      });
+    bootApplication();
 
-      bootApplication();
-      equal(router.get('location.path'), '');
+    equal(router.get('location.path'), '');
 
-      var controller = container.lookup('controller:index');
-      setAndFlush(controller, 'funTimes', 'woot');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [2, 3] } });
+    equal(router.get('location.path'), '/?foo=%5B2%2C3%5D', 'shorthand supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': [4, 5] } });
+    equal(router.get('location.path'), '/?foo=%5B4%2C5%5D', 'longform supported');
+    _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [] } });
+    equal(router.get('location.path'), '/?foo=%5B%5D', 'longform supported');
+  });
 
-      equal(router.get('location.path'), '/?fun-times=woot');
+  QUnit.test('Url with array query param sets controller property to array', function () {
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: ''
     });
 
-    QUnit.test('No replaceURL occurs on startup because default values don\'t show up in URL when configured on the route', function () {
-      expect(0);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        }
-      });
+    startingURL = '/?foo[]=1&foo[]=2&foo[]=3';
+    bootApplication();
 
-      expectedReplaceURL = '/?foo=123';
+    var controller = container.lookup('controller:index');
+    deepEqual(controller.get('foo'), ['1', '2', '3']);
+  });
 
-      bootApplication();
+  QUnit.test('Array query params can be pushed/popped', function () {
+    App.Router.map(function () {
+      this.route('home', { path: '/' });
     });
-
-    QUnit.test("controllers won't be eagerly instantiated by internal query params logic when configured on the route", function () {
-      expect(10);
-      App.Router.map(function () {
-        this.route('cats', function () {
-          this.route('index', { path: '/' });
-        });
-        this.route('home', { path: '/' });
-        this.route('about');
-      });
-
-      App.register('template:home', _emberTemplateCompiler.compile("<h3>{{link-to 'About' 'about' (query-params lol='wat') id='link-to-about'}}</h3>"));
-      App.register('template:about', _emberTemplateCompiler.compile("<h3>{{link-to 'Home' 'home'  (query-params foo='naw')}}</h3>"));
-      App.register('template:cats.index', _emberTemplateCompiler.compile("<h3>{{link-to 'Cats' 'cats'  (query-params name='domino') id='cats-link'}}</h3>"));
-
-      var homeShouldBeCreated = false;
-      var aboutShouldBeCreated = false;
-      var catsIndexShouldBeCreated = false;
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        },
-        setup: function () {
-          homeShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        }
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(homeShouldBeCreated, 'HomeController should be created at this time');
-        }
-      });
-
-      App.AboutRoute = _emberRouting.Route.extend({
-        queryParams: {
-          lol: {
-            defaultValue: 'haha'
-          }
-        },
-        setup: function () {
-          aboutShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        }
-      });
 
-      App.AboutController = _emberRuntime.Controller.extend({
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(aboutShouldBeCreated, 'AboutController should be created at this time');
-        }
-      });
-
-      App.CatsIndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          breed: {
-            defaultValue: 'Golden'
-          },
-          name: {
-            defaultValue: null
-          }
-        },
-        model: function () {
-          return [];
-        },
-        setup: function () {
-          catsIndexShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        },
-        setupController: function (controller, context) {
-          controller.set('model', context);
-        }
-      });
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: _emberRuntime.A()
+    });
 
-      App.CatsIndexController = _emberRuntime.Controller.extend({
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(catsIndexShouldBeCreated, 'CatsIndexController should be created at this time');
-        }
-      });
+    bootApplication();
 
-      bootApplication();
+    equal(router.get('location.path'), '');
 
-      equal(router.get('location.path'), '', 'url is correct');
-      var controller = container.lookup('controller:home');
-      setAndFlush(controller, 'foo', '456');
-      equal(router.get('location.path'), '/?foo=456', 'url is correct');
-      equal(_emberViews.jQuery('#link-to-about').attr('href'), '/about?lol=wat', 'link to about is correct');
+    var controller = container.lookup('controller:home');
 
-      _emberMetal.run(router, 'transitionTo', 'about');
-      equal(router.get('location.path'), '/about', 'url is correct');
+    _emberMetal.run(controller.foo, 'pushObject', 1);
+    equal(router.get('location.path'), '/?foo=%5B1%5D');
+    deepEqual(controller.foo, [1]);
+    _emberMetal.run(controller.foo, 'popObject');
+    equal(router.get('location.path'), '/');
+    deepEqual(controller.foo, []);
+    _emberMetal.run(controller.foo, 'pushObject', 1);
+    equal(router.get('location.path'), '/?foo=%5B1%5D');
+    deepEqual(controller.foo, [1]);
+    _emberMetal.run(controller.foo, 'popObject');
+    equal(router.get('location.path'), '/');
+    deepEqual(controller.foo, []);
+    _emberMetal.run(controller.foo, 'pushObject', 1);
+    equal(router.get('location.path'), '/?foo=%5B1%5D');
+    deepEqual(controller.foo, [1]);
+    _emberMetal.run(controller.foo, 'pushObject', 2);
+    equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
+    deepEqual(controller.foo, [1, 2]);
+    _emberMetal.run(controller.foo, 'popObject');
+    equal(router.get('location.path'), '/?foo=%5B1%5D');
+    deepEqual(controller.foo, [1]);
+    _emberMetal.run(controller.foo, 'unshiftObject', 'lol');
+    equal(router.get('location.path'), '/?foo=%5B%22lol%22%2C1%5D');
+    deepEqual(controller.foo, ['lol', 1]);
+  });
 
-      _emberMetal.run(router, 'transitionTo', 'cats');
+  QUnit.test('Overwriting with array with same content shouldn\'t refire update', function () {
+    expect(3);
+    var modelCount = 0;
 
-      equal(router.get('location.path'), '/cats', 'url is correct');
-      equal(_emberViews.jQuery('#cats-link').attr('href'), '/cats?name=domino', 'link to cats is correct');
-      _emberMetal.run(_emberViews.jQuery('#cats-link'), 'click');
-      equal(router.get('location.path'), '/cats?name=domino', 'url is correct');
+    App.Router.map(function () {
+      this.route('home', { path: '/' });
     });
 
-    QUnit.test('query params have been set by the time setupController is called when configured on the route', function () {
-      expect(1);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'wat'
-          }
-        },
-        setupController: function (controller) {
-          equal(controller.get('foo'), 'YEAH', 'controller\'s foo QP property set before setupController called');
-        }
-      });
-
-      startingURL = '/?foo=YEAH';
-      bootApplication();
+    App.HomeRoute = _emberRouting.Route.extend({
+      model: function () {
+        modelCount++;
+      }
     });
-
-    QUnit.test('model hooks receives query params (overridden by incoming url value) when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { omg: 'yes' });
-        }
-      });
 
-      startingURL = '/?omg=yes';
-      bootApplication();
-
-      equal(router.get('location.path'), '/?omg=yes');
+    App.HomeController = _emberRuntime.Controller.extend({
+      queryParams: ['foo'],
+      foo: _emberRuntime.A([1])
     });
 
-    QUnit.test('Route#paramsFor fetches query params when configured on the route', function () {
-      expect(1);
+    bootApplication();
 
-      App.Router.map(function () {
-        this.route('index', { path: '/:something' });
-      });
+    equal(modelCount, 1);
+    var controller = container.lookup('controller:home');
+    setAndFlush(controller, 'model', _emberRuntime.A([1]));
+    equal(modelCount, 1);
+    equal(router.get('location.path'), '');
+  });
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'fooapp'
-          }
-        },
-        model: function (params, transition) {
-          deepEqual(this.paramsFor('index'), { something: 'omg', foo: 'fooapp' }, 'could retrieve params for index');
-        }
-      });
+  QUnit.test('Defaulting to params hash as the model should not result in that params object being watched', function () {
+    expect(1);
 
-      startingURL = '/omg';
-      bootApplication();
+    App.Router.map(function () {
+      this.route('other');
     });
-
-    QUnit.test('model hook can query prefix-less application params (overridden by incoming url value) when they\'re configured on the route', function () {
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          appomg: {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { appomg: 'appyes' });
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { omg: 'yes' });
-          deepEqual(this.paramsFor('application'), { appomg: 'appyes' });
-        }
-      });
 
-      startingURL = '/?appomg=appyes&omg=yes';
-      bootApplication();
-
-      equal(router.get('location.path'), '/?appomg=appyes&omg=yes');
+    // This causes the params hash, which is returned as a route's
+    // model if no other model could be resolved given the provided
+    // params (and no custom model hook was defined), to be watched,
+    // unless we return a copy of the params hash.
+    App.ApplicationController = _emberRuntime.Controller.extend({
+      queryParams: ['woot'],
+      woot: 'wat'
     });
-
-    QUnit.test('Route#paramsFor fetches falsy query params when configured on the route', function () {
-      expect(1);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: true
-          }
-        },
-        model: function (params, transition) {
-          equal(params.foo, false);
-        }
-      });
 
-      startingURL = '/?foo=false';
-      bootApplication();
+    App.OtherRoute = _emberRouting.Route.extend({
+      model: function (p, trans) {
+        var m = _emberMetal.meta(trans.params.application);
+        ok(!m.peekWatching('woot'), 'A meta object isn\'t constructed for this params POJO');
+      }
     });
 
-    QUnit.test('model hook can query prefix-less application params when configured on the route', function () {
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          appomg: {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { appomg: 'applol' });
-        }
-      });
+    bootApplication();
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          deepEqual(params, { omg: 'lol' });
-          deepEqual(this.paramsFor('application'), { appomg: 'applol' });
-        }
-      });
+    _emberMetal.run(router, 'transitionTo', 'other');
+  });
 
-      bootApplication();
+  QUnit.test('A child of a resource route still defaults to parent route\'s model even if the child route has a query param', function () {
+    expect(1);
 
-      equal(router.get('location.path'), '');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['woot']
     });
-
-    QUnit.test('can opt into full transition by setting refreshModel in route queryParams when configured on the route', function () {
-      expect(6);
-
-      var appModelCount = 0;
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          'appomg': {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          appModelCount++;
-        }
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol',
-            refreshModel: true
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          if (indexModelCount === 1) {
-            deepEqual(params, { omg: 'lol' });
-          } else if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 1);
 
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 2);
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      model: function (p, trans) {
+        return { woot: true };
+      }
     });
-
-    QUnit.test('can use refreshModel even w URL changes that remove QPs from address bar when configured on the route', function () {
-      expect(4);
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true,
-            defaultValue: 'lol'
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          var data = undefined;
-          if (indexModelCount === 1) {
-            data = 'foo';
-          } else if (indexModelCount === 2) {
-            data = 'lol';
-          }
-
-          deepEqual(params, { omg: data }, 'index#model receives right data');
-        }
-      });
 
-      startingURL = '/?omg=foo';
-      bootApplication();
-      handleURL('/');
-
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'lol');
+    App.IndexRoute = _emberRouting.Route.extend({
+      setupController: function (controller, model) {
+        deepEqual(model, { woot: true }, 'index route inherited model route from parent route');
+      }
     });
-
-    QUnit.test('can opt into a replace query by specifying replace:true in the Router config hash when configured on the route', function () {
-      expect(2);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            defaultValue: 'matchneer',
-            replace: true
-          }
-        }
-      });
 
-      bootApplication();
+    bootApplication();
+  });
 
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?alex=wallace';
-      setAndFlush(appController, 'alex', 'wallace');
+  QUnit.test('opting into replace does not affect transitions between routes', function () {
+    expect(5);
+    App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'Foo\' \'foo\' id=\'foo-link\'}}' + '{{link-to \'Bar\' \'bar\' id=\'bar-no-qp-link\'}}' + '{{link-to \'Bar\' \'bar\' (query-params raytiley=\'isthebest\') id=\'bar-link\'}}' + '{{outlet}}'));
+    App.Router.map(function () {
+      this.route('foo');
+      this.route('bar');
     });
-
-    QUnit.test('Route query params config can be configured using property name instead of URL key when configured on the route', function () {
-      expect(2);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          commitBy: {
-            as: 'commit_by',
-            replace: true
-          }
-        }
-      });
 
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?commit_by=igor_seb';
-      setAndFlush(appController, 'commitBy', 'igor_seb');
+    App.BarController = _emberRuntime.Controller.extend({
+      queryParams: ['raytiley'],
+      raytiley: 'israd'
     });
 
-    QUnit.test('An explicit replace:false on a changed QP always wins and causes a pushState when configured on the route', function () {
-      expect(3);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            replace: true,
-            defaultValue: 'matchneer'
-          },
-          steely: {
-            defaultValue: 'dan',
-            replace: false
-          }
+    App.BarRoute = _emberRouting.Route.extend({
+      queryParams: {
+        raytiley: {
+          replace: true
         }
-      });
-
-      bootApplication();
-
-      var appController = container.lookup('controller:application');
-      expectedPushURL = '/?alex=wallace&steely=jan';
-      _emberMetal.run(appController, 'setProperties', { alex: 'wallace', steely: 'jan' });
-
-      expectedPushURL = '/?alex=wallace&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { steely: 'fran' });
-
-      expectedReplaceURL = '/?alex=sriracha&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { alex: 'sriracha' });
+      }
     });
 
-    QUnit.test('can opt into full transition by setting refreshModel in route queryParams when transitioning from child to parent when configured on the route', function () {
-      App.register('template:parent', _emberTemplateCompiler.compile('{{outlet}}'));
-      App.register('template:parent.child', _emberTemplateCompiler.compile("{{link-to 'Parent' 'parent' (query-params foo='change') id='parent-link'}}"));
-
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-        });
-      });
+    bootApplication();
+    var controller = container.lookup('controller:bar');
 
-      var parentModelCount = 0;
-      App.ParentRoute = _emberRouting.Route.extend({
-        model: function () {
-          parentModelCount++;
-        },
-        queryParams: {
-          foo: {
-            refreshModel: true,
-            defaultValue: 'abc'
-          }
-        }
-      });
+    expectedPushURL = '/foo';
+    _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
 
-      startingURL = '/parent/child?foo=lol';
-      bootApplication();
+    expectedPushURL = '/bar';
+    _emberMetal.run(_emberViews.jQuery('#bar-no-qp-link'), 'click');
 
-      equal(parentModelCount, 1);
+    expectedReplaceURL = '/bar?raytiley=woot';
+    setAndFlush(controller, 'raytiley', 'woot');
 
-      container.lookup('controller:parent');
+    expectedPushURL = '/foo';
+    _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
 
-      _emberMetal.run(_emberViews.jQuery('#parent-link'), 'click');
+    expectedPushURL = '/bar?raytiley=isthebest';
+    _emberMetal.run(_emberViews.jQuery('#bar-link'), 'click');
+  });
 
-      equal(parentModelCount, 2);
+  QUnit.test('Undefined isn\'t deserialized into a string', function () {
+    expect(3);
+    App.Router.map(function () {
+      this.route('example');
     });
-
-    QUnit.test('can override incoming QP values in setupController when configured on the route', function () {
-      expect(3);
-
-      App.Router.map(function () {
-        this.route('about');
-      });
 
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        },
-        setupController: function (controller) {
-          ok(true, 'setupController called');
-          controller.set('omg', 'OVERRIDE');
-        },
-        actions: {
-          queryParamsDidChange: function () {
-            ok(false, 'queryParamsDidChange shouldn\'t fire');
-          }
-        }
-      });
+    App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'Example\' \'example\' id=\'the-link\'}}'));
 
-      startingURL = '/about';
-      bootApplication();
-      equal(router.get('location.path'), '/about');
-      _emberMetal.run(router, 'transitionTo', 'index');
-      equal(router.get('location.path'), '/?omg=OVERRIDE');
+    App.ExampleController = _emberRuntime.Controller.extend({
+      queryParams: ['foo']
+      // uncommon to not support default value, but should assume undefined.
     });
-
-    QUnit.test('can override incoming QP array values in setupController when configured on the route', function () {
-      expect(3);
-
-      App.Router.map(function () {
-        this.route('about');
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: ['lol']
-          }
-        },
-        setupController: function (controller) {
-          ok(true, 'setupController called');
-          controller.set('omg', ['OVERRIDE']);
-        },
-        actions: {
-          queryParamsDidChange: function () {
-            ok(false, 'queryParamsDidChange shouldn\'t fire');
-          }
-        }
-      });
 
-      startingURL = '/about';
-      bootApplication();
-      equal(router.get('location.path'), '/about');
-      _emberMetal.run(router, 'transitionTo', 'index');
-      equal(router.get('location.path'), '/?omg=' + encodeURIComponent(JSON.stringify(['OVERRIDE'])));
+    App.ExampleRoute = _emberRouting.Route.extend({
+      model: function (params) {
+        deepEqual(params, { foo: undefined });
+      }
     });
-
-    QUnit.test('URL transitions that remove QPs still register as QP changes when configured on the route', function () {
-      expect(2);
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            defaultValue: 'lol'
-          }
-        }
-      });
 
-      startingURL = '/?omg=borf';
-      bootApplication();
+    bootApplication();
 
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'borf');
-      _emberMetal.run(router, 'transitionTo', '/');
-      equal(indexController.get('omg'), 'lol');
-    });
+    var $link = _emberViews.jQuery('#the-link');
+    equal($link.attr('href'), '/example');
+    _emberMetal.run($link, 'click');
 
-    QUnit.test('Subresource naming style is supported when configured on the route', function () {
-      App.Router.map(function () {
-        this.route('abc.def', { path: '/abcdef' }, function () {
-          this.route('zoo');
-        });
-      });
+    var controller = container.lookup('controller:example');
+    equal(_emberMetal.get(controller, 'foo'), undefined);
+  });
 
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'A' 'abc.def' (query-params foo='123') id='one'}}{{link-to 'B' 'abc.def.zoo' (query-params foo='123' bar='456') id='two'}}{{outlet}}"));
+  QUnit.test('when refreshModel is true and loading action returns false, model hook will rerun when QPs change even if previous did not finish', function () {
+    expect(6);
 
-      App.AbcDefRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'lol'
-          }
-        }
-      });
+    var appModelCount = 0;
+    var promiseResolve;
 
-      App.AbcDefZooRoute = _emberRouting.Route.extend({
-        queryParams: {
-          bar: {
-            defaultValue: 'haha'
-          }
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: {
+        'appomg': {
+          defaultValue: 'applol'
         }
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-      equal(_emberViews.jQuery('#one').attr('href'), '/abcdef?foo=123');
-      equal(_emberViews.jQuery('#two').attr('href'), '/abcdef/zoo?bar=456&foo=123');
-
-      _emberMetal.run(_emberViews.jQuery('#one'), 'click');
-      equal(router.get('location.path'), '/abcdef?foo=123');
-      _emberMetal.run(_emberViews.jQuery('#two'), 'click');
-      equal(router.get('location.path'), '/abcdef/zoo?bar=456&foo=123');
+      },
+      model: function (params) {
+        appModelCount++;
+      }
     });
-
-    QUnit.test('transitionTo supports query params when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'lol'
-          }
-        }
-      });
 
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg']
+      // uncommon to not support default value, but should assume undefined.
     });
 
-    QUnit.test('transitionTo supports query params (multiple) when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'lol'
-          },
-          bar: {
-            defaultValue: 'wat'
-          }
+    var indexModelCount = 0;
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        omg: {
+          refreshModel: true
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
-    });
-
-    QUnit.test('setting controller QP to empty string doesn\'t generate null in URL when configured on the route', function () {
-      expect(1);
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
+      },
+      actions: {
+        loading: function () {
+          return false;
         }
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:index');
-
-      expectedPushURL = '/?foo=';
-      setAndFlush(controller, 'foo', '');
-    });
-
-    QUnit.test('setting QP to empty string doesn\'t generate null in URL when configured on the route', function () {
-      expect(1);
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
+      },
+      model: function (params) {
+        indexModelCount++;
+        if (indexModelCount === 2) {
+          deepEqual(params, { omg: 'lex' });
+          return new _emberRuntime.RSVP.Promise(function (resolve) {
+            promiseResolve = resolve;
+            return;
+          });
+        } else if (indexModelCount === 3) {
+          deepEqual(params, { omg: 'hello' }, 'Model hook reruns even if the previous one didnt finish');
         }
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:index');
-
-      expectedPushURL = '/?foo=';
-      setAndFlush(controller, 'foo', '');
+      }
     });
 
-    QUnit.test('A default boolean value deserializes QPs as booleans rather than strings when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: false
-          }
-        },
-        model: function (params) {
-          equal(params.foo, true, 'model hook received foo as boolean true');
-        }
-      });
+    bootApplication();
 
-      startingURL = '/?foo=true';
-      bootApplication();
+    equal(indexModelCount, 1);
 
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), true);
+    var indexController = container.lookup('controller:index');
+    setAndFlush(indexController, 'omg', 'lex');
+    equal(indexModelCount, 2);
 
-      handleURL('/?foo=false');
-      equal(controller.get('foo'), false);
+    setAndFlush(indexController, 'omg', 'hello');
+    equal(indexModelCount, 3);
+    _emberMetal.run(function () {
+      promiseResolve();
     });
-
-    QUnit.test('Query param without value are empty string when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: ''
-          }
-        }
-      });
+    equal(_emberMetal.get(indexController, 'omg'), 'hello', 'At the end last value prevails');
+  });
 
-      startingURL = '/?foo=';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), '');
-    });
+  QUnit.test('when refreshModel is true and loading action does not return false, model hook will not rerun when QPs change even if previous did not finish', function () {
+    expect(7);
 
-    QUnit.test('Array query params can be set when configured on the route', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
+    var appModelCount = 0;
+    var promiseResolve;
 
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: []
-          }
+    App.ApplicationRoute = _emberRouting.Route.extend({
+      queryParams: {
+        'appomg': {
+          defaultValue: 'applol'
         }
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      setAndFlush(controller, 'foo', [1, 2]);
-
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
-
-      setAndFlush(controller, 'foo', [3, 4]);
-      equal(router.get('location.path'), '/?foo=%5B3%2C4%5D');
+      },
+      model: function (params) {
+        appModelCount++;
+      }
     });
-
-    QUnit.test('(de)serialization: arrays when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: [1]
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
 
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [2, 3] } });
-      equal(router.get('location.path'), '/?foo=%5B2%2C3%5D', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': [4, 5] } });
-      equal(router.get('location.path'), '/?foo=%5B4%2C5%5D', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [] } });
-      equal(router.get('location.path'), '/?foo=%5B%5D', 'longform supported');
+    App.IndexController = _emberRuntime.Controller.extend({
+      queryParams: ['omg']
+      // uncommon to not support default value, but should assume undefined.
     });
 
-    QUnit.test('Url with array query param sets controller property to array when configured on the route', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: ''
-          }
+    var indexModelCount = 0;
+    App.IndexRoute = _emberRouting.Route.extend({
+      queryParams: {
+        omg: {
+          refreshModel: true
         }
-      });
-
-      startingURL = '/?foo[]=1&foo[]=2&foo[]=3';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      deepEqual(controller.get('foo'), ['1', '2', '3']);
-    });
+      },
+      model: function (params) {
+        indexModelCount++;
 
-    QUnit.test('Array query params can be pushed/popped when configured on the route', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: _emberRuntime.A()
-          }
+        if (indexModelCount === 2) {
+          deepEqual(params, { omg: 'lex' });
+          return new _emberRuntime.RSVP.Promise(function (resolve) {
+            promiseResolve = resolve;
+            return;
+          });
+        } else if (indexModelCount === 3) {
+          ok(false, 'shouldnt get here');
         }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:home');
-
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'pushObject', 2);
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
-      deepEqual(controller.foo, [1, 2]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'unshiftObject', 'lol');
-      equal(router.get('location.path'), '/?foo=%5B%22lol%22%2C1%5D');
-      deepEqual(controller.foo, ['lol', 1]);
+      }
     });
-
-    QUnit.test('Overwriting with array with same content shouldn\'t refire update when configured on the route', function () {
-      expect(3);
-      var modelCount = 0;
-
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: _emberRuntime.A([1])
-          }
-        },
-        model: function () {
-          modelCount++;
-        }
-      });
 
-      bootApplication();
-
-      equal(modelCount, 1);
-      var controller = container.lookup('controller:home');
-      setAndFlush(controller, 'model', _emberRuntime.A([1]));
-      equal(modelCount, 1);
-      equal(router.get('location.path'), '');
-    });
+    bootApplication();
 
-    QUnit.test('Defaulting to params hash as the model should not result in that params object being watched when configured on the route', function () {
-      expect(1);
+    equal(appModelCount, 1);
+    equal(indexModelCount, 1);
 
-      App.Router.map(function () {
-        this.route('other');
-      });
+    var indexController = container.lookup('controller:index');
+    setAndFlush(indexController, 'omg', 'lex');
 
-      // This causes the params hash, which is returned as a route's
-      // model if no other model could be resolved given the provided
-      // params (and no custom model hook was defined), to be watched,
-      // unless we return a copy of the params hash.
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          woot: {
-            defaultValue: 'wat'
-          }
-        }
-      });
+    equal(appModelCount, 1);
+    equal(indexModelCount, 2);
 
-      App.OtherRoute = _emberRouting.Route.extend({
-        model: function (p, trans) {
-          var m = _emberMetal.meta(trans.params.application);
-          ok(!m.peekWatching('woot'), 'A meta object isn\'t constructed for this params POJO');
-        }
-      });
-
-      bootApplication();
-
-      _emberMetal.run(router, 'transitionTo', 'other');
-    });
-
-    QUnit.test('A child of a resource route still defaults to parent route\'s model even if the child route has a query param when configured on the route', function () {
-      expect(1);
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (p, trans) {
-          return { woot: true };
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          woot: {
-            defaultValue: undefined
-          }
-        },
-        setupController: function (controller, model) {
-          deepEqual(model, { woot: true }, 'index route inherited model route from parent route');
-        }
-      });
-
-      bootApplication();
-    });
-
-    QUnit.test('opting into replace does not affect transitions between routes when configured on route', function () {
-      expect(5);
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'Foo' 'foo' id='foo-link'}}" + "{{link-to 'Bar' 'bar' id='bar-no-qp-link'}}" + "{{link-to 'Bar' 'bar' (query-params raytiley='isthebest') id='bar-link'}}" + '{{outlet}}'));
-      App.Router.map(function () {
-        this.route('foo');
-        this.route('bar');
-      });
-
-      App.BarRoute = _emberRouting.Route.extend({
-        queryParams: {
-          raytiley: {
-            defaultValue: 'israd',
-            replace: true
-          }
-        }
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:bar');
-
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
-
-      expectedPushURL = '/bar';
-      _emberMetal.run(_emberViews.jQuery('#bar-no-qp-link'), 'click');
-
-      expectedReplaceURL = '/bar?raytiley=woot';
-      setAndFlush(controller, 'raytiley', 'woot');
-
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
-
-      expectedPushURL = '/bar?raytiley=isthebest';
-      _emberMetal.run(_emberViews.jQuery('#bar-link'), 'click');
-    });
-
-    QUnit.test('Undefined isn\'t deserialized into a string when configured on the route', function () {
-      expect(3);
-      App.Router.map(function () {
-        this.route('example');
-      });
-
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'Example' 'example' id='the-link'}}"));
-
-      App.ExampleRoute = _emberRouting.Route.extend({
-        queryParams: {
-          // uncommon to not support default value, but should assume undefined.
-          foo: {}
-        },
-        model: function (params) {
-          deepEqual(params, { foo: undefined });
-        }
-      });
-
-      bootApplication();
-
-      var $link = _emberViews.jQuery('#the-link');
-      equal($link.attr('href'), '/example');
-      _emberMetal.run($link, 'click');
-
-      var controller = container.lookup('controller:example');
-      equal(_emberMetal.get(controller, 'foo'), undefined);
-    });
-
-    QUnit.test('Changing a query param property on a controller after navigating using a {{link-to}} should preserve the unchanged query params', function () {
-      expect(11);
-      App.Router.map(function () {
-        this.route('example');
-      });
-
-      App.register('template:application', _emberTemplateCompiler.compile("{{link-to 'Example' 'example' (query-params bar='abc' foo='def') id='the-link1'}}" + "{{link-to 'Example' 'example' (query-params bar='123' foo='456') id='the-link2'}}"));
-
-      App.ExampleRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: { defaultValue: 'foo' },
-          bar: { defaultValue: 'bar' }
-        }
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:example');
-
-      var $link1 = _emberViews.jQuery('#the-link1');
-      var $link2 = _emberViews.jQuery('#the-link2');
-      equal($link1.attr('href'), '/example?bar=abc&foo=def');
-      equal($link2.attr('href'), '/example?bar=123&foo=456');
-
-      expectedPushURL = '/example?bar=abc&foo=def';
-      _emberMetal.run($link1, 'click');
-      equal(_emberMetal.get(controller, 'bar'), 'abc');
-      equal(_emberMetal.get(controller, 'foo'), 'def');
-
-      expectedPushURL = '/example?bar=123&foo=456';
-      _emberMetal.run($link2, 'click');
-      equal(_emberMetal.get(controller, 'bar'), '123');
-      equal(_emberMetal.get(controller, 'foo'), '456');
-
-      expectedPushURL = '/example?bar=rab&foo=456';
-      setAndFlush(controller, 'bar', 'rab');
-      equal(_emberMetal.get(controller, 'bar'), 'rab');
-      equal(_emberMetal.get(controller, 'foo'), '456');
-    });
-
-    QUnit.test('Calling transitionTo does not lose query params already on the activeTransition', function () {
-      expect(2);
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-          this.route('sibling');
-        });
-      });
-
-      App.ParentRoute = _emberRouting.Route.extend({
-        queryParams: { foo: { defaultValue: 'bar' } }
-      });
-
-      App.ParentChildRoute = _emberRouting.Route.extend({
-        afterModel: function () {
-          ok(true, 'The after model hook was called');
-          this.transitionTo('parent.sibling');
-        }
-      });
-
-      startingURL = '/parent/child?foo=lol';
-      bootApplication();
-
-      var parentController = container.lookup('controller:parent');
-
-      equal(parentController.get('foo'), 'lol');
-    });
-  } else {
-    QUnit.test('Calling transitionTo does not lose query params already on the activeTransition', function () {
-      expect(2);
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-          this.route('sibling');
-        });
-      });
-
-      App.ParentChildRoute = _emberRouting.Route.extend({
-        afterModel: function () {
-          ok(true, 'The after model hook was called');
-          this.transitionTo('parent.sibling');
-        }
-      });
-
-      App.ParentController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'bar'
-      });
-
-      startingURL = '/parent/child?foo=lol';
-      bootApplication();
-
-      var parentController = container.lookup('controller:parent');
-
-      equal(parentController.get('foo'), 'lol');
-    });
-
-    QUnit.test('Single query params can be set on the controller [DEPRECATED]', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      setAndFlush(controller, 'foo', '456');
-
-      equal(router.get('location.path'), '/?foo=456');
-
-      setAndFlush(controller, 'foo', '987');
-      equal(router.get('location.path'), '/?foo=987');
-    });
-
-    QUnit.test('Single query params can be set on the controller [DEPRECATED]', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      setAndFlush(controller, 'foo', '456');
-
-      equal(router.get('location.path'), '/?foo=456');
-
-      setAndFlush(controller, 'foo', '987');
-      equal(router.get('location.path'), '/?foo=987');
-    });
-
-    QUnit.test('Query params can map to different url keys configured on the controller [DEPRECATED]', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: [{ foo: 'other_foo', bar: { as: 'other_bar' } }],
-        foo: 'FOO',
-        bar: 'BAR'
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:index');
-      setAndFlush(controller, 'foo', 'LEX');
-
-      equal(router.get('location.path'), '/?other_foo=LEX');
-      setAndFlush(controller, 'foo', 'WOO');
-      equal(router.get('location.path'), '/?other_foo=WOO');
-
-      _emberMetal.run(router, 'transitionTo', '/?other_foo=NAW');
-      equal(controller.get('foo'), 'NAW');
-
-      setAndFlush(controller, 'bar', 'NERK');
-      _emberMetal.run(router, 'transitionTo', '/?other_bar=NERK&other_foo=NAW');
-    });
-
-    QUnit.test('Routes have overridable serializeQueryParamKey hook', function () {
-      App.IndexRoute = _emberRouting.Route.extend({
-        serializeQueryParamKey: _emberRuntime.String.dasherize
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: 'funTimes',
-        funTimes: ''
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:index');
-      setAndFlush(controller, 'funTimes', 'woot');
-
-      equal(router.get('location.path'), '/?fun-times=woot');
-    });
-
-    QUnit.test('No replaceURL occurs on startup because default values don\'t show up in URL', function () {
-      expect(0);
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-
-      expectedReplaceURL = '/?foo=123';
-
-      bootApplication();
-    });
-
-    QUnit.test('Can override inherited QP behavior by specifying queryParams as a computed property', function () {
-      expect(0);
-      var SharedMixin = _emberMetal.Mixin.create({
-        queryParams: ['a'],
-        a: 0
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend(SharedMixin, {
-        queryParams: _emberMetal.computed(function () {
-          return ['c'];
-        }),
-        c: true
-      });
-
-      bootApplication();
-      var indexController = container.lookup('controller:index');
-
-      expectedReplaceURL = 'not gonna happen';
-      _emberMetal.run(indexController, 'set', 'a', 1);
-    });
-
-    QUnit.test('model hooks receives query params', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { omg: 'lol' });
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-    });
-
-    QUnit.test('controllers won\'t be eagerly instantiated by internal query params logic', function () {
-      expect(10);
-      App.Router.map(function () {
-        this.route('cats', function () {
-          this.route('index', { path: '/' });
-        });
-        this.route('home', { path: '/' });
-        this.route('about');
-      });
-
-      App.register('template:home', _emberTemplateCompiler.compile("<h3>{{link-to 'About' 'about' (query-params lol='wat') id='link-to-about'}}</h3>"));
-      App.register('template:about', _emberTemplateCompiler.compile("<h3>{{link-to 'Home' 'home'  (query-params foo='naw')}}</h3>"));
-      App.register('template:cats.index', _emberTemplateCompiler.compile("<h3>{{link-to 'Cats' 'cats'  (query-params name='domino') id='cats-link'}}</h3>"));
-
-      var homeShouldBeCreated = false;
-      var aboutShouldBeCreated = false;
-      var catsIndexShouldBeCreated = false;
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        setup: function () {
-          homeShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        }
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123',
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(homeShouldBeCreated, 'HomeController should be created at this time');
-        }
-      });
-
-      App.AboutRoute = _emberRouting.Route.extend({
-        setup: function () {
-          aboutShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        }
-      });
-
-      App.AboutController = _emberRuntime.Controller.extend({
-        queryParams: ['lol'],
-        lol: 'haha',
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(aboutShouldBeCreated, 'AboutController should be created at this time');
-        }
-      });
-
-      App.CatsIndexRoute = _emberRouting.Route.extend({
-        model: function () {
-          return [];
-        },
-        setup: function () {
-          catsIndexShouldBeCreated = true;
-          this._super.apply(this, arguments);
-        },
-        setupController: function (controller, context) {
-          controller.set('model', context);
-        }
-      });
-
-      App.CatsIndexController = _emberRuntime.Controller.extend({
-        queryParams: ['breed', 'name'],
-        breed: 'Golden',
-        name: null,
-        init: function () {
-          this._super.apply(this, arguments);
-          ok(catsIndexShouldBeCreated, 'CatsIndexController should be created at this time');
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '', 'url is correct');
-      var controller = container.lookup('controller:home');
-      setAndFlush(controller, 'foo', '456');
-      equal(router.get('location.path'), '/?foo=456', 'url is correct');
-      equal(_emberViews.jQuery('#link-to-about').attr('href'), '/about?lol=wat', 'link to about is correct');
-
-      _emberMetal.run(router, 'transitionTo', 'about');
-      equal(router.get('location.path'), '/about', 'url is correct');
-
-      _emberMetal.run(router, 'transitionTo', 'cats');
-
-      equal(router.get('location.path'), '/cats', 'url is correct');
-      equal(_emberViews.jQuery('#cats-link').attr('href'), '/cats?name=domino', 'link to cats is correct');
-      _emberMetal.run(_emberViews.jQuery('#cats-link'), 'click');
-      equal(router.get('location.path'), '/cats?name=domino', 'url is correct');
-    });
-
-    QUnit.test('query params have been set by the time setupController is called', function () {
-      expect(1);
-
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'wat'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        setupController: function (controller) {
-          equal(controller.get('foo'), 'YEAH', 'controller\'s foo QP property set before setupController called');
-        }
-      });
-
-      startingURL = '/?foo=YEAH';
-      bootApplication();
-    });
-
-    QUnit.test('model hooks receives query params (overridden by incoming url value)', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { omg: 'yes' });
-        }
-      });
-
-      startingURL = '/?omg=yes';
-      bootApplication();
-
-      equal(router.get('location.path'), '/?omg=yes');
-    });
-
-    QUnit.test('Route#paramsFor fetches query params', function () {
-      expect(1);
-
-      App.Router.map(function () {
-        this.route('index', { path: '/:something' });
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'fooapp'
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params, transition) {
-          deepEqual(this.paramsFor('index'), { something: 'omg', foo: 'fooapp' }, 'could retrieve params for index');
-        }
-      });
-
-      startingURL = '/omg';
-      bootApplication();
-    });
-
-    QUnit.test('model hook can query prefix-less application params (overridden by incoming url value)', function () {
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['appomg'],
-        appomg: 'applol'
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { appomg: 'appyes' });
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { omg: 'yes' });
-          deepEqual(this.paramsFor('application'), { appomg: 'appyes' });
-        }
-      });
-
-      startingURL = '/?appomg=appyes&omg=yes';
-      bootApplication();
-
-      equal(router.get('location.path'), '/?appomg=appyes&omg=yes');
-    });
-
-    QUnit.test('Route#paramsFor fetches falsy query params', function () {
-      expect(1);
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: true
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params, transition) {
-          equal(params.foo, false);
-        }
-      });
-
-      startingURL = '/?foo=false';
-      bootApplication();
-    });
-
-    QUnit.test('model hook can query prefix-less application params', function () {
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['appomg'],
-        appomg: 'applol'
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { appomg: 'applol' });
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { omg: 'lol' });
-          deepEqual(this.paramsFor('application'), { appomg: 'applol' });
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-    });
-
-    QUnit.test('can opt into full transition by setting refreshModel in route queryParams', function () {
-      expect(6);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['appomg'],
-        appomg: 'applol'
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      var appModelCount = 0;
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          appModelCount++;
-        }
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          if (indexModelCount === 1) {
-            deepEqual(params, { omg: 'lol' });
-          } else if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 1);
-
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 2);
-    });
-
-    QUnit.test('refreshModel does not cause a second transition during app boot ', function () {
-      expect(0);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['appomg'],
-        appomg: 'applol'
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true
-          }
-        },
-        refresh: function () {
-          ok(false);
-        }
-      });
-
-      startingURL = '/?appomg=hello&omg=world';
-      bootApplication();
-    });
-
-    QUnit.test('queryParams are updated when a controller property is set and the route is refreshed. Issue #13263  ', function () {
-      _emberGlimmer.setTemplates({
-        application: _emberTemplateCompiler.compile('<button id="test-button" {{action \'increment\'}}>Increment</button>' + '<span id="test-value">{{foo}}</span>' + '{{outlet}}')
-      });
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 1,
-        actions: {
-          increment: function () {
-            this.incrementProperty('foo');
-            this.send('refreshRoute');
-          }
-        }
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        actions: {
-          refreshRoute: function () {
-            this.refresh();
-          }
-        }
-      });
-
-      startingURL = '/';
-      bootApplication();
-      equal(_emberViews.jQuery('#test-value').text().trim(), '1');
-      equal(router.get('location.path'), '/', 'url is correct');
-      _emberMetal.run(_emberViews.jQuery('#test-button'), 'click');
-      equal(_emberViews.jQuery('#test-value').text().trim(), '2');
-      equal(router.get('location.path'), '/?foo=2', 'url is correct');
-      _emberMetal.run(_emberViews.jQuery('#test-button'), 'click');
-      equal(_emberViews.jQuery('#test-value').text().trim(), '3');
-      equal(router.get('location.path'), '/?foo=3', 'url is correct');
-    });
-
-    QUnit.test('Use Ember.get to retrieve query params \'refreshModel\' configuration', function () {
-      expect(6);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['appomg'],
-        appomg: 'applol'
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      var appModelCount = 0;
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          appModelCount++;
-        }
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: _emberRuntime.Object.create({
-          unknownProperty: function (keyName) {
-            return { refreshModel: true };
-          }
-        }),
-        model: function (params) {
-          indexModelCount++;
-
-          if (indexModelCount === 1) {
-            deepEqual(params, { omg: 'lol' });
-          } else if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 1);
-
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 2);
-    });
-
-    QUnit.test('can use refreshModel even w URL changes that remove QPs from address bar', function () {
-      expect(4);
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          var data = undefined;
-          if (indexModelCount === 1) {
-            data = 'foo';
-          } else if (indexModelCount === 2) {
-            data = 'lol';
-          }
-
-          deepEqual(params, { omg: data }, 'index#model receives right data');
-        }
-      });
-
-      startingURL = '/?omg=foo';
-      bootApplication();
-      handleURL('/');
-
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'lol');
-    });
-
-    QUnit.test('can opt into a replace query by specifying replace:true in the Router config hash', function () {
-      expect(2);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['alex'],
-        alex: 'matchneer'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            replace: true
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?alex=wallace';
-      setAndFlush(appController, 'alex', 'wallace');
-    });
-
-    QUnit.test('Route query params config can be configured using property name instead of URL key', function () {
-      expect(2);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: [{ commitBy: 'commit_by' }]
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          commitBy: {
-            replace: true
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?commit_by=igor_seb';
-      setAndFlush(appController, 'commitBy', 'igor_seb');
-    });
-
-    QUnit.test('An explicit replace:false on a changed QP always wins and causes a pushState', function () {
-      expect(3);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['alex', 'steely'],
-        alex: 'matchneer',
-        steely: 'dan'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          alex: {
-            replace: true
-          },
-          steely: {
-            replace: false
-          }
-        }
-      });
-
-      bootApplication();
-
-      var appController = container.lookup('controller:application');
-      expectedPushURL = '/?alex=wallace&steely=jan';
-      _emberMetal.run(appController, 'setProperties', { alex: 'wallace', steely: 'jan' });
-
-      expectedPushURL = '/?alex=wallace&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { steely: 'fran' });
-
-      expectedReplaceURL = '/?alex=sriracha&steely=fran';
-      _emberMetal.run(appController, 'setProperties', { alex: 'sriracha' });
-    });
-
-    QUnit.test('can opt into full transition by setting refreshModel in route queryParams when transitioning from child to parent', function () {
-      App.register('template:parent', _emberTemplateCompiler.compile('{{outlet}}'));
-      App.register('template:parent.child', _emberTemplateCompiler.compile('{{link-to \'Parent\' \'parent\' (query-params foo=\'change\') id=\'parent-link\'}}'));
-
-      App.Router.map(function () {
-        this.route('parent', function () {
-          this.route('child');
-        });
-      });
-
-      var parentModelCount = 0;
-      App.ParentRoute = _emberRouting.Route.extend({
-        model: function () {
-          parentModelCount++;
-        },
-        queryParams: {
-          foo: {
-            refreshModel: true
-          }
-        }
-      });
-
-      App.ParentController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'abc'
-      });
-
-      startingURL = '/parent/child?foo=lol';
-      bootApplication();
-
-      equal(parentModelCount, 1);
-
-      container.lookup('controller:parent');
-
-      _emberMetal.run(_emberViews.jQuery('#parent-link'), 'click');
-
-      equal(parentModelCount, 2);
-    });
-
-    QUnit.test('Use Ember.get to retrieve query params \'replace\' configuration', function () {
-      expect(2);
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['alex'],
-        alex: 'matchneer'
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: _emberRuntime.Object.create({
-          unknownProperty: function (keyName) {
-            // We are simulating all qps requiring refresh
-            return { replace: true };
-          }
-        })
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var appController = container.lookup('controller:application');
-      expectedReplaceURL = '/?alex=wallace';
-      setAndFlush(appController, 'alex', 'wallace');
-    });
-
-    QUnit.test('can override incoming QP values in setupController', function () {
-      expect(3);
-
-      App.Router.map(function () {
-        this.route('about');
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        setupController: function (controller) {
-          ok(true, 'setupController called');
-          controller.set('omg', 'OVERRIDE');
-        },
-        actions: {
-          queryParamsDidChange: function () {
-            ok(false, 'queryParamsDidChange shouldn\'t fire');
-          }
-        }
-      });
-
-      startingURL = '/about';
-      bootApplication();
-      equal(router.get('location.path'), '/about');
-      _emberMetal.run(router, 'transitionTo', 'index');
-      equal(router.get('location.path'), '/?omg=OVERRIDE');
-    });
-
-    QUnit.test('can override incoming QP array values in setupController', function () {
-      expect(3);
-
-      App.Router.map(function () {
-        this.route('about');
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: ['lol']
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        setupController: function (controller) {
-          ok(true, 'setupController called');
-          controller.set('omg', ['OVERRIDE']);
-        },
-        actions: {
-          queryParamsDidChange: function () {
-            ok(false, 'queryParamsDidChange shouldn\'t fire');
-          }
-        }
-      });
-
-      startingURL = '/about';
-      bootApplication();
-      equal(router.get('location.path'), '/about');
-      _emberMetal.run(router, 'transitionTo', 'index');
-      equal(router.get('location.path'), '/?omg=' + encodeURIComponent(JSON.stringify(['OVERRIDE'])));
-    });
-
-    QUnit.test('URL transitions that remove QPs still register as QP changes', function () {
-      expect(2);
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg'],
-        omg: 'lol'
-      });
-
-      startingURL = '/?omg=borf';
-      bootApplication();
-
-      var indexController = container.lookup('controller:index');
-      equal(indexController.get('omg'), 'borf');
-      _emberMetal.run(router, 'transitionTo', '/');
-      equal(indexController.get('omg'), 'lol');
-    });
-
-    QUnit.test('Subresource naming style is supported', function () {
-      App.Router.map(function () {
-        this.route('abc.def', { path: '/abcdef' }, function () {
-          this.route('zoo');
-        });
-      });
-
-      App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'A\' \'abc.def\' (query-params foo=\'123\') id=\'one\'}}{{link-to \'B\' \'abc.def.zoo\' (query-params foo=\'123\' bar=\'456\') id=\'two\'}}{{outlet}}'));
-
-      App.AbcDefController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'lol'
-      });
-
-      App.AbcDefZooController = _emberRuntime.Controller.extend({
-        queryParams: ['bar'],
-        bar: 'haha'
-      });
-
-      bootApplication();
-      equal(router.get('location.path'), '');
-      equal(_emberViews.jQuery('#one').attr('href'), '/abcdef?foo=123');
-      equal(_emberViews.jQuery('#two').attr('href'), '/abcdef/zoo?bar=456&foo=123');
-
-      _emberMetal.run(_emberViews.jQuery('#one'), 'click');
-      equal(router.get('location.path'), '/abcdef?foo=123');
-      _emberMetal.run(_emberViews.jQuery('#two'), 'click');
-      equal(router.get('location.path'), '/abcdef/zoo?bar=456&foo=123');
-    });
-
-    QUnit.test('transitionTo supports query params', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: 'lol'
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
-    });
-
-    QUnit.test('transitionTo supports query params (multiple)', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo', 'bar'],
-        foo: 'lol',
-        bar: 'wat'
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: 'borf' } });
-      equal(router.get('location.path'), '/?foo=borf', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': 'blaf' } });
-      equal(router.get('location.path'), '/?foo=blaf', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': false } });
-      equal(router.get('location.path'), '/?foo=false', 'longform supported (bool)');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: false } });
-      equal(router.get('location.path'), '/?foo=false', 'shorhand supported (bool)');
-    });
-
-    QUnit.test('setting controller QP to empty string doesn\'t generate null in URL', function () {
-      expect(1);
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: '123'
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:index');
-
-      expectedPushURL = '/?foo=';
-      setAndFlush(controller, 'foo', '');
-    });
-
-    QUnit.test('setting QP to empty string doesn\'t generate null in URL', function () {
-      expect(1);
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: '123'
-          }
-        }
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:index');
-
-      expectedPushURL = '/?foo=';
-      setAndFlush(controller, 'foo', '');
-    });
-
-    QUnit.test('A default boolean value deserializes QPs as booleans rather than strings', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: false
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          equal(params.foo, true, 'model hook received foo as boolean true');
-        }
-      });
-
-      startingURL = '/?foo=true';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), true);
-
-      handleURL('/?foo=false');
-      equal(controller.get('foo'), false);
-    });
-
-    QUnit.test('Query param without value are empty string', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: ''
-      });
-
-      startingURL = '/?foo=';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      equal(controller.get('foo'), '');
-    });
-
-    QUnit.test('Array query params can be set', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: []
-      });
-
-      bootApplication();
-
-      var controller = container.lookup('controller:home');
-
-      setAndFlush(controller, 'foo', [1, 2]);
-
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
-
-      setAndFlush(controller, 'foo', [3, 4]);
-      equal(router.get('location.path'), '/?foo=%5B3%2C4%5D');
-    });
-
-    QUnit.test('(de)serialization: arrays', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: [1]
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [2, 3] } });
-      equal(router.get('location.path'), '/?foo=%5B2%2C3%5D', 'shorthand supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { 'index:foo': [4, 5] } });
-      equal(router.get('location.path'), '/?foo=%5B4%2C5%5D', 'longform supported');
-      _emberMetal.run(router, 'transitionTo', { queryParams: { foo: [] } });
-      equal(router.get('location.path'), '/?foo=%5B%5D', 'longform supported');
-    });
-
-    QUnit.test('Url with array query param sets controller property to array', function () {
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: ''
-      });
-
-      startingURL = '/?foo[]=1&foo[]=2&foo[]=3';
-      bootApplication();
-
-      var controller = container.lookup('controller:index');
-      deepEqual(controller.get('foo'), ['1', '2', '3']);
-    });
-
-    QUnit.test('Array query params can be pushed/popped', function () {
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: _emberRuntime.A()
-      });
-
-      bootApplication();
-
-      equal(router.get('location.path'), '');
-
-      var controller = container.lookup('controller:home');
-
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/');
-      deepEqual(controller.foo, []);
-      _emberMetal.run(controller.foo, 'pushObject', 1);
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'pushObject', 2);
-      equal(router.get('location.path'), '/?foo=%5B1%2C2%5D');
-      deepEqual(controller.foo, [1, 2]);
-      _emberMetal.run(controller.foo, 'popObject');
-      equal(router.get('location.path'), '/?foo=%5B1%5D');
-      deepEqual(controller.foo, [1]);
-      _emberMetal.run(controller.foo, 'unshiftObject', 'lol');
-      equal(router.get('location.path'), '/?foo=%5B%22lol%22%2C1%5D');
-      deepEqual(controller.foo, ['lol', 1]);
-    });
-
-    QUnit.test('Overwriting with array with same content shouldn\'t refire update', function () {
-      expect(3);
-      var modelCount = 0;
-
-      App.Router.map(function () {
-        this.route('home', { path: '/' });
-      });
-
-      App.HomeRoute = _emberRouting.Route.extend({
-        model: function () {
-          modelCount++;
-        }
-      });
-
-      App.HomeController = _emberRuntime.Controller.extend({
-        queryParams: ['foo'],
-        foo: _emberRuntime.A([1])
-      });
-
-      bootApplication();
-
-      equal(modelCount, 1);
-      var controller = container.lookup('controller:home');
-      setAndFlush(controller, 'model', _emberRuntime.A([1]));
-      equal(modelCount, 1);
-      equal(router.get('location.path'), '');
-    });
-
-    QUnit.test('Defaulting to params hash as the model should not result in that params object being watched', function () {
-      expect(1);
-
-      App.Router.map(function () {
-        this.route('other');
-      });
-
-      // This causes the params hash, which is returned as a route's
-      // model if no other model could be resolved given the provided
-      // params (and no custom model hook was defined), to be watched,
-      // unless we return a copy of the params hash.
-      App.ApplicationController = _emberRuntime.Controller.extend({
-        queryParams: ['woot'],
-        woot: 'wat'
-      });
-
-      App.OtherRoute = _emberRouting.Route.extend({
-        model: function (p, trans) {
-          var m = _emberMetal.meta(trans.params.application);
-          ok(!m.peekWatching('woot'), 'A meta object isn\'t constructed for this params POJO');
-        }
-      });
-
-      bootApplication();
-
-      _emberMetal.run(router, 'transitionTo', 'other');
-    });
-
-    QUnit.test('A child of a resource route still defaults to parent route\'s model even if the child route has a query param', function () {
-      expect(1);
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['woot']
-      });
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        model: function (p, trans) {
-          return { woot: true };
-        }
-      });
-
-      App.IndexRoute = _emberRouting.Route.extend({
-        setupController: function (controller, model) {
-          deepEqual(model, { woot: true }, 'index route inherited model route from parent route');
-        }
-      });
-
-      bootApplication();
-    });
-
-    QUnit.test('opting into replace does not affect transitions between routes', function () {
-      expect(5);
-      App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'Foo\' \'foo\' id=\'foo-link\'}}' + '{{link-to \'Bar\' \'bar\' id=\'bar-no-qp-link\'}}' + '{{link-to \'Bar\' \'bar\' (query-params raytiley=\'isthebest\') id=\'bar-link\'}}' + '{{outlet}}'));
-      App.Router.map(function () {
-        this.route('foo');
-        this.route('bar');
-      });
-
-      App.BarController = _emberRuntime.Controller.extend({
-        queryParams: ['raytiley'],
-        raytiley: 'israd'
-      });
-
-      App.BarRoute = _emberRouting.Route.extend({
-        queryParams: {
-          raytiley: {
-            replace: true
-          }
-        }
-      });
-
-      bootApplication();
-      var controller = container.lookup('controller:bar');
-
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
-
-      expectedPushURL = '/bar';
-      _emberMetal.run(_emberViews.jQuery('#bar-no-qp-link'), 'click');
-
-      expectedReplaceURL = '/bar?raytiley=woot';
-      setAndFlush(controller, 'raytiley', 'woot');
-
-      expectedPushURL = '/foo';
-      _emberMetal.run(_emberViews.jQuery('#foo-link'), 'click');
-
-      expectedPushURL = '/bar?raytiley=isthebest';
-      _emberMetal.run(_emberViews.jQuery('#bar-link'), 'click');
-    });
-
-    QUnit.test('Undefined isn\'t deserialized into a string', function () {
-      expect(3);
-      App.Router.map(function () {
-        this.route('example');
-      });
-
-      App.register('template:application', _emberTemplateCompiler.compile('{{link-to \'Example\' \'example\' id=\'the-link\'}}'));
-
-      App.ExampleController = _emberRuntime.Controller.extend({
-        queryParams: ['foo']
-        // uncommon to not support default value, but should assume undefined.
-      });
-
-      App.ExampleRoute = _emberRouting.Route.extend({
-        model: function (params) {
-          deepEqual(params, { foo: undefined });
-        }
-      });
-
-      bootApplication();
-
-      var $link = _emberViews.jQuery('#the-link');
-      equal($link.attr('href'), '/example');
-      _emberMetal.run($link, 'click');
-
-      var controller = container.lookup('controller:example');
-      equal(_emberMetal.get(controller, 'foo'), undefined);
-    });
-
-    QUnit.test('when refreshModel is true and loading action returns false, model hook will rerun when QPs change even if previous did not finish', function () {
-      expect(6);
-
-      var appModelCount = 0;
-      var promiseResolve;
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          'appomg': {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          appModelCount++;
-        }
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg']
-        // uncommon to not support default value, but should assume undefined.
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true
-          }
-        },
-        actions: {
-          loading: function () {
-            return false;
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-          if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-            return new _emberRuntime.RSVP.Promise(function (resolve) {
-              promiseResolve = resolve;
-              return;
-            });
-          } else if (indexModelCount === 3) {
-            deepEqual(params, { omg: 'hello' }, 'Model hook reruns even if the previous one didnt finish');
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(indexModelCount, 1);
-
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-      equal(indexModelCount, 2);
-
-      setAndFlush(indexController, 'omg', 'hello');
-      equal(indexModelCount, 3);
-      _emberMetal.run(function () {
-        promiseResolve();
-      });
-      equal(_emberMetal.get(indexController, 'omg'), 'hello', 'At the end last value prevails');
-    });
-
-    QUnit.test('when refreshModel is true and loading action does not return false, model hook will not rerun when QPs change even if previous did not finish', function () {
-      expect(7);
-
-      var appModelCount = 0;
-      var promiseResolve;
-
-      App.ApplicationRoute = _emberRouting.Route.extend({
-        queryParams: {
-          'appomg': {
-            defaultValue: 'applol'
-          }
-        },
-        model: function (params) {
-          appModelCount++;
-        }
-      });
-
-      App.IndexController = _emberRuntime.Controller.extend({
-        queryParams: ['omg']
-        // uncommon to not support default value, but should assume undefined.
-      });
-
-      var indexModelCount = 0;
-      App.IndexRoute = _emberRouting.Route.extend({
-        queryParams: {
-          omg: {
-            refreshModel: true
-          }
-        },
-        model: function (params) {
-          indexModelCount++;
-
-          if (indexModelCount === 2) {
-            deepEqual(params, { omg: 'lex' });
-            return new _emberRuntime.RSVP.Promise(function (resolve) {
-              promiseResolve = resolve;
-              return;
-            });
-          } else if (indexModelCount === 3) {
-            ok(false, 'shouldnt get here');
-          }
-        }
-      });
-
-      bootApplication();
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 1);
-
-      var indexController = container.lookup('controller:index');
-      setAndFlush(indexController, 'omg', 'lex');
-
-      equal(appModelCount, 1);
-      equal(indexModelCount, 2);
-
-      setAndFlush(indexController, 'omg', 'hello');
-      equal(_emberMetal.get(indexController, 'omg'), 'hello', ' value was set');
-      equal(indexModelCount, 2);
-      _emberMetal.run(function () {
-        promiseResolve();
-      });
+    setAndFlush(indexController, 'omg', 'hello');
+    equal(_emberMetal.get(indexController, 'omg'), 'hello', ' value was set');
+    equal(indexModelCount, 2);
+    _emberMetal.run(function () {
+      promiseResolve();
     });
-  }
+  });
 
   QUnit.test('warn user that routes query params configuration must be an Object, not an Array', function () {
     expect(1);
@@ -71302,15 +69183,9 @@ enifed('ember/tests/routing/query_params_test/model_dependent_state_with_query_p
     return function () {
       var articleClass = _emberRuntime.String.classify(articleLookup);
 
-      if (false) {
-        App[articleClass + 'Route'].reopen({
-          queryParams: { q: { scope: 'controller' } }
-        });
-      } else {
-        App[articleClass + 'Controller'].reopen({
-          queryParams: { q: { scope: 'controller' } }
-        });
-      }
+      App[articleClass + 'Controller'].reopen({
+        queryParams: { q: { scope: 'controller' } }
+      });
 
       this.boot();
 
@@ -71448,31 +69323,16 @@ enifed('ember/tests/routing/query_params_test/model_dependent_state_with_query_p
         }
       });
 
-      if (false) {
-        App.ArticleRoute.reopen({
-          queryParams: {
-            q: { defaultValue: 'wat' },
-            z: { defaultValue: 0 }
-          }
-        });
+      App.ArticleController = _emberRuntime.Controller.extend({
+        queryParams: ['q', 'z'],
+        q: 'wat',
+        z: 0
+      });
 
-        App.CommentsRoute = _emberRouting.Route.extend({
-          queryParams: {
-            page: { defaultValue: 1 }
-          }
-        });
-      } else {
-        App.ArticleController = _emberRuntime.Controller.extend({
-          queryParams: ['q', 'z'],
-          q: 'wat',
-          z: 0
-        });
-
-        App.CommentsController = _emberRuntime.Controller.extend({
-          queryParams: 'page',
-          page: 1
-        });
-      }
+      App.CommentsController = _emberRuntime.Controller.extend({
+        queryParams: 'page',
+        page: 1
+      });
 
       registry.register('template:application', _emberTemplateCompiler.compile('{{#each articles as |a|}} {{link-to \'Article\' \'article\' a id=a.id}} {{/each}} {{outlet}}'));
 
@@ -71539,31 +69399,17 @@ enifed('ember/tests/routing/query_params_test/model_dependent_state_with_query_p
         }
       });
 
-      if (false) {
-        App.SiteArticleRoute.reopen({
-          queryParams: {
-            q: { defaultValue: 'wat' },
-            z: { defaultValue: 0 }
-          }
-        });
+      App.SiteArticleController = _emberRuntime.Controller.extend({
+        queryParams: ['q', 'z'],
+        q: 'wat',
+        z: 0
+      });
 
-        App.SiteArticleCommentsRoute = _emberRouting.Route.extend({
-          queryParams: {
-            page: { defaultValue: 1 }
-          }
-        });
-      } else {
-        App.SiteArticleController = _emberRuntime.Controller.extend({
-          queryParams: ['q', 'z'],
-          q: 'wat',
-          z: 0
-        });
+      App.SiteArticleCommentsController = _emberRuntime.Controller.extend({
+        queryParams: 'page',
+        page: 1
+      });
 
-        App.SiteArticleCommentsController = _emberRuntime.Controller.extend({
-          queryParams: 'page',
-          page: 1
-        });
-      }
       registry.register('template:application', _emberTemplateCompiler.compile('{{#each articles as |a|}} {{link-to \'Article\' \'site.article\' a id=a.id}} {{/each}} {{outlet}}'));
 
       this.boot = function () {
@@ -71652,42 +69498,21 @@ enifed('ember/tests/routing/query_params_test/model_dependent_state_with_query_p
         }
       });
 
-      if (false) {
-        App.SiteRoute.reopen({
-          queryParams: {
-            country: { defaultValue: 'au' }
-          }
-        });
+      App.SiteController = _emberRuntime.Controller.extend({
+        queryParams: ['country'],
+        country: 'au'
+      });
 
-        App.SiteArticleRoute.reopen({
-          queryParams: {
-            q: { defaultValue: 'wat' },
-            z: { defaultValue: 0 }
-          }
-        });
+      App.SiteArticleController = _emberRuntime.Controller.extend({
+        queryParams: ['q', 'z'],
+        q: 'wat',
+        z: 0
+      });
 
-        App.SiteArticleCommentsRoute = _emberRouting.Route.extend({
-          queryParams: {
-            page: { defaultValue: 1 }
-          }
-        });
-      } else {
-        App.SiteController = _emberRuntime.Controller.extend({
-          queryParams: ['country'],
-          country: 'au'
-        });
-
-        App.SiteArticleController = _emberRuntime.Controller.extend({
-          queryParams: ['q', 'z'],
-          q: 'wat',
-          z: 0
-        });
-
-        App.SiteArticleCommentsController = _emberRuntime.Controller.extend({
-          queryParams: ['page'],
-          page: 1
-        });
-      }
+      App.SiteArticleCommentsController = _emberRuntime.Controller.extend({
+        queryParams: ['page'],
+        page: 1
+      });
 
       registry.register('template:application', _emberTemplateCompiler.compile('{{#each allSitesAllArticles as |a|}} {{#link-to \'site.article\' a.site_id a.article_id id=a.id}}Article [{{a.site_id}}] [{{a.article_id}}]{{/link-to}} {{/each}} {{outlet}}'));
 
@@ -72113,215 +69938,116 @@ enifed('ember/tests/routing/query_params_test/overlapping_query_params_test', ['
     });
   }
 
-  if (false) {
-    QUnit.module('Query Params - overlapping query param property names when configured on the route', {
-      setup: function () {
-        sharedSetup();
+  QUnit.module('Query Params - overlapping query param property names', {
+    setup: function () {
+      sharedSetup();
 
-        App.Router.map(function () {
-          this.route('parent', function () {
-            this.route('child');
-          });
+      App.Router.map(function () {
+        this.route('parent', function () {
+          this.route('child');
         });
+      });
 
-        this.boot = function () {
-          bootApplication();
-          _emberMetal.run(router, 'transitionTo', 'parent.child');
-        };
-      },
+      this.boot = function () {
+        bootApplication();
+        _emberMetal.run(router, 'transitionTo', 'parent.child');
+      };
+    },
 
-      teardown: function () {
-        sharedTeardown();
-      }
+    teardown: function () {
+      sharedTeardown();
+    }
+  });
+
+  QUnit.test('can remap same-named qp props', function () {
+    App.ParentController = _emberRuntime.Controller.extend({
+      queryParams: { page: 'parentPage' },
+      page: 1
     });
 
-    QUnit.test('can remap same-named qp props', function () {
-      App.ParentRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: {
-            as: 'parentPage',
-            defaultValue: 1
-          }
-        }
-      });
-
-      App.ParentChildRoute = _emberRouting.Route.extend({
-        queryParams: {
-          page: {
-            as: 'childPage',
-            defaultValue: 1
-          }
-        }
-      });
-
-      this.boot();
-
-      equal(router.get('location.path'), '/parent/child');
-
-      var parentController = container.lookup('controller:parent');
-      var parentChildController = container.lookup('controller:parent.child');
-
-      setAndFlush(parentController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?parentPage=2');
-      setAndFlush(parentController, 'page', 1);
-      equal(router.get('location.path'), '/parent/child');
-
-      setAndFlush(parentChildController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?childPage=2');
-      setAndFlush(parentChildController, 'page', 1);
-      equal(router.get('location.path'), '/parent/child');
-
-      _emberMetal.run(function () {
-        parentController.set('page', 2);
-        parentChildController.set('page', 2);
-      });
-
-      equal(router.get('location.path'), '/parent/child?childPage=2&parentPage=2');
-
-      _emberMetal.run(function () {
-        parentController.set('page', 1);
-        parentChildController.set('page', 1);
-      });
-
-      equal(router.get('location.path'), '/parent/child');
+    App.ParentChildController = _emberRuntime.Controller.extend({
+      queryParams: { page: 'childPage' },
+      page: 1
     });
 
-    QUnit.test('query params in the same route hierarchy with the same url key get auto-scoped', function () {
-      App.ParentRoute = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            as: 'shared',
-            defaultValue: 1
-          }
-        }
-      });
+    this.boot();
 
-      App.ParentChildRoute = _emberRouting.Route.extend({
-        queryParams: {
-          bar: {
-            as: 'shared',
-            defaultValue: 1
-          }
-        }
-      });
+    equal(router.get('location.path'), '/parent/child');
 
-      var self = this;
-      expectAssertion(function () {
-        self.boot();
-      }, 'You\'re not allowed to have more than one controller property map to the same query param key, but both `parent:foo` and `parent.child:bar` map to `shared`. You can fix this by mapping one of the controller properties to a different query param key via the `as` config option, e.g. `foo: { as: \'other-foo\' }`');
-    });
-  } else {
-    QUnit.module('Query Params - overlapping query param property names', {
-      setup: function () {
-        sharedSetup();
+    var parentController = container.lookup('controller:parent');
+    var parentChildController = container.lookup('controller:parent.child');
 
-        App.Router.map(function () {
-          this.route('parent', function () {
-            this.route('child');
-          });
-        });
+    setAndFlush(parentController, 'page', 2);
+    equal(router.get('location.path'), '/parent/child?parentPage=2');
+    setAndFlush(parentController, 'page', 1);
+    equal(router.get('location.path'), '/parent/child');
 
-        this.boot = function () {
-          bootApplication();
-          _emberMetal.run(router, 'transitionTo', 'parent.child');
-        };
-      },
+    setAndFlush(parentChildController, 'page', 2);
+    equal(router.get('location.path'), '/parent/child?childPage=2');
+    setAndFlush(parentChildController, 'page', 1);
+    equal(router.get('location.path'), '/parent/child');
 
-      teardown: function () {
-        sharedTeardown();
-      }
+    _emberMetal.run(function () {
+      parentController.set('page', 2);
+      parentChildController.set('page', 2);
     });
 
-    QUnit.test('can remap same-named qp props', function () {
-      App.ParentController = _emberRuntime.Controller.extend({
-        queryParams: { page: 'parentPage' },
-        page: 1
-      });
+    equal(router.get('location.path'), '/parent/child?childPage=2&parentPage=2');
 
-      App.ParentChildController = _emberRuntime.Controller.extend({
-        queryParams: { page: 'childPage' },
-        page: 1
-      });
-
-      this.boot();
-
-      equal(router.get('location.path'), '/parent/child');
-
-      var parentController = container.lookup('controller:parent');
-      var parentChildController = container.lookup('controller:parent.child');
-
-      setAndFlush(parentController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?parentPage=2');
-      setAndFlush(parentController, 'page', 1);
-      equal(router.get('location.path'), '/parent/child');
-
-      setAndFlush(parentChildController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?childPage=2');
-      setAndFlush(parentChildController, 'page', 1);
-      equal(router.get('location.path'), '/parent/child');
-
-      _emberMetal.run(function () {
-        parentController.set('page', 2);
-        parentChildController.set('page', 2);
-      });
-
-      equal(router.get('location.path'), '/parent/child?childPage=2&parentPage=2');
-
-      _emberMetal.run(function () {
-        parentController.set('page', 1);
-        parentChildController.set('page', 1);
-      });
-
-      equal(router.get('location.path'), '/parent/child');
+    _emberMetal.run(function () {
+      parentController.set('page', 1);
+      parentChildController.set('page', 1);
     });
 
-    QUnit.test('query params in the same route hierarchy with the same url key get auto-scoped', function () {
-      App.ParentController = _emberRuntime.Controller.extend({
-        queryParams: { foo: 'shared' },
-        foo: 1
-      });
+    equal(router.get('location.path'), '/parent/child');
+  });
 
-      App.ParentChildController = _emberRuntime.Controller.extend({
-        queryParams: { bar: 'shared' },
-        bar: 1
-      });
-
-      var self = this;
-      expectAssertion(function () {
-        self.boot();
-      }, 'You\'re not allowed to have more than one controller property map to the same query param key, but both `parent:foo` and `parent.child:bar` map to `shared`. You can fix this by mapping one of the controller properties to a different query param key via the `as` config option, e.g. `foo: { as: \'other-foo\' }`');
+  QUnit.test('query params in the same route hierarchy with the same url key get auto-scoped', function () {
+    App.ParentController = _emberRuntime.Controller.extend({
+      queryParams: { foo: 'shared' },
+      foo: 1
     });
 
-    QUnit.test('Support shared but overridable mixin pattern', function () {
-      var HasPage = _emberMetal.Mixin.create({
-        queryParams: 'page',
-        page: 1
-      });
-
-      App.ParentController = _emberRuntime.Controller.extend(HasPage, {
-        queryParams: { page: 'yespage' }
-      });
-
-      App.ParentChildController = _emberRuntime.Controller.extend(HasPage);
-
-      this.boot();
-
-      equal(router.get('location.path'), '/parent/child');
-
-      var parentController = container.lookup('controller:parent');
-      var parentChildController = container.lookup('controller:parent.child');
-
-      setAndFlush(parentChildController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?page=2');
-      equal(parentController.get('page'), 1);
-      equal(parentChildController.get('page'), 2);
-
-      setAndFlush(parentController, 'page', 2);
-      equal(router.get('location.path'), '/parent/child?page=2&yespage=2');
-      equal(parentController.get('page'), 2);
-      equal(parentChildController.get('page'), 2);
+    App.ParentChildController = _emberRuntime.Controller.extend({
+      queryParams: { bar: 'shared' },
+      bar: 1
     });
-  }
+
+    var self = this;
+    expectAssertion(function () {
+      self.boot();
+    }, 'You\'re not allowed to have more than one controller property map to the same query param key, but both `parent:foo` and `parent.child:bar` map to `shared`. You can fix this by mapping one of the controller properties to a different query param key via the `as` config option, e.g. `foo: { as: \'other-foo\' }`');
+  });
+
+  QUnit.test('Support shared but overridable mixin pattern', function () {
+    var HasPage = _emberMetal.Mixin.create({
+      queryParams: 'page',
+      page: 1
+    });
+
+    App.ParentController = _emberRuntime.Controller.extend(HasPage, {
+      queryParams: { page: 'yespage' }
+    });
+
+    App.ParentChildController = _emberRuntime.Controller.extend(HasPage);
+
+    this.boot();
+
+    equal(router.get('location.path'), '/parent/child');
+
+    var parentController = container.lookup('controller:parent');
+    var parentChildController = container.lookup('controller:parent.child');
+
+    setAndFlush(parentChildController, 'page', 2);
+    equal(router.get('location.path'), '/parent/child?page=2');
+    equal(parentController.get('page'), 1);
+    equal(parentChildController.get('page'), 2);
+
+    setAndFlush(parentController, 'page', 2);
+    equal(router.get('location.path'), '/parent/child?page=2&yespage=2');
+    equal(parentController.get('page'), 2);
+    equal(parentChildController.get('page'), 2);
+  });
 });
 enifed('ember/tests/routing/query_params_test/query_params_paramless_link_to_test', ['exports', 'ember-runtime', 'ember-routing', 'ember-metal', 'ember-template-compiler', 'ember-application', 'ember-views', 'ember-glimmer'], function (exports, _emberRuntime, _emberRouting, _emberMetal, _emberTemplateCompiler, _emberApplication, _emberViews, _emberGlimmer) {
   'use strict';
@@ -72431,34 +70157,8 @@ enifed('ember/tests/routing/query_params_test/query_params_paramless_link_to_tes
     });
   }
 
-  function testParamlessLinksWithRouteConfig(routeName) {
-    QUnit.test('param-less links in an app booted with query params in the URL don\'t reset the query params: ' + routeName, function () {
-      expect(1);
-
-      _emberGlimmer.setTemplate(routeName, _emberTemplateCompiler.compile('{{link-to \'index\' \'index\' id=\'index-link\'}}'));
-
-      App[_emberRuntime.String.capitalize(routeName) + 'Route'] = _emberRouting.Route.extend({
-        queryParams: {
-          foo: {
-            defaultValue: 'wat'
-          }
-        }
-      });
-
-      startingURL = '/?foo=YEAH';
-      bootApplication();
-
-      equal(_emberViews.jQuery('#index-link').attr('href'), '/?foo=YEAH');
-    });
-  }
-
-  if (false) {
-    testParamlessLinksWithRouteConfig('application');
-    testParamlessLinksWithRouteConfig('index');
-  } else {
-    testParamlessLinks('application');
-    testParamlessLinks('index');
-  }
+  testParamlessLinks('application');
+  testParamlessLinks('index');
 });
 enifed('ember/tests/routing/router_map_test', ['exports', 'ember-metal', 'ember-template-compiler', 'ember-application', 'ember-routing', 'ember-views', 'ember-glimmer'], function (exports, _emberMetal, _emberTemplateCompiler, _emberApplication, _emberRouting, _emberViews, _emberGlimmer) {
   'use strict';
