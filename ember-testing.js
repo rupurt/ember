@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha.1-alpha+45f1416d
+ * @version   2.9.0-beta.5-alpha+471c5e6a
  */
 
 var enifed, requireModule, require, Ember;
@@ -525,10 +525,6 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
     Object.seal(obj);
   });
 
-  _emberMetal.setDebugFunction('debugFreeze', function debugFreeze(obj) {
-    Object.freeze(obj);
-  });
-
   _emberMetal.setDebugFunction('deprecate', _emberDebugDeprecate.default);
 
   _emberMetal.setDebugFunction('warn', _emberDebugWarn.default);
@@ -614,7 +610,7 @@ enifed('ember-debug/index', ['exports', 'ember-metal', 'ember-environment', 'emb
         // defer to whatever handler was registered before this one
         next(message, options);
       }
-    });
+    }
     ```
   
     The handler function takes the following arguments:
@@ -1132,7 +1128,7 @@ enifed('ember-testing/ext/rsvp', ['exports', 'ember-runtime', 'ember-metal', 'em
 
   exports.default = _emberRuntime.RSVP;
 });
-enifed('ember-testing/helpers', ['exports', 'ember-metal', 'ember-testing/test/helpers', 'ember-testing/helpers/and_then', 'ember-testing/helpers/click', 'ember-testing/helpers/current_path', 'ember-testing/helpers/current_route_name', 'ember-testing/helpers/current_url', 'ember-testing/helpers/fill_in', 'ember-testing/helpers/find', 'ember-testing/helpers/find_with_assert', 'ember-testing/helpers/key_event', 'ember-testing/helpers/pause_test', 'ember-testing/helpers/trigger_event', 'ember-testing/helpers/visit', 'ember-testing/helpers/wait'], function (exports, _emberMetal, _emberTestingTestHelpers, _emberTestingHelpersAnd_then, _emberTestingHelpersClick, _emberTestingHelpersCurrent_path, _emberTestingHelpersCurrent_route_name, _emberTestingHelpersCurrent_url, _emberTestingHelpersFill_in, _emberTestingHelpersFind, _emberTestingHelpersFind_with_assert, _emberTestingHelpersKey_event, _emberTestingHelpersPause_test, _emberTestingHelpersTrigger_event, _emberTestingHelpersVisit, _emberTestingHelpersWait) {
+enifed('ember-testing/helpers', ['exports', 'ember-testing/test/helpers', 'ember-testing/helpers/and_then', 'ember-testing/helpers/click', 'ember-testing/helpers/current_path', 'ember-testing/helpers/current_route_name', 'ember-testing/helpers/current_url', 'ember-testing/helpers/fill_in', 'ember-testing/helpers/find', 'ember-testing/helpers/find_with_assert', 'ember-testing/helpers/key_event', 'ember-testing/helpers/pause_test', 'ember-testing/helpers/trigger_event', 'ember-testing/helpers/visit', 'ember-testing/helpers/wait'], function (exports, _emberTestingTestHelpers, _emberTestingHelpersAnd_then, _emberTestingHelpersClick, _emberTestingHelpersCurrent_path, _emberTestingHelpersCurrent_route_name, _emberTestingHelpersCurrent_url, _emberTestingHelpersFill_in, _emberTestingHelpersFind, _emberTestingHelpersFind_with_assert, _emberTestingHelpersKey_event, _emberTestingHelpersPause_test, _emberTestingHelpersTrigger_event, _emberTestingHelpersVisit, _emberTestingHelpersWait) {
   'use strict';
 
   _emberTestingTestHelpers.registerAsyncHelper('visit', _emberTestingHelpersVisit.default);
@@ -1141,7 +1137,7 @@ enifed('ember-testing/helpers', ['exports', 'ember-metal', 'ember-testing/test/h
   _emberTestingTestHelpers.registerAsyncHelper('fillIn', _emberTestingHelpersFill_in.default);
   _emberTestingTestHelpers.registerAsyncHelper('wait', _emberTestingHelpersWait.default);
   _emberTestingTestHelpers.registerAsyncHelper('andThen', _emberTestingHelpersAnd_then.default);
-  _emberTestingTestHelpers.registerAsyncHelper('pauseTest', _emberTestingHelpersPause_test.pauseTest);
+  _emberTestingTestHelpers.registerAsyncHelper('pauseTest', _emberTestingHelpersPause_test.default);
   _emberTestingTestHelpers.registerAsyncHelper('triggerEvent', _emberTestingHelpersTrigger_event.default);
 
   _emberTestingTestHelpers.registerHelper('find', _emberTestingHelpersFind.default);
@@ -1149,10 +1145,6 @@ enifed('ember-testing/helpers', ['exports', 'ember-metal', 'ember-testing/test/h
   _emberTestingTestHelpers.registerHelper('currentRouteName', _emberTestingHelpersCurrent_route_name.default);
   _emberTestingTestHelpers.registerHelper('currentPath', _emberTestingHelpersCurrent_path.default);
   _emberTestingTestHelpers.registerHelper('currentURL', _emberTestingHelpersCurrent_url.default);
-
-  if (false) {
-    _emberTestingTestHelpers.registerHelper('resumeTest', _emberTestingHelpersPause_test.resumeTest);
-  }
 });
 enifed("ember-testing/helpers/and_then", ["exports"], function (exports) {
   /**
@@ -1474,37 +1466,19 @@ enifed('ember-testing/helpers/key_event', ['exports'], function (exports) {
     return app.testHelpers.triggerEvent(selector, context, type, { keyCode: keyCode, which: keyCode });
   }
 });
-enifed('ember-testing/helpers/pause_test', ['exports', 'ember-runtime', 'ember-console', 'ember-metal'], function (exports, _emberRuntime, _emberConsole, _emberMetal) {
+enifed('ember-testing/helpers/pause_test', ['exports', 'ember-runtime'], function (exports, _emberRuntime) {
   /**
   @module ember
   @submodule ember-testing
   */
   'use strict';
 
-  exports.resumeTest = resumeTest;
-  exports.pauseTest = pauseTest;
-
-  var resume = undefined;
-
-  /**
-   Resumes a test paused by `pauseTest`.
-  
-   @method resumeTest
-   @return {void}
-   @public
-  */
-
-  function resumeTest() {
-    _emberMetal.assert('Testing has not been paused. There is nothing to resume.', resume);
-    resume();
-    resume = undefined;
-  }
+  exports.default = pauseTest;
 
   /**
    Pauses the current test - this is useful for debugging while testing or for test-driving.
    It allows you to inspect the state of your application at any point.
    Example (The test will pause before clicking the button):
-  
    ```javascript
    visit('/')
    return pauseTest();
@@ -1517,15 +1491,7 @@ enifed('ember-testing/helpers/pause_test', ['exports', 'ember-runtime', 'ember-c
   */
 
   function pauseTest() {
-    if (false) {
-      _emberConsole.default.info('Testing paused. Use `resumeTest()` to continue.');
-    }
-
-    return new _emberRuntime.RSVP.Promise(function (resolve) {
-      if (false) {
-        resume = resolve;
-      }
-    }, 'TestAdapter paused promise');
+    return new _emberRuntime.RSVP.Promise(function () {}, 'TestAdapter paused promise');
   }
 });
 enifed('ember-testing/helpers/trigger_event', ['exports', 'ember-testing/events'], function (exports, _emberTestingEvents) {
@@ -2181,6 +2147,12 @@ enifed('ember-testing/test/promise', ['exports', 'ember-runtime', 'ember-testing
       @param {String} label An optional string for identifying the promise.
     */
 
+    TestPromise.resolve = function resolve(val) {
+      return new TestPromise(function (resolve) {
+        return resolve(val);
+      });
+    };
+
     TestPromise.prototype.then = function then(onFulfillment) {
       var _RSVP$Promise$prototype$then;
 
@@ -2215,8 +2187,10 @@ enifed('ember-testing/test/promise', ['exports', 'ember-runtime', 'ember-testing
     @since 1.2.0
   */
 
-  function resolve(result, label) {
-    return TestPromise.resolve(result, label);
+  function resolve(result) {
+    return new TestPromise(function (resolve) {
+      return resolve(result);
+    });
   }
 
   function getLastPromise() {
