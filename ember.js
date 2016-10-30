@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha.1-alpha+10857fd9
+ * @version   2.10.0-beta.2-alpha+29ab3354
  */
 
 var enifed, requireModule, require, Ember;
@@ -1472,7 +1472,7 @@ enifed('container/container', ['exports', 'ember-utils', 'ember-environment', 'e
       var factoryInjections = factoryInjectionsFor(container, fullName);
       var cacheable = !areInjectionsDynamic(injections) && !areInjectionsDynamic(factoryInjections);
 
-      factoryInjections[_emberUtils.NAME_KEY] = registry.makeToString(factory, fullName);
+      factoryInjections._toString = registry.makeToString(factory, fullName);
 
       var injectedFactory = factory.extend(injections);
 
@@ -7150,7 +7150,7 @@ enifed('ember-glimmer/component', ['exports', 'ember-utils', 'ember-views', 'emb
    @default null
    @public
    */
-  Component[_emberUtils.NAME_KEY] = 'Ember.Component';
+  Component[_emberMetal.NAME_KEY] = 'Ember.Component';
 
   Component.reopenClass({
     isComponentFactory: true,
@@ -9519,34 +9519,19 @@ enifed('ember-glimmer/helpers/component', ['exports', 'ember-utils', 'ember-glim
   
     ```handlebars
     {{yield (hash
-      nameInput=(component "my-input-component" value=model.name placeholder="First Name")
-    )}}
+        nameInput=(component "my-input-component" value=model.name placeholder="First Name"))}}
     ```
   
-    When yielding the component via the `hash` helper, the component is invocked directly.
-    See the following snippet:
+    The following snippet:
   
     ```
     {{#person-form as |form|}}
-      {{form.nameInput placeholder="Username"}}
+      {{component form.nameInput placeholder="Username"}}
     {{/person-form}}
     ```
   
-    Which outputs an input whose value is already bound to `model.name` and `placeholder`
+    would output an input whose value is already bound to `model.name` and `placeholder`
     is "Username".
-  
-    When yielding the component without the hash helper use the `component` helper.
-    For example, below is a `full-name` component template:
-  
-    ```handlebars
-    {{yield (component "my-input-component" value=model.name placeholder="Name")}}
-    ```
-  
-    ```
-    {{#full-name as |field|}}
-      {{component field placeholder="Full name"}}
-    {{/full-name}}
-    ```
   
     @method component
     @since 1.11.0
@@ -10389,9 +10374,6 @@ enifed('ember-glimmer/helpers/mut', ['exports', 'ember-utils', 'ember-metal', 'e
     });
     ```
   
-    Note that for curly components (`{{my-component}}`) the bindings are already mutable,
-    making the `mut` unnecessary.
-  
     Additionally, the `mut` helper can be combined with the `action` helper to
     mutate a value. For example:
   
@@ -10405,31 +10387,12 @@ enifed('ember-glimmer/helpers/mut', ['exports', 'ember-utils', 'ember-metal', 'e
     // my-child.js
     export default Component.extend({
       click() {
-        this.get('click-count-change')(this.get('childClickCount') + 1);
+        this.get('clickCountChange')(this.get('childClickCount') + 1);
       }
     });
     ```
   
     The `mut` helper changes the `totalClicks` value to what was provided as the action argument.
-  
-    The `mut` helper, when used with `action`, will return a function that
-    sets the value passed to `mut` to its first argument. This works like any other
-    closure action and interacts with the other features `action` provides.
-    As an example, we can create a button that increments a value passing the value
-    directly to the `action`:
-  
-    ```handlebars
-    {{! inc helper is not provided by Ember }}
-    <button onclick={{action (mut count) (inc count)}}>
-      Increment count
-    </button>
-    ```
-  
-    You can also use the `value` option:
-  
-    ```handlebars
-    <input value={{name}} oninput={{action (mut name) value="target.value"}}>
-    ```
   
     @method mut
     @param {Object} [attr] the "two-way" attribute that can be modified.
@@ -17444,6 +17407,7 @@ enifed('ember-metal/index', ['exports', 'require', 'ember-metal/core', 'ember-me
   exports.removeObserver = _emberMetalObserver.removeObserver;
   exports._addBeforeObserver = _emberMetalObserver._addBeforeObserver;
   exports._removeBeforeObserver = _emberMetalObserver._removeBeforeObserver;
+  exports.NAME_KEY = _emberMetalMixin.NAME_KEY;
   exports.Mixin = _emberMetalMixin.Mixin;
   exports.aliasMethod = _emberMetalMixin.aliasMethod;
   exports._immediateObserver = _emberMetalMixin._immediateObserver;
@@ -19482,32 +19446,20 @@ enifed('ember-metal/mixin', ['exports', 'ember-utils', 'ember-metal/error', 'emb
 
   function applyConcatenatedProperties(obj, key, value, values) {
     var baseValue = values[key] || obj[key];
-    var ret = undefined;
 
     if (baseValue) {
       if ('function' === typeof baseValue.concat) {
         if (value === null || value === undefined) {
-          ret = baseValue;
+          return baseValue;
         } else {
-          ret = baseValue.concat(value);
+          return baseValue.concat(value);
         }
       } else {
-        ret = _emberUtils.makeArray(baseValue).concat(value);
+        return _emberUtils.makeArray(baseValue).concat(value);
       }
     } else {
-      ret = _emberUtils.makeArray(value);
+      return _emberUtils.makeArray(value);
     }
-
-    _emberMetalDebug.runInDebug(function () {
-      // it is possible to use concatenatedProperties with strings (which cannot be frozen)
-      // only freeze objects...
-      if (typeof ret === 'object' && ret !== null) {
-        // prevent mutating `concatenatedProperties` array after it is applied
-        Object.freeze(ret);
-      }
-    });
-
-    return ret;
   }
 
   function applyMergedProperties(obj, key, value, values) {
@@ -19783,6 +19735,9 @@ enifed('ember-metal/mixin', ['exports', 'ember-utils', 'ember-metal/error', 'emb
     return obj;
   }
 
+  var NAME_KEY = _emberUtils.GUID_KEY + '_name';
+
+  exports.NAME_KEY = NAME_KEY;
   /**
     The `Ember.Mixin` class allows you to create mixins, whose properties can be
     added to other classes. For instance,
@@ -19865,7 +19820,7 @@ enifed('ember-metal/mixin', ['exports', 'ember-utils', 'ember-metal/error', 'emb
     this.ownerConstructor = undefined;
     this._without = undefined;
     this[_emberUtils.GUID_KEY] = null;
-    this[_emberUtils.NAME_KEY] = null;
+    this[NAME_KEY] = null;
     _emberMetalDebug.debugSeal(this);
   }
 
@@ -24515,8 +24470,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
 
     /**
       The name of the route, dot-delimited.
-       For example, a route found at `app/routes/posts/post.js` will have
-      a `routeName` of `posts.post`.
+       For example, a route found at `app/routes/posts/post.js` or
+      `app/posts/post/route.js` (with pods) will have a `routeName` of
+      `posts.post`.
        @property routeName
       @for Ember.Route
       @type String
@@ -24732,23 +24688,18 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       Returns a hash containing the parameters of an ancestor route.
        Example
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('member', { path: ':name' }, function() {
           this.route('interest', { path: ':interest' });
         });
       });
-      ```
-       ```app/routes/member.js
-      export default Ember.Route.extend({
+       App.MemberRoute = Ember.Route.extend({
         queryParams: {
           memberQp: { refreshModel: true }
         }
       });
-      ```
-       ```app/routes/member/interest.js
-      export default Ember.Route.extend({
+       App.MemberInterestRoute = Ember.Route.extend({
         queryParams: {
           interestQp: { refreshModel: true }
         },
@@ -24841,10 +24792,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       A hook you can use to reset controller values either when the model
       changes or the route is exiting.
-       ```app/routes/articles.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        resetController(controller, isExiting, transition) {
+       ```javascript
+      App.ArticlesRoute = Ember.Route.extend({
+        // ...
+         resetController: function(controller, isExiting, transition) {
           if (isExiting) {
             controller.set('page', 1);
           }
@@ -24895,19 +24846,12 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       The name of the template to use by default when rendering this routes
       template.
-       ```app/routes/posts/list.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       ```javascript
+      let PostsList = Ember.Route.extend({
         templateName: 'posts/list'
       });
-      ```
-       ```app/routes/posts/index.js
-      import PostsList from '../posts/list';
-       export default PostsList.extend();
-      ```
-       ```app/routes/posts/archived.js
-      import PostsList from '../posts/list';
-       export default PostsList.extend();
+       App.PostsIndexRoute = PostsList.extend();
+      App.PostsArchivedRoute = PostsList.extend();
       ```
        @property templateName
       @type String
@@ -24942,11 +24886,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       or decorating the transition from the currently active routes.
        A good example is preventing navigation when a form is
       half-filled out:
-       ```app/routes/contact-form.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       ```javascript
+      App.ContactFormRoute = Ember.Route.extend({
         actions: {
-          willTransition(transition) {
+          willTransition: function(transition) {
             if (this.controller.get('userHasEnteredData')) {
               this.controller.displayNavigationConfirm();
               transition.abort();
@@ -24980,11 +24923,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       have resolved. The `didTransition` action has no arguments,
       however, it can be useful for tracking page views or resetting
       state on the controller.
-       ```app/routes/login.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       ```javascript
+      App.LoginRoute = Ember.Route.extend({
         actions: {
-          didTransition() {
+          didTransition: function() {
             this.controller.get('errors.base').clear();
             return true; // Bubble the didTransition event
           }
@@ -25001,10 +24943,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       hook returns a promise that is not already resolved. The current
       `Transition` object is the first parameter and the route that
       triggered the loading event is the second parameter.
-       ```app/routes/application.js
-      export default Ember.Route.extend({
+       ```javascript
+      App.ApplicationRoute = Ember.Route.extend({
         actions: {
-          loading(transition, route) {
+          loading: function(transition, route) {
             let controller = this.controllerFor('foo');
             controller.set('currentlyLoading', true);
              transition.finally(function() {
@@ -25030,14 +24972,13 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
        Here is an example of an error handler that will be invoked
       for rejected promises from the various hooks on the route,
       as well as any unhandled errors from child routes:
-       ```app/routes/admin.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        beforeModel() {
+       ```javascript
+      App.AdminRoute = Ember.Route.extend({
+        beforeModel: function() {
           return Ember.RSVP.reject('bad things!');
         },
          actions: {
-          error(error, transition) {
+          error: function(error, transition) {
             // Assuming we got here due to the error in `beforeModel`,
             // we can expect that error === "bad things!",
             // but a promise model rejecting would also
@@ -25055,11 +24996,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       will fire a default error handler that logs the error. You can
       specify your own global default error handler by overriding the
       `error` handler on `ApplicationRoute`:
-       ```app/routes/application.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       ```javascript
+      App.ApplicationRoute = Ember.Route.extend({
         actions: {
-          error(error, transition) {
+          error: function(error, transition) {
             this.controllerFor('banner').displayError(error.message);
           }
         }
@@ -25075,12 +25015,11 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       This event is triggered when the router enters the route. It is
       not executed when the model for the route changes.
-       ```app/routes/application.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        collectAnalytics: Ember.on('activate', function(){
+       ```javascript
+      App.ApplicationRoute = Ember.Route.extend({
+        collectAnalytics: function(){
           collectAnalytics();
-        })
+        }.on('activate')
       });
       ```
        @event activate
@@ -25091,12 +25030,11 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       This event is triggered when the router completely exits this
       route. It is not executed when the model for the route changes.
-       ```app/routes/index.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        trackPageLeaveAnalytics: Ember.on('deactivate', function(){
+       ```javascript
+      App.IndexRoute = Ember.Route.extend({
+        trackPageLeaveAnalytics: function(){
           trackPageLeaveAnalytics();
-        })
+        }.on('deactivate')
       });
       ```
        @event deactivate
@@ -25107,11 +25045,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       The controller associated with this route.
        Example
-       ```app/routes/form.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       ```javascript
+      App.FormRoute = Ember.Route.extend({
         actions: {
-          willTransition(transition) {
+          willTransition: function(transition) {
             if (this.controller.get('userHasEnteredData') &&
                 !confirm('Are you sure you want to abandon progress?')) {
               transition.abort();
@@ -25283,17 +25220,13 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       ```
        Multiple models will be applied last to first recursively up the
       route tree.
-       ```app/routes.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('blogPost', { path:':blogPostId' }, function() {
-          this.route('blogComment', { path: ':blogCommentId' });
+          this.route('blogComment', { path: ':blogCommentId', resetNamespace: true });
         });
       });
-       export default Router;
-      ```
-       ```javascript
-      this.transitionTo('blogComment', aPost, aComment);
+       this.transitionTo('blogComment', aPost, aComment);
       this.transitionTo('blogComment', 1, 13);
       ```
        It is also possible to pass a URL (a string that starts with a
@@ -25315,20 +25248,15 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       ```
        See also [replaceWith](#method_replaceWith).
        Simple Transition Example
-       ```app/routes.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('index');
         this.route('secret');
         this.route('fourOhFour', { path: '*:' });
       });
-       export default Router;
-      ```
-       ```app/routes/index.js
-      import Ember from 'ember':
-       export Ember.Route.extend({
+       App.IndexRoute = Ember.Route.extend({
         actions: {
-          moveToSecret(context) {
+          moveToSecret: function(context) {
             if (authorized()) {
               this.transitionTo('secret', context);
             } else {
@@ -25339,63 +25267,48 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       });
       ```
        Transition to a nested route
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('articles', { path: '/articles' }, function() {
           this.route('new');
         });
       });
-       export default Router;
-      ```
-       ```app/routes/index.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       App.IndexRoute = Ember.Route.extend({
         actions: {
-          transitionToNewArticle() {
+          transitionToNewArticle: function() {
             this.transitionTo('articles.new');
           }
         }
       });
       ```
        Multiple Models Example
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('index');
          this.route('breakfast', { path: ':breakfastId' }, function() {
-          this.route('cereal', { path: ':cerealId' });
+          this.route('cereal', { path: ':cerealId', resetNamespace: true });
         });
       });
-       export default Router;
-      ```
-       ```app/routes/index.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       App.IndexRoute = Ember.Route.extend({
         actions: {
-          moveToChocolateCereal() {
+          moveToChocolateCereal: function() {
             let cereal = { cerealId: 'ChocolateYumminess' };
             let breakfast = { breakfastId: 'CerealAndMilk' };
-             this.transitionTo('breakfast.cereal', breakfast, cereal);
+             this.transitionTo('cereal', breakfast, cereal);
           }
         }
       });
       ```
        Nested Route with Query String Example
-       ```app/routes.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('fruits', function() {
           this.route('apples');
         });
       });
-       export default Router;
-      ```
-       ```app/routes/index.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       App.IndexRoute = Ember.Route.extend({
         actions: {
-          transitionToApples() {
+          transitionToApples: function() {
             this.transitionTo('fruits.apples', { queryParams: { color: 'red' } });
           }
         }
@@ -25466,18 +25379,13 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       Beside that, it is identical to `transitionTo` in all other respects. See
       'transitionTo' for additional information regarding multiple models.
        Example
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('index');
         this.route('secret');
       });
-       export default Router;
-      ```
-       ```app/routes/secret.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        afterModel() {
+       App.SecretRoute = Ember.Route.extend({
+        afterModel: function() {
           if (!authorized()){
             this.replaceWith('index');
           }
@@ -25502,28 +25410,20 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       Sends an action to the router, which will delegate it to the currently
       active route hierarchy per the bubbling rules explained under `actions`.
        Example
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('index');
       });
-       export default Router;
-      ```
-       ```app/routes/application.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       App.ApplicationRoute = Ember.Route.extend({
         actions: {
-          track(arg) {
+          track: function(arg) {
             console.log(arg, 'was clicked');
           }
         }
       });
-      ```
-       ```app/routes/index.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
+       App.IndexRoute = Ember.Route.extend({
         actions: {
-          trackIfDebug(arg) {
+          trackIfDebug: function(arg) {
             if (debug) {
               this.send('track', arg);
             }
@@ -25641,7 +25541,6 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
         cache.stash(cacheKey, prop, value);
       }
     },
-
     /**
       This hook is the first of the route entry validation hooks
       called when an attempt is made to transition into a route
@@ -25661,6 +25560,46 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       transition until the promise resolves (or rejects). This could
       be useful, for instance, for retrieving async code from
       the server that is required to enter a route.
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        beforeModel: function(transition) {
+          if (!App.Post) {
+            return Ember.$.getScript('/models/post.js');
+          }
+        }
+      });
+      ```
+       If `App.Post` doesn't exist in the above example,
+      `beforeModel` will use jQuery's `getScript`, which
+      returns a promise that resolves after the server has
+      successfully retrieved and executed the code from the
+      server. Note that if an error were to occur, it would
+      be passed to the `error` hook on `Ember.Route`, but
+      it's also possible to handle errors specific to
+      `beforeModel` right from within the hook (to distinguish
+      from the shared error handling behavior of the `error`
+      hook):
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        beforeModel: function(transition) {
+          if (!App.Post) {
+            let self = this;
+            return Ember.$.getScript('post.js').then(null, function(e) {
+              self.transitionTo('help');
+               // Note that the above transitionTo will implicitly
+              // halt the transition. If you were to return
+              // nothing from this promise reject handler,
+              // according to promise semantics, that would
+              // convert the reject into a resolve and the
+              // transition would continue. To propagate the
+              // error so that it'd be handled by the `error`
+              // hook, you would have to
+              return Ember.RSVP.reject(e);
+            });
+          }
+        }
+      });
+      ```
        @method beforeModel
       @param {Transition} transition
       @return {Promise} if the value returned from this hook is
@@ -25679,10 +25618,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       the `transition`, and is therefore suited to performing
       logic that can only take place after the model has already
       resolved.
-       ```app/routes/posts.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        afterModel(posts, transition) {
+       ```javascript
+      App.PostsRoute = Ember.Route.extend({
+        afterModel: function(posts, transition) {
           if (posts.get('length') === 1) {
             this.transitionTo('post.show', posts.get('firstObject'));
           }
@@ -25742,12 +25680,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       A hook you can implement to convert the URL into the model for
       this route.
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('post', { path: '/posts/:post_id' });
       });
-       export default Router;
       ```
        The model for the `post` route is `store.findRecord('post', params.post_id)`.
        By default, if your route has a dynamic segment ending in `_id`:
@@ -25781,10 +25717,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       if a promise returned from `model` fails, the error will be
       handled by the `error` hook on `Ember.Route`.
        Example
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        model(params) {
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        model: function(params) {
           return this.store.findRecord('post', params.post_id);
         }
       });
@@ -25891,20 +25826,16 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       A hook you can implement to convert the route's model into parameters
       for the URL.
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('post', { path: '/posts/:post_id' });
       });
-       ```
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        model(params) {
+       App.PostRoute = Ember.Route.extend({
+        model: function(params) {
           // the server returns `{ id: 12 }`
           return Ember.$.getJSON('/posts/' + params.post_id);
         },
-         serialize(model) {
+         serialize: function(model) {
           // this will make the URL `/posts/12`
           return { post_id: model.id };
         }
@@ -25936,13 +25867,12 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       prevent this default behavior. If you want to preserve that behavior
       when implementing your `setupController` function, make sure to call
       `_super`:
-       ```app/routes/photos.js
-      import Ember from 'ebmer';
-       export default Ember.Route.extend({
-        model() {
+       ```javascript
+      App.PhotosRoute = Ember.Route.extend({
+        model: function() {
           return this.store.findAll('photo');
         },
-         setupController(controller, model) {
+         setupController: function(controller, model) {
           // Call _super for default behavior
           this._super(controller, model);
           // Implement your custom setup after
@@ -25954,21 +25884,18 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       of this route.
        If no explicit controller is defined, Ember will automatically create one.
        As an example, consider the router:
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
         this.route('post', { path: '/posts/:post_id' });
       });
-       export default Router;
       ```
        For the `post` route, a controller named `App.PostController` would
       be used if it is defined. If it is not defined, a basic `Ember.Controller`
       instance would be used.
        Example
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        setupController(controller, model) {
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        setupController: function(controller, model) {
           controller.set('model', model);
         }
       });
@@ -25989,10 +25916,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       Returns the controller for a particular route or name.
        The controller instance must already have been created, either through entering the
       associated route or using `generateController`.
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        setupController(controller, post) {
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        setupController: function(controller, post) {
           this._super(controller, post);
           this.controllerFor('posts').set('currentPost', post);
         }
@@ -26026,10 +25952,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
     /**
       Generates a controller for a route.
        Example
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        setupController(controller, post) {
+       ```javascript
+      App.PostRoute = Ember.Route.extend({
+        setupController: function(controller, post) {
           this._super(controller, post);
           this.generateController('posts', post);
         }
@@ -26058,19 +25983,14 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       retrieve it. If the ancestor route's model was a promise,
       its resolved result is returned.
        Example
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      App.Router.map(function() {
           this.route('post', { path: '/post/:post_id' }, function() {
             this.route('comments', { resetNamespace: true });
           });
       });
-       export default Router;
-      ```
-       ```app/routes/comments.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-          afterModel() {
+       App.CommentsRoute = Ember.Route.extend({
+          afterModel: function() {
             this.set('post', this.modelFor('post'));
           }
       });
@@ -26115,10 +26035,9 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       template, configured with the controller for the route.
        This method can be overridden to set up and render additional or
       alternative templates.
-       ```app/routes/posts.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        renderTemplate(controller, model) {
+       ```javascript
+      App.PostsRoute = Ember.Route.extend({
+        renderTemplate: function(controller, model) {
           let favController = this.controllerFor('favoritePost');
            // Render the `favoritePost` template into
           // the outlet `posts`, and display the `favoritePost`
@@ -26146,12 +26065,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       phase of routing (via the `renderTemplate` hook) and later in response to
       user interaction.
        For example, given the following minimal router and templates:
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      Router.map(function() {
         this.route('photos');
       });
-       export default Router;
       ```
        ```handlebars
       <!-- application.hbs -->
@@ -26165,10 +26082,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       ```
        You can render `photos.hbs` into the `"anOutletName"` outlet of
       `application.hbs` by calling `render`:
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        renderTemplate() {
+       ```javascript
+      // posts route
+      Ember.Route.extend({
+        renderTemplate: function() {
           this.render('photos', {
             into: 'application',
             outlet: 'anOutletName'
@@ -26178,10 +26095,10 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       ```
        `render` additionally allows you to supply which `controller` and
       `model` objects should be loaded and associated with the rendered template.
-        ```app/routes/posts.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        renderTemplate(controller, model){
+        ```javascript
+      // posts route
+      Ember.Route.extend({
+        renderTemplate: function(controller, model){
           this.render('posts', {    // the template to render, referenced by name
             into: 'application',    // the template to render into, referenced by name
             outlet: 'anOutletName', // the outlet inside `options.template` to render into.
@@ -26200,26 +26117,26 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       based on the name of the route specified in the router or the Route's
       `controllerName` and `templateName` properties.
        For example:
-       ```app/router.js
-      // ...
-       Router.map(function() {
+       ```javascript
+      // router
+      Router.map(function() {
         this.route('index');
         this.route('post', { path: '/posts/:post_id' });
       });
-       export default Router;
       ```
-       ```app/routes/post.js
-      import Ember from 'ember';
-       export default Ember.Route.extend({
-        renderTemplate() {
+       ```javascript
+      // post route
+      PostRoute = App.Route.extend({
+        renderTemplate: function() {
           this.render(); // all defaults apply
         }
       });
       ```
-       The name of the route, defined by the router, is `post`.
+       The name of the `PostRoute`, defined by the router, is `post`.
        The following equivalent default options will be applied when
       the Route calls `render`:
        ```javascript
+      //
       this.render('post', {  // the template name associated with 'post' Route
         into: 'application', // the parent route to 'post' Route
         outlet: 'main',      // {{outlet}} and {{outlet 'main'}} are synonymous,
@@ -26268,17 +26185,16 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       * `parentView`: the name of the view containing the outlet to clear
          (default: the view rendered by the parent route)
        Example:
-       ```app/routes/application.js
-      import Ember from 'ember';
-       export default App.Route.extend({
+       ```javascript
+      App.ApplicationRoute = App.Route.extend({
         actions: {
-          showModal(evt) {
+          showModal: function(evt) {
             this.render(evt.modalName, {
               outlet: 'modal',
               into: 'application'
             });
           },
-          hideModal(evt) {
+          hideModal: function(evt) {
             this.disconnectOutlet({
               outlet: 'modal',
               parentView: 'application'
@@ -26289,18 +26205,11 @@ enifed('ember-routing/system/route', ['exports', 'ember-utils', 'ember-metal', '
       ```
        Alternatively, you can pass the `outlet` name directly as a string.
        Example:
-       ```app/routes/application.js
-      import Ember from 'ember';
-       export default App.Route.extend({
-        actions: {
-          showModal(evt) {
-            // ...
-          },
-          hideModal(evt) {
-            this.disconnectOutlet('modal');
-          }
-        }
-      });
+       ```javascript
+      hideModal: function(evt) {
+        this.disconnectOutlet('modal');
+      }
+      ```
        @method disconnectOutlet
       @param {Object|String} options the options hash or outlet name
       @since 1.0.0
@@ -28271,7 +28180,11 @@ enifed('ember-routing/utils', ['exports', 'ember-utils', 'ember-metal'], functio
   */
 
   function normalizeControllerQueryParams(queryParams) {
-    var qpMap = {};
+    if (queryParams._qpMap) {
+      return queryParams._qpMap;
+    }
+
+    var qpMap = queryParams._qpMap = {};
 
     for (var i = 0; i < queryParams.length; ++i) {
       accumulateQueryParamDescriptors(queryParams[i], qpMap);
@@ -35135,7 +35048,7 @@ enifed('ember-runtime/system/core_object', ['exports', 'ember-utils', 'ember-met
   // using ember-metal/lib/main here to ensure that ember-debug is setup
   // if present
 
-  var _Mixin$create, _ClassMixinProps;
+  var _Mixin$create;
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['.'], ['.']);
 
@@ -35394,7 +35307,7 @@ enifed('ember-runtime/system/core_object', ['exports', 'ember-utils', 'ember-met
 
   CoreObject.__super__ = null;
 
-  var ClassMixinProps = (_ClassMixinProps = {
+  var ClassMixinProps = {
 
     ClassMixin: _emberMetal.REQUIRED,
 
@@ -35402,95 +35315,310 @@ enifed('ember-runtime/system/core_object', ['exports', 'ember-utils', 'ember-met
 
     isClass: true,
 
-    isMethod: false
-  }, _ClassMixinProps[_emberUtils.NAME_KEY] = null, _ClassMixinProps[_emberUtils.GUID_KEY] = null, _ClassMixinProps.extend = function () {
-    var Class = makeCtor();
-    var proto;
-    Class.ClassMixin = _emberMetal.Mixin.create(this.ClassMixin);
-    Class.PrototypeMixin = _emberMetal.Mixin.create(this.PrototypeMixin);
+    isMethod: false,
+    /**
+      Creates a new subclass.
+       ```javascript
+      const Person = Ember.Object.extend({
+        say(thing) {
+          alert(thing);
+         }
+      });
+      ```
+       This defines a new subclass of Ember.Object: `Person`. It contains one method: `say()`.
+       You can also create a subclass from any existing class by calling its `extend()` method.
+      For example, you might want to create a subclass of Ember's built-in `Ember.Component` class:
+       ```javascript
+      const PersonComponent = Ember.Component.extend({
+        tagName: 'li',
+        classNameBindings: ['isAdministrator']
+      });
+      ```
+       When defining a subclass, you can override methods but still access the
+      implementation of your parent class by calling the special `_super()` method:
+       ```javascript
+      const Person = Ember.Object.extend({
+        say(thing) {
+          var name = this.get('name');
+          alert(`${name} says: ${thing}`);
+        }
+      });
+       const Soldier = Person.extend({
+        say(thing) {
+          this._super(`${thing}, sir!`);
+        },
+        march(numberOfHours) {
+          alert(`${this.get('name')} marches for ${numberOfHours} hours.`);
+        }
+      });
+       let yehuda = Soldier.create({
+        name: "Yehuda Katz"
+      });
+       yehuda.say("Yes");  // alerts "Yehuda Katz says: Yes, sir!"
+      ```
+       The `create()` on line #17 creates an *instance* of the `Soldier` class.
+      The `extend()` on line #8 creates a *subclass* of `Person`. Any instance
+      of the `Person` class will *not* have the `march()` method.
+       You can also pass `Mixin` classes to add additional properties to the subclass.
+       ```javascript
+      const Person = Ember.Object.extend({
+        say(thing) {
+          alert(`${this.get('name')} says: ${thing}`);
+        }
+      });
+       const SingingMixin = Mixin.create({
+        sing(thing){
+          alert(`${this.get('name')} sings: la la la ${thing}`);
+        }
+      });
+       const BroadwayStar = Person.extend(SingingMixin, {
+        dance() {
+          alert(`${this.get('name')} dances: tap tap tap tap `);
+        }
+      });
+      ```
+       The `BroadwayStar` class contains three methods: `say()`, `sing()`, and `dance()`.
+       @method extend
+      @static
+       @param {Mixin} [mixins]* One or more Mixin classes
+      @param {Object} [arguments]* Object containing values to use within the new class
+      @public
+    */
+    extend: function () {
+      var Class = makeCtor();
+      var proto;
+      Class.ClassMixin = _emberMetal.Mixin.create(this.ClassMixin);
+      Class.PrototypeMixin = _emberMetal.Mixin.create(this.PrototypeMixin);
 
-    Class.ClassMixin.ownerConstructor = Class;
-    Class.PrototypeMixin.ownerConstructor = Class;
+      Class.ClassMixin.ownerConstructor = Class;
+      Class.PrototypeMixin.ownerConstructor = Class;
 
-    reopen.apply(Class.PrototypeMixin, arguments);
+      reopen.apply(Class.PrototypeMixin, arguments);
 
-    Class.superclass = this;
-    Class.__super__ = this.prototype;
+      Class.superclass = this;
+      Class.__super__ = this.prototype;
 
-    proto = Class.prototype = Object.create(this.prototype);
-    proto.constructor = Class;
-    _emberUtils.generateGuid(proto);
-    _emberMetal.meta(proto).proto = proto; // this will disable observers on prototype
+      proto = Class.prototype = Object.create(this.prototype);
+      proto.constructor = Class;
+      _emberUtils.generateGuid(proto);
+      _emberMetal.meta(proto).proto = proto; // this will disable observers on prototype
 
-    Class.ClassMixin.apply(Class);
-    return Class;
-  }, _ClassMixinProps.create = function () {
-    var C = this;
+      Class.ClassMixin.apply(Class);
+      return Class;
+    },
 
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
+    /**
+      Creates an instance of a class. Accepts either no arguments, or an object
+      containing values to initialize the newly instantiated object with.
+       ```javascript
+      const Person = Ember.Object.extend({
+        helloWorld() {
+          alert(`Hi, my name is ${this.get('name')}`);
+        }
+      });
+       let tom = Person.create({
+        name: 'Tom Dale'
+      });
+       tom.helloWorld(); // alerts "Hi, my name is Tom Dale".
+      ```
+       `create` will call the `init` function if defined during
+      `Ember.AnyObject.extend`
+       If no arguments are passed to `create`, it will not set values to the new
+      instance during initialization:
+       ```javascript
+      let noName = Person.create();
+      noName.helloWorld(); // alerts undefined
+      ```
+       NOTE: For performance reasons, you cannot declare methods or computed
+      properties during `create`. You should instead declare methods and computed
+      properties when using `extend`.
+       @method create
+      @static
+      @param [arguments]*
+      @public
+    */
+    create: function () {
+      var C = this;
 
-    if (args.length > 0) {
-      this._initProperties(args);
-    }
-    return new C();
-  }, _ClassMixinProps.reopen = function () {
-    this.willReopen();
-    reopen.apply(this.PrototypeMixin, arguments);
-    return this;
-  }, _ClassMixinProps.reopenClass = function () {
-    reopen.apply(this.ClassMixin, arguments);
-    applyMixin(this, arguments, false);
-    return this;
-  }, _ClassMixinProps.detect = function (obj) {
-    if ('function' !== typeof obj) {
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      if (args.length > 0) {
+        this._initProperties(args);
+      }
+      return new C();
+    },
+
+    /**
+      Augments a constructor's prototype with additional
+      properties and functions:
+       ```javascript
+      const MyObject = Ember.Object.extend({
+        name: 'an object'
+      });
+       o = MyObject.create();
+      o.get('name'); // 'an object'
+       MyObject.reopen({
+        say(msg){
+          console.log(msg);
+        }
+      })
+       o2 = MyObject.create();
+      o2.say("hello"); // logs "hello"
+       o.say("goodbye"); // logs "goodbye"
+      ```
+       To add functions and properties to the constructor itself,
+      see `reopenClass`
+       @method reopen
+      @public
+    */
+    reopen: function () {
+      this.willReopen();
+      reopen.apply(this.PrototypeMixin, arguments);
+      return this;
+    },
+
+    /**
+      Augments a constructor's own properties and functions:
+       ```javascript
+      const MyObject = Ember.Object.extend({
+        name: 'an object'
+      });
+       MyObject.reopenClass({
+        canBuild: false
+      });
+       MyObject.canBuild; // false
+      o = MyObject.create();
+      ```
+       In other words, this creates static properties and functions for the class.
+      These are only available on the class and not on any instance of that class.
+       ```javascript
+      const Person = Ember.Object.extend({
+        name: "",
+        sayHello() {
+          alert("Hello. My name is " + this.get('name'));
+        }
+      });
+       Person.reopenClass({
+        species: "Homo sapiens",
+        createPerson(newPersonsName){
+          return Person.create({
+            name:newPersonsName
+          });
+        }
+      });
+       let tom = Person.create({
+        name: "Tom Dale"
+      });
+      let yehuda = Person.createPerson("Yehuda Katz");
+       tom.sayHello(); // "Hello. My name is Tom Dale"
+      yehuda.sayHello(); // "Hello. My name is Yehuda Katz"
+      alert(Person.species); // "Homo sapiens"
+      ```
+       Note that `species` and `createPerson` are *not* valid on the `tom` and `yehuda`
+      variables. They are only valid on `Person`.
+       To add functions and properties to instances of
+      a constructor by extending the constructor's prototype
+      see `reopen`
+       @method reopenClass
+      @public
+    */
+    reopenClass: function () {
+      reopen.apply(this.ClassMixin, arguments);
+      applyMixin(this, arguments, false);
+      return this;
+    },
+
+    detect: function (obj) {
+      if ('function' !== typeof obj) {
+        return false;
+      }
+      while (obj) {
+        if (obj === this) {
+          return true;
+        }
+        obj = obj.superclass;
+      }
       return false;
-    }
-    while (obj) {
-      if (obj === this) {
-        return true;
+    },
+
+    detectInstance: function (obj) {
+      return obj instanceof this;
+    },
+
+    /**
+      In some cases, you may want to annotate computed properties with additional
+      metadata about how they function or what values they operate on. For
+      example, computed property functions may close over variables that are then
+      no longer available for introspection.
+       You can pass a hash of these values to a computed property like this:
+       ```javascript
+      person: Ember.computed(function() {
+        var personId = this.get('personId');
+        return Person.create({ id: personId });
+      }).meta({ type: Person })
+      ```
+       Once you've done this, you can retrieve the values saved to the computed
+      property from your class like this:
+       ```javascript
+      MyClass.metaForProperty('person');
+      ```
+       This will return the original hash that was passed to `meta()`.
+       @static
+      @method metaForProperty
+      @param key {String} property name
+      @private
+    */
+    metaForProperty: function (key) {
+      var proto = this.proto();
+      var possibleDesc = proto[key];
+      var desc = possibleDesc !== null && typeof possibleDesc === 'object' && possibleDesc.isDescriptor ? possibleDesc : undefined;
+
+      _emberMetal.assert('metaForProperty() could not find a computed property ' + 'with key \'' + key + '\'.', !!desc && desc instanceof _emberMetal.ComputedProperty);
+      return desc._meta || {};
+    },
+
+    _computedProperties: _emberMetal.computed(function () {
+      hasCachedComputedProperties = true;
+      var proto = this.proto();
+      var property;
+      var properties = [];
+
+      for (var name in proto) {
+        property = proto[name];
+
+        if (property && property.isDescriptor) {
+          properties.push({
+            name: name,
+            meta: property._meta
+          });
+        }
       }
-      obj = obj.superclass;
-    }
-    return false;
-  }, _ClassMixinProps.detectInstance = function (obj) {
-    return obj instanceof this;
-  }, _ClassMixinProps.metaForProperty = function (key) {
-    var proto = this.proto();
-    var possibleDesc = proto[key];
-    var desc = possibleDesc !== null && typeof possibleDesc === 'object' && possibleDesc.isDescriptor ? possibleDesc : undefined;
+      return properties;
+    }).readOnly(),
 
-    _emberMetal.assert('metaForProperty() could not find a computed property ' + 'with key \'' + key + '\'.', !!desc && desc instanceof _emberMetal.ComputedProperty);
-    return desc._meta || {};
-  }, _ClassMixinProps._computedProperties = _emberMetal.computed(function () {
-    hasCachedComputedProperties = true;
-    var proto = this.proto();
-    var property;
-    var properties = [];
+    /**
+      Iterate over each computed property for the class, passing its name
+      and any associated metadata (see `metaForProperty`) to the callback.
+       @static
+      @method eachComputedProperty
+      @param {Function} callback
+      @param {Object} binding
+      @private
+    */
+    eachComputedProperty: function (callback, binding) {
+      var property;
+      var empty = {};
 
-    for (var name in proto) {
-      property = proto[name];
+      var properties = _emberMetal.get(this, '_computedProperties');
 
-      if (property && property.isDescriptor) {
-        properties.push({
-          name: name,
-          meta: property._meta
-        });
+      for (var i = 0; i < properties.length; i++) {
+        property = properties[i];
+        callback.call(binding || this, property.name, property.meta || empty);
       }
     }
-    return properties;
-  }).readOnly(), _ClassMixinProps.eachComputedProperty = function (callback, binding) {
-    var property;
-    var empty = {};
-
-    var properties = _emberMetal.get(this, '_computedProperties');
-
-    for (var i = 0; i < properties.length; i++) {
-      property = properties[i];
-      callback.call(binding || this, property.name, property.meta || empty);
-    }
-  }, _ClassMixinProps);
+  };
 
   function injectedPropertyAssertion() {
     _emberMetal.assert('Injected properties are invalid', _emberRuntimeInject.validatePropertyInjections(this));
@@ -35748,210 +35876,6 @@ enifed('ember-runtime/system/core_object', ['exports', 'ember-utils', 'ember-met
   @return {String} string representation
   @public
 */
-
-/**
-  Creates a new subclass.
-   ```javascript
-  const Person = Ember.Object.extend({
-    say(thing) {
-      alert(thing);
-     }
-  });
-  ```
-   This defines a new subclass of Ember.Object: `Person`. It contains one method: `say()`.
-   You can also create a subclass from any existing class by calling its `extend()` method.
-  For example, you might want to create a subclass of Ember's built-in `Ember.Component` class:
-   ```javascript
-  const PersonComponent = Ember.Component.extend({
-    tagName: 'li',
-    classNameBindings: ['isAdministrator']
-  });
-  ```
-   When defining a subclass, you can override methods but still access the
-  implementation of your parent class by calling the special `_super()` method:
-   ```javascript
-  const Person = Ember.Object.extend({
-    say(thing) {
-      var name = this.get('name');
-      alert(`${name} says: ${thing}`);
-    }
-  });
-   const Soldier = Person.extend({
-    say(thing) {
-      this._super(`${thing}, sir!`);
-    },
-    march(numberOfHours) {
-      alert(`${this.get('name')} marches for ${numberOfHours} hours.`);
-    }
-  });
-   let yehuda = Soldier.create({
-    name: "Yehuda Katz"
-  });
-   yehuda.say("Yes");  // alerts "Yehuda Katz says: Yes, sir!"
-  ```
-   The `create()` on line #17 creates an *instance* of the `Soldier` class.
-  The `extend()` on line #8 creates a *subclass* of `Person`. Any instance
-  of the `Person` class will *not* have the `march()` method.
-   You can also pass `Mixin` classes to add additional properties to the subclass.
-   ```javascript
-  const Person = Ember.Object.extend({
-    say(thing) {
-      alert(`${this.get('name')} says: ${thing}`);
-    }
-  });
-   const SingingMixin = Mixin.create({
-    sing(thing){
-      alert(`${this.get('name')} sings: la la la ${thing}`);
-    }
-  });
-   const BroadwayStar = Person.extend(SingingMixin, {
-    dance() {
-      alert(`${this.get('name')} dances: tap tap tap tap `);
-    }
-  });
-  ```
-   The `BroadwayStar` class contains three methods: `say()`, `sing()`, and `dance()`.
-   @method extend
-  @static
-   @param {Mixin} [mixins]* One or more Mixin classes
-  @param {Object} [arguments]* Object containing values to use within the new class
-  @public
-*/
-
-/**
-  Creates an instance of a class. Accepts either no arguments, or an object
-  containing values to initialize the newly instantiated object with.
-   ```javascript
-  const Person = Ember.Object.extend({
-    helloWorld() {
-      alert(`Hi, my name is ${this.get('name')}`);
-    }
-  });
-   let tom = Person.create({
-    name: 'Tom Dale'
-  });
-   tom.helloWorld(); // alerts "Hi, my name is Tom Dale".
-  ```
-   `create` will call the `init` function if defined during
-  `Ember.AnyObject.extend`
-   If no arguments are passed to `create`, it will not set values to the new
-  instance during initialization:
-   ```javascript
-  let noName = Person.create();
-  noName.helloWorld(); // alerts undefined
-  ```
-   NOTE: For performance reasons, you cannot declare methods or computed
-  properties during `create`. You should instead declare methods and computed
-  properties when using `extend`.
-   @method create
-  @static
-  @param [arguments]*
-  @public
-*/
-
-/**
-  Augments a constructor's prototype with additional
-  properties and functions:
-   ```javascript
-  const MyObject = Ember.Object.extend({
-    name: 'an object'
-  });
-   o = MyObject.create();
-  o.get('name'); // 'an object'
-   MyObject.reopen({
-    say(msg){
-      console.log(msg);
-    }
-  })
-   o2 = MyObject.create();
-  o2.say("hello"); // logs "hello"
-   o.say("goodbye"); // logs "goodbye"
-  ```
-   To add functions and properties to the constructor itself,
-  see `reopenClass`
-   @method reopen
-  @public
-*/
-
-/**
-  Augments a constructor's own properties and functions:
-   ```javascript
-  const MyObject = Ember.Object.extend({
-    name: 'an object'
-  });
-   MyObject.reopenClass({
-    canBuild: false
-  });
-   MyObject.canBuild; // false
-  o = MyObject.create();
-  ```
-   In other words, this creates static properties and functions for the class.
-  These are only available on the class and not on any instance of that class.
-   ```javascript
-  const Person = Ember.Object.extend({
-    name: "",
-    sayHello() {
-      alert("Hello. My name is " + this.get('name'));
-    }
-  });
-   Person.reopenClass({
-    species: "Homo sapiens",
-    createPerson(newPersonsName){
-      return Person.create({
-        name:newPersonsName
-      });
-    }
-  });
-   let tom = Person.create({
-    name: "Tom Dale"
-  });
-  let yehuda = Person.createPerson("Yehuda Katz");
-   tom.sayHello(); // "Hello. My name is Tom Dale"
-  yehuda.sayHello(); // "Hello. My name is Yehuda Katz"
-  alert(Person.species); // "Homo sapiens"
-  ```
-   Note that `species` and `createPerson` are *not* valid on the `tom` and `yehuda`
-  variables. They are only valid on `Person`.
-   To add functions and properties to instances of
-  a constructor by extending the constructor's prototype
-  see `reopen`
-   @method reopenClass
-  @public
-*/
-
-/**
-  In some cases, you may want to annotate computed properties with additional
-  metadata about how they function or what values they operate on. For
-  example, computed property functions may close over variables that are then
-  no longer available for introspection.
-   You can pass a hash of these values to a computed property like this:
-   ```javascript
-  person: Ember.computed(function() {
-    var personId = this.get('personId');
-    return Person.create({ id: personId });
-  }).meta({ type: Person })
-  ```
-   Once you've done this, you can retrieve the values saved to the computed
-  property from your class like this:
-   ```javascript
-  MyClass.metaForProperty('person');
-  ```
-   This will return the original hash that was passed to `meta()`.
-   @static
-  @method metaForProperty
-  @param key {String} property name
-  @private
-*/
-
-/**
-  Iterate over each computed property for the class, passing its name
-  and any associated metadata (see `metaForProperty`) to the callback.
-   @static
-  @method eachComputedProperty
-  @param {Function} callback
-  @param {Object} binding
-  @private
-*/
 enifed('ember-runtime/system/each_proxy', ['exports', 'ember-utils', 'ember-metal', 'ember-runtime/mixins/array'], function (exports, _emberUtils, _emberMetal, _emberRuntimeMixinsArray) {
   'use strict';
 
@@ -36204,7 +36128,7 @@ enifed('ember-runtime/system/namespace', ['exports', 'ember-utils', 'ember-metal
       }
 
       findNamespaces();
-      return this[_emberUtils.NAME_KEY];
+      return this[_emberMetal.NAME_KEY];
     },
 
     nameClasses: function () {
@@ -36264,10 +36188,10 @@ enifed('ember-runtime/system/namespace', ['exports', 'ember-utils', 'ember-metal
       paths[idx] = key;
 
       // If we have found an unprocessed class
-      if (obj && obj.toString === classToString && !obj[_emberUtils.NAME_KEY]) {
+      if (obj && obj.toString === classToString && !obj[_emberMetal.NAME_KEY]) {
         // Replace the class' `toString` with the dot-separated path
         // and set its `NAME_KEY`
-        obj[_emberUtils.NAME_KEY] = paths.join('.');
+        obj[_emberMetal.NAME_KEY] = paths.join('.');
 
         // Support nested namespaces
       } else if (obj && obj.isNamespace) {
@@ -36313,7 +36237,7 @@ enifed('ember-runtime/system/namespace', ['exports', 'ember-utils', 'ember-metal
       }
       var obj = tryIsNamespace(lookup, key);
       if (obj) {
-        obj[_emberUtils.NAME_KEY] = key;
+        obj[_emberMetal.NAME_KEY] = key;
       }
     }
   }
@@ -36321,41 +36245,35 @@ enifed('ember-runtime/system/namespace', ['exports', 'ember-utils', 'ember-metal
   function superClassString(mixin) {
     var superclass = mixin.superclass;
     if (superclass) {
-      if (superclass[_emberUtils.NAME_KEY]) {
-        return superclass[_emberUtils.NAME_KEY];
+      if (superclass[_emberMetal.NAME_KEY]) {
+        return superclass[_emberMetal.NAME_KEY];
       }
       return superClassString(superclass);
     }
   }
 
-  function calculateToString(target) {
-    var str = undefined;
-
-    if (!searchDisabled) {
-      processAllNamespaces();
-      // can also be set by processAllNamespaces
-      str = target[_emberUtils.NAME_KEY];
-      if (str) {
-        return str;
-      } else {
-        str = superClassString(target);
-        str = str ? '(subclass of ' + str + ')' : str;
-      }
-    }
-    if (str) {
-      return str;
-    } else {
-      return '(unknown mixin)';
-    }
-  }
-
   function classToString() {
-    var name = this[_emberUtils.NAME_KEY];
-    if (name) {
-      return name;
+    if (!searchDisabled && !this[_emberMetal.NAME_KEY]) {
+      processAllNamespaces();
     }
 
-    return this[_emberUtils.NAME_KEY] = calculateToString(this);
+    var ret = undefined;
+
+    if (this[_emberMetal.NAME_KEY]) {
+      ret = this[_emberMetal.NAME_KEY];
+    } else if (this._toString) {
+      ret = this._toString;
+    } else {
+      var str = superClassString(this);
+      if (str) {
+        ret = '(subclass of ' + str + ')';
+      } else {
+        ret = '(unknown mixin)';
+      }
+      this.toString = makeToString(ret);
+    }
+
+    return ret;
   }
 
   function processAllNamespaces() {
@@ -36378,6 +36296,12 @@ enifed('ember-runtime/system/namespace', ['exports', 'ember-utils', 'ember-metal
 
       _emberMetal.clearUnprocessedMixins();
     }
+  }
+
+  function makeToString(ret) {
+    return function () {
+      return ret;
+    };
   }
 
   _emberMetal.Mixin.prototype.toString = classToString; // ES6TODO: altering imported objects. SBB.
@@ -39135,7 +39059,7 @@ enifed('ember-utils/guid', ['exports', 'ember-utils/intern'], function (exports,
     }
   }
 });
-enifed('ember-utils/index', ['exports', 'ember-utils/symbol', 'ember-utils/owner', 'ember-utils/assign', 'ember-utils/empty-object', 'ember-utils/dictionary', 'ember-utils/guid', 'ember-utils/intern', 'ember-utils/super', 'ember-utils/inspect', 'ember-utils/lookup-descriptor', 'ember-utils/invoke', 'ember-utils/make-array', 'ember-utils/apply-str', 'ember-utils/name', 'ember-utils/to-string'], function (exports, _emberUtilsSymbol, _emberUtilsOwner, _emberUtilsAssign, _emberUtilsEmptyObject, _emberUtilsDictionary, _emberUtilsGuid, _emberUtilsIntern, _emberUtilsSuper, _emberUtilsInspect, _emberUtilsLookupDescriptor, _emberUtilsInvoke, _emberUtilsMakeArray, _emberUtilsApplyStr, _emberUtilsName, _emberUtilsToString) {
+enifed('ember-utils/index', ['exports', 'ember-utils/symbol', 'ember-utils/owner', 'ember-utils/assign', 'ember-utils/empty-object', 'ember-utils/dictionary', 'ember-utils/guid', 'ember-utils/intern', 'ember-utils/super', 'ember-utils/inspect', 'ember-utils/lookup-descriptor', 'ember-utils/invoke', 'ember-utils/make-array', 'ember-utils/apply-str', 'ember-utils/to-string'], function (exports, _emberUtilsSymbol, _emberUtilsOwner, _emberUtilsAssign, _emberUtilsEmptyObject, _emberUtilsDictionary, _emberUtilsGuid, _emberUtilsIntern, _emberUtilsSuper, _emberUtilsInspect, _emberUtilsLookupDescriptor, _emberUtilsInvoke, _emberUtilsMakeArray, _emberUtilsApplyStr, _emberUtilsToString) {
   /*
    This package will be eagerly parsed and should have no dependencies on external
    packages.
@@ -39171,7 +39095,6 @@ enifed('ember-utils/index', ['exports', 'ember-utils/symbol', 'ember-utils/owner
   exports.tryInvoke = _emberUtilsInvoke.tryInvoke;
   exports.makeArray = _emberUtilsMakeArray.default;
   exports.applyStr = _emberUtilsApplyStr.default;
-  exports.NAME_KEY = _emberUtilsName.default;
   exports.toString = _emberUtilsToString.default;
 });
 enifed('ember-utils/inspect', ['exports'], function (exports) {
@@ -39404,11 +39327,6 @@ enifed("ember-utils/make-array", ["exports"], function (exports) {
     return Array.isArray(obj) ? obj : [obj];
   }
 });
-enifed('ember-utils/name', ['exports', 'ember-utils/symbol'], function (exports, _emberUtilsSymbol) {
-  'use strict';
-
-  exports.default = _emberUtilsSymbol.default('NAME_KEY');
-});
 enifed('ember-utils/owner', ['exports', 'ember-utils/symbol'], function (exports, _emberUtilsSymbol) {
   /**
   @module ember
@@ -39571,8 +39489,8 @@ enifed('ember-utils/symbol', ['exports', 'ember-utils/guid', 'ember-utils/intern
     return _emberUtilsIntern.default(debugName + ' [id=' + _emberUtilsGuid.GUID_KEY + Math.floor(Math.random() * new Date()) + ']');
   }
 });
-enifed('ember-utils/to-string', ['exports'], function (exports) {
-  'use strict';
+enifed("ember-utils/to-string", ["exports"], function (exports) {
+  "use strict";
 
   exports.default = toString;
   var objectToString = Object.prototype.toString;
@@ -39583,7 +39501,7 @@ enifed('ember-utils/to-string', ['exports'], function (exports) {
   */
 
   function toString(obj) {
-    if (obj && typeof obj.toString === 'function') {
+    if (obj && obj.toString) {
       return obj.toString();
     } else {
       return objectToString.call(obj);
@@ -39866,7 +39784,10 @@ enifed('ember-views/mixins/class_names_support', ['exports', 'ember-metal'], fun
       this._super.apply(this, arguments);
 
       _emberMetal.assert('Only arrays are allowed for \'classNameBindings\'', Array.isArray(this.classNameBindings));
+      this.classNameBindings = this.classNameBindings.slice();
+
       _emberMetal.assert('Only arrays of static class strings are allowed for \'classNames\'. For dynamic classes, use \'classNameBindings\'.', Array.isArray(this.classNames));
+      this.classNames = this.classNames.slice();
     },
 
     /**
@@ -42149,7 +42070,7 @@ enifed('ember/index', ['exports', 'require', 'ember-environment', 'ember-utils',
   _emberMetal.default.getProperties = _emberMetal.getProperties;
   _emberMetal.default.setProperties = _emberMetal.setProperties;
   _emberMetal.default.expandProperties = _emberMetal.expandProperties;
-  _emberMetal.default.NAME_KEY = _emberUtils.NAME_KEY;
+  _emberMetal.default.NAME_KEY = _emberMetal.NAME_KEY;
   _emberMetal.default.addObserver = _emberMetal.addObserver;
   _emberMetal.default.observersFor = _emberMetal.observersFor;
   _emberMetal.default.removeObserver = _emberMetal.removeObserver;
@@ -42578,7 +42499,7 @@ enifed('ember/index', ['exports', 'require', 'ember-environment', 'ember-utils',
 enifed("ember/version", ["exports"], function (exports) {
   "use strict";
 
-  exports.default = "2.10.0-alpha.1-alpha+10857fd9";
+  exports.default = "2.10.0-beta.2-alpha+29ab3354";
 });
 enifed('internal-test-helpers/apply-mixins', ['exports', 'ember-utils'], function (exports, _emberUtils) {
   'use strict';
