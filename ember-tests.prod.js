@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-alpha.1-alpha+b307387a
+ * @version   2.10.0-beta.2-alpha+06892432
  */
 
 var enifed, requireModule, require, Ember;
@@ -10352,7 +10352,7 @@ babelHelpers.inherits(_class, _RenderingTest);
         init: function () {
           this._super();
 
-          var bindings = this.classNameBindings = this.classNameBindings.slice();
+          var bindings = this.classNameBindings;
 
           if (this.get('bindIsEnabled')) {
             bindings.push('isEnabled:enabled');
@@ -10571,7 +10571,7 @@ babelHelpers.inherits(_class2, _RenderingTest2);
     return _class2;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 });
-enifed('ember-glimmer/tests/integration/components/closure-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal', 'ember-runtime/system/native_array'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal, _emberRuntimeSystemNative_array) {
+enifed('ember-glimmer/tests/integration/components/closure-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal) {
   'use strict';
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}'], ['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}']),
@@ -11755,112 +11755,6 @@ babelHelpers.inherits(_class, _RenderingTest);
       assert.equal(this.$().text(), 'my-comp: open');
     };
 
-    _class.prototype['@test GH#14508 rest positional params are received when passed as named parameter'] = function testGH14508RestPositionalParamsAreReceivedWhenPassedAsNamedParameter() {
-      var _this33 = this;
-
-      this.registerComponent('my-link', {
-        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
-          positionalParams: 'params'
-        }),
-        template: '{{#each params as |p|}}{{p}}{{/each}}'
-      });
-
-      this.render('{{component (component "my-link") params=allParams}}', {
-        allParams: _emberRuntimeSystemNative_array.A(['a', 'b'])
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this33.rerender();
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this33.context.get('allParams').pushObject('c');
-      });
-
-      this.assertText('abc');
-
-      this.runTask(function () {
-        return _this33.context.get('allParams').popObject();
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this33.context.get('allParams').clear();
-      });
-
-      this.assertText('');
-
-      this.runTask(function () {
-        return _this33.context.set('allParams', _emberRuntimeSystemNative_array.A(['1', '2']));
-      });
-
-      this.assertText('12');
-
-      this.runTask(function () {
-        return _this33.context.set('allParams', _emberRuntimeSystemNative_array.A(['a', 'b']));
-      });
-
-      this.assertText('ab');
-    };
-
-    _class.prototype['@test GH#14508 rest positional params are received when passed as named parameter with dot notation'] = function testGH14508RestPositionalParamsAreReceivedWhenPassedAsNamedParameterWithDotNotation() {
-      var _this34 = this;
-
-      this.registerComponent('my-link', {
-        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
-          positionalParams: 'params'
-        }),
-        template: '{{#each params as |p|}}{{p}}{{/each}}'
-      });
-
-      this.render('{{#with (hash link=(component "my-link")) as |c|}}{{c.link params=allParams}}{{/with}}', {
-        allParams: _emberRuntimeSystemNative_array.A(['a', 'b'])
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this34.rerender();
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this34.context.get('allParams').pushObject('c');
-      });
-
-      this.assertText('abc');
-
-      this.runTask(function () {
-        return _this34.context.get('allParams').popObject();
-      });
-
-      this.assertText('ab');
-
-      this.runTask(function () {
-        return _this34.context.get('allParams').clear();
-      });
-
-      this.assertText('');
-
-      this.runTask(function () {
-        return _this34.context.set('allParams', _emberRuntimeSystemNative_array.A(['1', '2']));
-      });
-
-      this.assertText('12');
-
-      this.runTask(function () {
-        return _this34.context.set('allParams', _emberRuntimeSystemNative_array.A(['a', 'b']));
-      });
-
-      this.assertText('ab');
-    };
-
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 
@@ -11892,7 +11786,7 @@ babelHelpers.inherits(ClosureComponentMutableParamsTest, _RenderingTest2);
       var setup = _ref2.setup;
 
       return _ref = {}, _ref['@test parameters in a closure are mutable when closure is a ' + title] = function (assert) {
-        var _this35 = this;
+        var _this33 = this;
 
         this.registerComponent('change-button', {
           ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -11906,19 +11800,19 @@ babelHelpers.inherits(ClosureComponentMutableParamsTest, _RenderingTest2);
         assert.equal(this.$('.value').text(), '8');
 
         this.runTask(function () {
-          return _this35.rerender();
+          return _this33.rerender();
         });
 
         assert.equal(this.$('.value').text(), '8');
 
         this.runTask(function () {
-          return _this35.$('.my-button').click();
+          return _this33.$('.my-button').click();
         });
 
         assert.equal(this.$('.value').text(), '10');
 
         this.runTask(function () {
-          return _this35.context.set('model', { val2: 8 });
+          return _this33.context.set('model', { val2: 8 });
         });
 
         assert.equal(this.$('.value').text(), '8');
@@ -12421,7 +12315,6 @@ babelHelpers.inherits(_class, _RenderingTest);
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
         init: function () {
           this._super();
-          this.classNames = this.classNames.slice();
           this.classNames.push('foo', 'bar', 'outside-' + this.get('extraClass'));
         }
       });
@@ -45155,6 +45048,15 @@ enifed('ember-routing/tests/utils_test', ['exports', 'ember-routing/utils'], fun
 
   QUnit.module('Routing query parameter utils - normalizeControllerQueryParams');
 
+  QUnit.test('returns the cached value if that has been previously set', function (assert) {
+    var cached = {};
+    var params = ['foo'];
+    params._qpMap = cached;
+
+    var normalized = _emberRoutingUtils.normalizeControllerQueryParams(params);
+    equal(cached, normalized, 'cached value returned if previously set');
+  });
+
   QUnit.test('converts array style into verbose object style', function (assert) {
     var paramName = 'foo';
     var params = [paramName];
@@ -56622,203 +56524,6 @@ enifed('ember-runtime/tests/system/object/detect_test', ['exports', 'ember-runti
     ok(C.detect(C), 'C is a C class');
   });
 });
-enifed('ember-runtime/tests/system/object/es-compatibility-test', ['exports', 'ember-runtime/system/object', 'ember-metal'], function (exports, _emberRuntimeSystemObject, _emberMetal) {
-  'use strict';
-
-  QUnit.module('EmberObject ES Compatibility');
-
-  QUnit.test('extending an Ember.Object', function (assert) {
-    var calls = [];
-
-    var MyObject = (function (_EmberObject) {
-      babelHelpers.inherits(MyObject, _EmberObject);
-
-      function MyObject() {
-        calls.push('constructor');
-        _EmberObject.apply(this, arguments);
-        this.postInitProperty = 'post-init-property';
-      }
-
-      MyObject.prototype.init = function init() {
-        var _EmberObject$prototype$init;
-
-        calls.push('init');
-        (_EmberObject$prototype$init = _EmberObject.prototype.init).call.apply(_EmberObject$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
-        this.initProperty = 'init-property';
-      };
-
-      return MyObject;
-    })(_emberRuntimeSystemObject.default);
-
-    var myObject = MyObject.create({ passedProperty: 'passed-property' });
-
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
-    assert.equal(myObject.postInitProperty, 'post-init-property', 'constructor property available on instance (create)');
-    assert.equal(myObject.initProperty, 'init-property', 'init property available on instance (create)');
-    assert.equal(myObject.passedProperty, 'passed-property', 'passed property available on instance (create)');
-
-    calls = [];
-    myObject = new MyObject({ passedProperty: 'passed-property' });
-
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
-    assert.equal(myObject.postInitProperty, 'post-init-property', 'constructor property available on instance (new)');
-    assert.equal(myObject.initProperty, 'init-property', 'init property available on instance (new)');
-    assert.equal(myObject.passedProperty, 'passed-property', 'passed property available on instance (new)');
-  });
-
-  QUnit.test('using super', function (assert) {
-    var calls = [];
-
-    var SuperSuperObject = _emberRuntimeSystemObject.default.extend({
-      method: function () {
-        calls.push('super-super-method');
-      }
-    });
-
-    var SuperObject = SuperSuperObject.extend({
-      method: function () {
-        this._super();
-        calls.push('super-method');
-      }
-    });
-
-    var MyObject = (function (_SuperObject) {
-      babelHelpers.inherits(MyObject, _SuperObject);
-
-      function MyObject() {
-        _SuperObject.apply(this, arguments);
-      }
-
-      MyObject.prototype.method = function method() {
-        _SuperObject.prototype.method.call(this);
-        calls.push('method');
-      };
-
-      return MyObject;
-    })(SuperObject);
-
-    var myObject = new MyObject();
-    myObject.method();
-
-    assert.deepEqual(calls, ['super-super-method', 'super-method', 'method'], 'chain of prototype methods called with super');
-  });
-
-  QUnit.test('using mixins', function (assert) {
-    var Mixin1 = _emberMetal.Mixin.create({
-      property1: 'data-1'
-    });
-
-    var Mixin2 = _emberMetal.Mixin.create({
-      property2: 'data-2'
-    });
-
-    var MyObject = (function (_EmberObject$extend) {
-      babelHelpers.inherits(MyObject, _EmberObject$extend);
-
-      function MyObject() {
-        _EmberObject$extend.apply(this, arguments);
-      }
-
-      return MyObject;
-    })(_emberRuntimeSystemObject.default.extend(Mixin1, Mixin2));
-
-    var myObject = new MyObject();
-    assert.equal(myObject.property1, 'data-1', 'includes the first mixin');
-    assert.equal(myObject.property2, 'data-2', 'includes the second mixin');
-  });
-
-  QUnit.test('using instanceof', function (assert) {
-    var MyObject = (function (_EmberObject2) {
-      babelHelpers.inherits(MyObject, _EmberObject2);
-
-      function MyObject() {
-        _EmberObject2.apply(this, arguments);
-      }
-
-      return MyObject;
-    })(_emberRuntimeSystemObject.default);
-
-    var myObject1 = MyObject.create();
-    var myObject2 = new MyObject();
-
-    assert.ok(myObject1 instanceof MyObject);
-    assert.ok(myObject1 instanceof _emberRuntimeSystemObject.default);
-
-    assert.ok(myObject2 instanceof MyObject);
-    assert.ok(myObject2 instanceof _emberRuntimeSystemObject.default);
-  });
-
-  QUnit.test('extending an ES subclass of EmberObject', function (assert) {
-    var calls = [];
-
-    var SubEmberObject = (function (_EmberObject3) {
-      babelHelpers.inherits(SubEmberObject, _EmberObject3);
-
-      function SubEmberObject() {
-        calls.push('constructor');
-        _EmberObject3.apply(this, arguments);
-      }
-
-      SubEmberObject.prototype.init = function init() {
-        var _EmberObject3$prototype$init;
-
-        calls.push('init');
-        (_EmberObject3$prototype$init = _EmberObject3.prototype.init).call.apply(_EmberObject3$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
-      };
-
-      return SubEmberObject;
-    })(_emberRuntimeSystemObject.default);
-
-    var MyObject = (function (_SubEmberObject) {
-      babelHelpers.inherits(MyObject, _SubEmberObject);
-
-      function MyObject() {
-        _SubEmberObject.apply(this, arguments);
-      }
-
-      return MyObject;
-    })(SubEmberObject);
-
-    var myObject = MyObject.create();
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
-
-    calls = [];
-    myObject = new MyObject();
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
-  });
-
-  // TODO: Needs to be fixed. Currently only `init` is called.
-  QUnit.skip('calling extend on an ES subclass of EmberObject', function (assert) {
-    var calls = [];
-
-    var SubEmberObject = (function (_EmberObject4) {
-      babelHelpers.inherits(SubEmberObject, _EmberObject4);
-
-      function SubEmberObject() {
-        calls.push('constructor');
-        _EmberObject4.apply(this, arguments);
-      }
-
-      SubEmberObject.prototype.init = function init() {
-        var _EmberObject4$prototype$init;
-
-        calls.push('init');
-        (_EmberObject4$prototype$init = _EmberObject4.prototype.init).call.apply(_EmberObject4$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
-      };
-
-      return SubEmberObject;
-    })(_emberRuntimeSystemObject.default);
-
-    var MyObject = SubEmberObject.extend({});
-
-    var myObject = MyObject.create();
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
-
-    calls = [];
-    myObject = new MyObject();
-    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
-  });
-});
 enifed('ember-runtime/tests/system/object/events_test', ['exports', 'ember-runtime/system/object', 'ember-runtime/mixins/evented'], function (exports, _emberRuntimeSystemObject, _emberRuntimeMixinsEvented) {
   'use strict';
 
@@ -57453,10 +57158,6 @@ enifed('ember-runtime/tests/system/object/toString_test', ['exports', 'ember-uti
     }
   });
 
-  QUnit.test('NAME_KEY slot is present on Class', function () {
-    ok(_emberRuntimeSystemObject.default.extend().hasOwnProperty(_emberUtils.NAME_KEY), 'Ember Class\'s have a NAME_KEY slot');
-  });
-
   QUnit.test('toString() returns the same value if called twice', function () {
     var Foo = _emberRuntimeSystemNamespace.default.create();
     Foo.toString = function () {
@@ -57535,8 +57236,8 @@ enifed('ember-runtime/tests/system/object/toString_test', ['exports', 'ember-uti
     var bar = Bar.create();
 
     // simulate these classes being defined on a Namespace
-    Foo[_emberUtils.NAME_KEY] = 'Foo';
-    Bar[_emberUtils.NAME_KEY] = 'Bar';
+    Foo[_emberUtils.GUID_KEY + '_name'] = 'Foo';
+    Bar[_emberUtils.GUID_KEY + '_name'] = 'Bar';
 
     equal(bar.toString(), '<Bar:' + _emberUtils.guidFor(bar) + '>', 'does not include toStringExtension part');
     equal(foo.toString(), '<Foo:' + _emberUtils.guidFor(foo) + ':fooey>', 'Includes toStringExtension result');
@@ -63999,7 +63700,7 @@ enifed('ember/tests/reexports_test', ['exports', 'ember/index', 'internal-test-h
   ['computed', 'ember-metal'], ['computed.alias', 'ember-metal', 'alias'], ['ComputedProperty', 'ember-metal'], ['cacheFor', 'ember-metal'], ['deprecate', 'ember-metal'], ['deprecateFunc', 'ember-metal'], ['assert', 'ember-metal'], ['warn', 'ember-metal'], ['debug', 'ember-metal'], ['runInDebug', 'ember-metal'], ['merge', 'ember-metal'], ['instrument', 'ember-metal'], ['Instrumentation.instrument', 'ember-metal', 'instrument'], ['Instrumentation.subscribe', 'ember-metal', 'instrumentationSubscribe'], ['Instrumentation.unsubscribe', 'ember-metal', 'instrumentationUnsubscribe'], ['Instrumentation.reset', 'ember-metal', 'instrumentationReset'], ['testing', 'ember-metal', { get: 'isTesting', set: 'setTesting' }], ['onerror', 'ember-metal', { get: 'getOnerror', set: 'setOnerror' }],
   // ['create'], TODO: figure out what to do here
   // ['keys'], TODO: figure out what to do here
-  ['FEATURES', 'ember-metal'], ['FEATURES.isEnabled', 'ember-metal', 'isFeatureEnabled'], ['Error', 'ember-metal'], ['META_DESC', 'ember-metal'], ['meta', 'ember-metal'], ['get', 'ember-metal'], ['set', 'ember-metal'], ['_getPath', 'ember-metal'], ['getWithDefault', 'ember-metal'], ['trySet', 'ember-metal'], ['_Cache', 'ember-metal', 'Cache'], ['on', 'ember-metal'], ['addListener', 'ember-metal'], ['removeListener', 'ember-metal'], ['_suspendListener', 'ember-metal', 'suspendListener'], ['_suspendListeners', 'ember-metal', 'suspendListeners'], ['sendEvent', 'ember-metal'], ['hasListeners', 'ember-metal'], ['watchedEvents', 'ember-metal'], ['listenersFor', 'ember-metal'], ['accumulateListeners', 'ember-metal'], ['isNone', 'ember-metal'], ['isEmpty', 'ember-metal'], ['isBlank', 'ember-metal'], ['isPresent', 'ember-metal'], ['_Backburner', 'backburner', 'default'], ['run', 'ember-metal'], ['_ObserverSet', 'ember-metal', 'ObserverSet'], ['propertyWillChange', 'ember-metal'], ['propertyDidChange', 'ember-metal'], ['overrideChains', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['endPropertyChanges', 'ember-metal'], ['changeProperties', 'ember-metal'], ['defineProperty', 'ember-metal'], ['watchKey', 'ember-metal'], ['unwatchKey', 'ember-metal'], ['removeChainWatcher', 'ember-metal'], ['_ChainNode', 'ember-metal', 'ChainNode'], ['finishChains', 'ember-metal'], ['watchPath', 'ember-metal'], ['unwatchPath', 'ember-metal'], ['watch', 'ember-metal'], ['isWatching', 'ember-metal'], ['unwatch', 'ember-metal'], ['destroy', 'ember-metal'], ['libraries', 'ember-metal'], ['OrderedSet', 'ember-metal'], ['Map', 'ember-metal'], ['MapWithDefault', 'ember-metal'], ['getProperties', 'ember-metal'], ['setProperties', 'ember-metal'], ['expandProperties', 'ember-metal'], ['NAME_KEY', 'ember-utils'], ['addObserver', 'ember-metal'], ['observersFor', 'ember-metal'], ['removeObserver', 'ember-metal'], ['_suspendObserver', 'ember-metal'], ['_suspendObservers', 'ember-metal'], ['required', 'ember-metal'], ['aliasMethod', 'ember-metal'], ['observer', 'ember-metal'], ['immediateObserver', 'ember-metal', '_immediateObserver'], ['mixin', 'ember-metal'], ['Mixin', 'ember-metal'], ['bind', 'ember-metal'], ['Binding', 'ember-metal'], ['isGlobalPath', 'ember-metal'],
+  ['FEATURES', 'ember-metal'], ['FEATURES.isEnabled', 'ember-metal', 'isFeatureEnabled'], ['Error', 'ember-metal'], ['META_DESC', 'ember-metal'], ['meta', 'ember-metal'], ['get', 'ember-metal'], ['set', 'ember-metal'], ['_getPath', 'ember-metal'], ['getWithDefault', 'ember-metal'], ['trySet', 'ember-metal'], ['_Cache', 'ember-metal', 'Cache'], ['on', 'ember-metal'], ['addListener', 'ember-metal'], ['removeListener', 'ember-metal'], ['_suspendListener', 'ember-metal', 'suspendListener'], ['_suspendListeners', 'ember-metal', 'suspendListeners'], ['sendEvent', 'ember-metal'], ['hasListeners', 'ember-metal'], ['watchedEvents', 'ember-metal'], ['listenersFor', 'ember-metal'], ['accumulateListeners', 'ember-metal'], ['isNone', 'ember-metal'], ['isEmpty', 'ember-metal'], ['isBlank', 'ember-metal'], ['isPresent', 'ember-metal'], ['_Backburner', 'backburner', 'default'], ['run', 'ember-metal'], ['_ObserverSet', 'ember-metal', 'ObserverSet'], ['propertyWillChange', 'ember-metal'], ['propertyDidChange', 'ember-metal'], ['overrideChains', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['endPropertyChanges', 'ember-metal'], ['changeProperties', 'ember-metal'], ['defineProperty', 'ember-metal'], ['watchKey', 'ember-metal'], ['unwatchKey', 'ember-metal'], ['removeChainWatcher', 'ember-metal'], ['_ChainNode', 'ember-metal', 'ChainNode'], ['finishChains', 'ember-metal'], ['watchPath', 'ember-metal'], ['unwatchPath', 'ember-metal'], ['watch', 'ember-metal'], ['isWatching', 'ember-metal'], ['unwatch', 'ember-metal'], ['destroy', 'ember-metal'], ['libraries', 'ember-metal'], ['OrderedSet', 'ember-metal'], ['Map', 'ember-metal'], ['MapWithDefault', 'ember-metal'], ['getProperties', 'ember-metal'], ['setProperties', 'ember-metal'], ['expandProperties', 'ember-metal'], ['NAME_KEY', 'ember-metal'], ['addObserver', 'ember-metal'], ['observersFor', 'ember-metal'], ['removeObserver', 'ember-metal'], ['_suspendObserver', 'ember-metal'], ['_suspendObservers', 'ember-metal'], ['required', 'ember-metal'], ['aliasMethod', 'ember-metal'], ['observer', 'ember-metal'], ['immediateObserver', 'ember-metal', '_immediateObserver'], ['mixin', 'ember-metal'], ['Mixin', 'ember-metal'], ['bind', 'ember-metal'], ['Binding', 'ember-metal'], ['isGlobalPath', 'ember-metal'],
 
   // ember-views
   ['$', 'ember-views', 'jQuery'], ['ViewUtils.isSimpleClick', 'ember-views', 'isSimpleClick'], ['ViewUtils.getViewElement', 'ember-views', 'getViewElement'], ['ViewUtils.getViewBounds', 'ember-views', 'getViewBounds'], ['ViewUtils.getViewClientRects', 'ember-views', 'getViewClientRects'], ['ViewUtils.getViewBoundingClientRect', 'ember-views', 'getViewBoundingClientRect'], ['ViewUtils.getRootViews', 'ember-views', 'getRootViews'], ['ViewUtils.getChildViews', 'ember-views', 'getChildViews'], ['TextSupport', 'ember-views'], ['ComponentLookup', 'ember-views'], ['EventDispatcher', 'ember-views'],
