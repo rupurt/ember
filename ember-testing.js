@@ -6,10 +6,10 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.11.0-alpha.1-alpha+3c9c494a
+ * @version   2.10.0-beta.2-alpha+b135cae8
  */
 
-var enifed, requireModule, Ember;
+var enifed, requireModule, require, Ember;
 var mainContext = this;
 
 (function() {
@@ -40,14 +40,14 @@ var mainContext = this;
       registry[name] = value;
     };
 
-    requireModule = function(name) {
+    require = requireModule = function(name) {
       return internalRequire(name, null);
     };
 
     // setup `require` module
-    requireModule['default'] = requireModule;
+    require['default'] = require;
 
-    requireModule.has = function registryHas(moduleName) {
+    require.has = function registryHas(moduleName) {
       return !!registry[moduleName] || !!registry[moduleName + '/index'];
     };
 
@@ -88,7 +88,7 @@ var mainContext = this;
         if (deps[i] === 'exports') {
           reified[i] = exports;
         } else if (deps[i] === 'require') {
-          reified[i] = requireModule;
+          reified[i] = require;
         } else {
           reified[i] = internalRequire(deps[i], name);
         }
@@ -103,12 +103,12 @@ var mainContext = this;
 
     Ember.__loader = {
       define: enifed,
-      require: requireModule,
+      require: require,
       registry: registry
     };
   } else {
     enifed = Ember.__loader.define;
-    requireModule = Ember.__loader.require;
+    require = requireModule = Ember.__loader.require;
   }
 })();
 
@@ -1664,20 +1664,18 @@ enifed('ember-testing/helpers/wait', ['exports', 'ember-testing/test/waiters', '
     any async operations from other helpers (or your assertions) have been processed.
   
     This is most often used as the return value for the helper functions (see 'click',
-    'fillIn','visit',etc). However, there is a method to register a test helper which
-    utilizes this method without the need to actually call `wait()` in your helpers.
-  
-    The `wait` helper is built into `registerAsyncHelper` by default. You will not need
-    to `return app.testHelpers.wait();` - the wait behavior is provided for you.
+    'fillIn','visit',etc).
   
     Example:
   
     ```javascript
     Ember.Test.registerAsyncHelper('loginUser', function(app, username, password) {
       visit('secured/path/here')
-        .fillIn('#username', username)
-        .fillIn('#password', password)
-        .click('.submit');
+      .fillIn('#username', username)
+      .fillIn('#password', password)
+      .click('.submit')
+  
+      return app.testHelpers.wait();
     });
   
     @method wait
