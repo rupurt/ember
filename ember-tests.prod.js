@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.11.0-alpha.1-alpha+d5acb2d4
+ * @version   2.11.0-alpha.1-alpha+43daba23
  */
 
 var enifed, requireModule, Ember;
@@ -34855,14 +34855,6 @@ enifed('ember-metal/tests/accessors/get_test', ['exports', 'internal-test-helper
     equal(count, 1);
   });
 
-  QUnit.test('should be able to use an empty string as a property', function (assert) {
-    var obj = { '': 'empty string' };
-
-    var result = _emberMetalProperty_get.get(obj, '');
-
-    assert.equal(result, obj['']);
-  });
-
   _internalTestHelpers.testBoth('should call unknownProperty on watched values if the value is undefined', function (get, set) {
     var obj = {
       count: 0,
@@ -34940,6 +34932,9 @@ enifed('ember-metal/tests/accessors/get_test', ['exports', 'internal-test-helper
     expectAssertion(function () {
       return _emberMetalProperty_get.get(obj, 42);
     }, /The key provided to get must be a string, you passed 42/);
+    expectAssertion(function () {
+      return _emberMetalProperty_get.get(obj, '');
+    }, /Cannot call `Ember.get` with an empty string/);
   });
 
   // ..........................................................
