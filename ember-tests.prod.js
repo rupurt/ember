@@ -6,10 +6,10 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.10.0-beta.3-alpha+d668480b
+ * @version   2.11.0-alpha.1-alpha+8c8062a1
  */
 
-var enifed, requireModule, require, Ember;
+var enifed, requireModule, Ember;
 var mainContext = this;
 
 (function() {
@@ -40,14 +40,14 @@ var mainContext = this;
       registry[name] = value;
     };
 
-    require = requireModule = function(name) {
+    requireModule = function(name) {
       return internalRequire(name, null);
     };
 
     // setup `require` module
-    require['default'] = require;
+    requireModule['default'] = requireModule;
 
-    require.has = function registryHas(moduleName) {
+    requireModule.has = function registryHas(moduleName) {
       return !!registry[moduleName] || !!registry[moduleName + '/index'];
     };
 
@@ -88,7 +88,7 @@ var mainContext = this;
         if (deps[i] === 'exports') {
           reified[i] = exports;
         } else if (deps[i] === 'require') {
-          reified[i] = require;
+          reified[i] = requireModule;
         } else {
           reified[i] = internalRequire(deps[i], name);
         }
@@ -103,12 +103,12 @@ var mainContext = this;
 
     Ember.__loader = {
       define: enifed,
-      require: require,
+      require: requireModule,
       registry: registry
     };
   } else {
     enifed = Ember.__loader.define;
-    require = requireModule = Ember.__loader.require;
+    requireModule = Ember.__loader.require;
   }
 })();
 
@@ -10352,7 +10352,7 @@ babelHelpers.inherits(_class, _RenderingTest);
         init: function () {
           this._super();
 
-          var bindings = this.classNameBindings;
+          var bindings = this.classNameBindings = this.classNameBindings.slice();
 
           if (this.get('bindIsEnabled')) {
             bindings.push('isEnabled:enabled');
@@ -10571,7 +10571,7 @@ babelHelpers.inherits(_class2, _RenderingTest2);
     return _class2;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 });
-enifed('ember-glimmer/tests/integration/components/closure-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal) {
+enifed('ember-glimmer/tests/integration/components/closure-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal', 'ember-runtime/system/native_array'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal, _emberRuntimeSystemNative_array) {
   'use strict';
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}'], ['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}']),
@@ -11755,6 +11755,112 @@ babelHelpers.inherits(_class, _RenderingTest);
       assert.equal(this.$().text(), 'my-comp: open');
     };
 
+    _class.prototype['@test GH#14508 rest positional params are received when passed as named parameter'] = function testGH14508RestPositionalParamsAreReceivedWhenPassedAsNamedParameter() {
+      var _this33 = this;
+
+      this.registerComponent('my-link', {
+        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
+          positionalParams: 'params'
+        }),
+        template: '{{#each params as |p|}}{{p}}{{/each}}'
+      });
+
+      this.render('{{component (component "my-link") params=allParams}}', {
+        allParams: _emberRuntimeSystemNative_array.A(['a', 'b'])
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this33.rerender();
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this33.context.get('allParams').pushObject('c');
+      });
+
+      this.assertText('abc');
+
+      this.runTask(function () {
+        return _this33.context.get('allParams').popObject();
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this33.context.get('allParams').clear();
+      });
+
+      this.assertText('');
+
+      this.runTask(function () {
+        return _this33.context.set('allParams', _emberRuntimeSystemNative_array.A(['1', '2']));
+      });
+
+      this.assertText('12');
+
+      this.runTask(function () {
+        return _this33.context.set('allParams', _emberRuntimeSystemNative_array.A(['a', 'b']));
+      });
+
+      this.assertText('ab');
+    };
+
+    _class.prototype['@test GH#14508 rest positional params are received when passed as named parameter with dot notation'] = function testGH14508RestPositionalParamsAreReceivedWhenPassedAsNamedParameterWithDotNotation() {
+      var _this34 = this;
+
+      this.registerComponent('my-link', {
+        ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
+          positionalParams: 'params'
+        }),
+        template: '{{#each params as |p|}}{{p}}{{/each}}'
+      });
+
+      this.render('{{#with (hash link=(component "my-link")) as |c|}}{{c.link params=allParams}}{{/with}}', {
+        allParams: _emberRuntimeSystemNative_array.A(['a', 'b'])
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this34.rerender();
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this34.context.get('allParams').pushObject('c');
+      });
+
+      this.assertText('abc');
+
+      this.runTask(function () {
+        return _this34.context.get('allParams').popObject();
+      });
+
+      this.assertText('ab');
+
+      this.runTask(function () {
+        return _this34.context.get('allParams').clear();
+      });
+
+      this.assertText('');
+
+      this.runTask(function () {
+        return _this34.context.set('allParams', _emberRuntimeSystemNative_array.A(['1', '2']));
+      });
+
+      this.assertText('12');
+
+      this.runTask(function () {
+        return _this34.context.set('allParams', _emberRuntimeSystemNative_array.A(['a', 'b']));
+      });
+
+      this.assertText('ab');
+    };
+
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 
@@ -11786,7 +11892,7 @@ babelHelpers.inherits(ClosureComponentMutableParamsTest, _RenderingTest2);
       var setup = _ref2.setup;
 
       return _ref = {}, _ref['@test parameters in a closure are mutable when closure is a ' + title] = function (assert) {
-        var _this33 = this;
+        var _this35 = this;
 
         this.registerComponent('change-button', {
           ComponentClass: _emberGlimmerTestsUtilsHelpers.Component.extend().reopenClass({
@@ -11800,19 +11906,19 @@ babelHelpers.inherits(ClosureComponentMutableParamsTest, _RenderingTest2);
         assert.equal(this.$('.value').text(), '8');
 
         this.runTask(function () {
-          return _this33.rerender();
+          return _this35.rerender();
         });
 
         assert.equal(this.$('.value').text(), '8');
 
         this.runTask(function () {
-          return _this33.$('.my-button').click();
+          return _this35.$('.my-button').click();
         });
 
         assert.equal(this.$('.value').text(), '10');
 
         this.runTask(function () {
-          return _this33.context.set('model', { val2: 8 });
+          return _this35.context.set('model', { val2: 8 });
         });
 
         assert.equal(this.$('.value').text(), '8');
@@ -12315,6 +12421,7 @@ babelHelpers.inherits(_class, _RenderingTest);
       var FooBarComponent = _emberGlimmerTestsUtilsHelpers.Component.extend({
         init: function () {
           this._super();
+          this.classNames = this.classNames.slice();
           this.classNames.push('foo', 'bar', 'outside-' + this.get('extraClass'));
         }
       });
@@ -28186,68 +28293,91 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     }
 
     _class.prototype['@test should render given template'] = function testShouldRenderGivenTemplate() {
+      var _this = this;
+
       this.registerTemplate('home', '<p>BYE</p>');
 
-      this.render('<h1>HI</h1>{{render \'home\'}}');
+      expectDeprecation(function () {
+        _this.render('<h1>HI</h1>{{render \'home\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('HIBYE');
     };
 
     _class.prototype['@test uses `controller:basic` as the basis for a generated controller when none exists for specified name'] = function testUsesControllerBasicAsTheBasisForAGeneratedControllerWhenNoneExistsForSpecifiedName() {
+      var _this2 = this;
+
       this.owner.register('controller:basic', _emberRuntime.Controller.extend({
         isBasicController: true
       }));
       this.registerTemplate('home', '{{isBasicController}}');
 
-      this.render('{{render \'home\'}}');
+      expectDeprecation(function () {
+        _this2.render('{{render \'home\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('true');
     };
 
     _class.prototype['@test generates a controller if none exists'] = function testGeneratesAControllerIfNoneExists() {
+      var _this3 = this;
+
       this.registerTemplate('home', '<p>{{this}}</p>');
 
-      this.render('<h1>HI</h1>{{render \'home\'}}');
+      expectDeprecation(function () {
+        _this3.render('<h1>HI</h1>{{render \'home\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('HI(generated home controller)');
     };
 
     _class.prototype['@test should use controller with the same name as template if present'] = function testShouldUseControllerWithTheSameNameAsTemplateIfPresent() {
+      var _this4 = this;
+
       this.owner.register('controller:home', _emberRuntime.Controller.extend({ name: 'home' }));
       this.registerTemplate('home', '{{name}}<p>BYE</p>');
 
-      this.render('<h1>HI</h1>{{render \'home\'}}');
+      expectDeprecation(function () {
+        _this4.render('<h1>HI</h1>{{render \'home\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('HIhomeBYE');
     };
 
     _class.prototype['@test should render nested helpers'] = function testShouldRenderNestedHelpers() {
+      var _this5 = this;
+
       this.owner.register('controller:home', _emberRuntime.Controller.extend());
       this.owner.register('controller:foo', _emberRuntime.Controller.extend());
       this.owner.register('controller:bar', _emberRuntime.Controller.extend());
       this.owner.register('controller:baz', _emberRuntime.Controller.extend());
 
       this.registerTemplate('home', '<p>BYE</p>');
-      this.registerTemplate('foo', '<p>FOO</p>{{render \'bar\'}}');
-      this.registerTemplate('bar', '<p>BAR</p>{{render \'baz\'}}');
       this.registerTemplate('baz', '<p>BAZ</p>');
 
-      this.render('<h1>HI</h1>{{render \'foo\'}}');
+      expectDeprecation(function () {
+        _this5.registerTemplate('foo', '<p>FOO</p>{{render \'bar\'}}');
+        _this5.registerTemplate('bar', '<p>BAR</p>{{render \'baz\'}}');
+        _this5.render('<h1>HI</h1>{{render \'foo\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
+
       this.assertText('HIFOOBARBAZ');
     };
 
     _class.prototype['@test should have assertion if the template does not exist'] = function testShouldHaveAssertionIfTheTemplateDoesNotExist() {
-      var _this = this;
+      var _this6 = this;
 
       this.owner.register('controller:oops', _emberRuntime.Controller.extend());
 
-      expectAssertion(function () {
-        _this.render('<h1>HI</h1>{{render \'oops\'}}');
-      }, 'You used `{{render \'oops\'}}`, but \'oops\' can not be found as a template.');
+      expectDeprecation(function () {
+        expectAssertion(function () {
+          _this6.render('<h1>HI</h1>{{render \'oops\'}}');
+        }, 'You used `{{render \'oops\'}}`, but \'oops\' can not be found as a template.');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
     };
 
     _class.prototype['@test should render given template with the singleton controller as its context'] = function testShouldRenderGivenTemplateWithTheSingletonControllerAsItsContext() {
-      var _this2 = this;
+      var _this7 = this;
 
       this.owner.register('controller:post', _emberRuntime.Controller.extend({
         init: function () {
@@ -28256,12 +28386,14 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       }));
       this.registerTemplate('post', '<p>{{title}}</p>');
 
-      this.render('<h1>HI</h1>{{render \'post\'}}');
+      expectDeprecation(function () {
+        _this7.render('<h1>HI</h1>{{render \'post\'}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('HIIt\'s Simple Made Easy');
 
       this.runTask(function () {
-        return _this2.rerender();
+        return _this7.rerender();
       });
 
       this.assertText('HIIt\'s Simple Made Easy');
@@ -28282,7 +28414,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test should not destroy the singleton controller on teardown'] = function testShouldNotDestroyTheSingletonControllerOnTeardown(assert) {
-      var _this3 = this;
+      var _this8 = this;
 
       var willDestroyFired = 0;
 
@@ -28299,14 +28431,16 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
 
       this.registerTemplate('post', '<p>{{title}}</p>');
 
-      this.render('{{#if showPost}}{{render \'post\'}}{{else}}Nothing here{{/if}}', { showPost: false });
+      expectDeprecation(function () {
+        _this8.render('{{#if showPost}}{{render \'post\'}}{{else}}Nothing here{{/if}}', { showPost: false });
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       this.assertText('Nothing here');
 
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _this3.rerender();
+        return _this8.rerender();
       });
 
       this.assertText('Nothing here');
@@ -28314,7 +28448,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this3.context, 'showPost', true);
+        return _emberMetal.set(_this8.context, 'showPost', true);
       });
 
       this.assertText('It\'s Simple Made Easy');
@@ -28322,7 +28456,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this3.context, 'showPost', false);
+        return _emberMetal.set(_this8.context, 'showPost', false);
       });
 
       this.assertText('Nothing here');
@@ -28331,13 +28465,13 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test should render given template with a supplied model'] = function testShouldRenderGivenTemplateWithASuppliedModel() {
-      var _this4 = this;
+      var _this9 = this;
 
       this.owner.register('controller:post', _emberRuntime.Controller.extend());
       this.registerTemplate('post', '<p>{{model.title}}</p>');
 
       expectDeprecation(function () {
-        _this4.render('<h1>HI</h1>{{render \'post\' post}}', {
+        _this9.render('<h1>HI</h1>{{render \'post\' post}}', {
           post: {
             title: 'It\'s Simple Made Easy'
           }
@@ -28347,26 +28481,26 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.assertText('HIIt\'s Simple Made Easy');
 
       this.runTask(function () {
-        return _this4.rerender();
+        return _this9.rerender();
       });
 
       this.assertText('HIIt\'s Simple Made Easy');
 
       this.runTask(function () {
-        return _emberMetal.set(_this4.context, 'post.title', 'Rails is omakase');
+        return _emberMetal.set(_this9.context, 'post.title', 'Rails is omakase');
       });
 
       this.assertText('HIRails is omakase');
 
       this.runTask(function () {
-        return _emberMetal.set(_this4.context, 'post', { title: 'It\'s Simple Made Easy' });
+        return _emberMetal.set(_this9.context, 'post', { title: 'It\'s Simple Made Easy' });
       });
 
       this.assertText('HIIt\'s Simple Made Easy');
     };
 
     _class.prototype['@test should destroy the non-singleton controllers on teardown'] = function testShouldDestroyTheNonSingletonControllersOnTeardown(assert) {
-      var _this5 = this;
+      var _this10 = this;
 
       var willDestroyFired = 0;
 
@@ -28380,7 +28514,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.registerTemplate('post', '<p>{{model.title}}</p>');
 
       expectDeprecation(function () {
-        _this5.render('{{#if showPost}}{{render \'post\' post}}{{else}}Nothing here{{/if}}', {
+        _this10.render('{{#if showPost}}{{render \'post\' post}}{{else}}Nothing here{{/if}}', {
           showPost: false,
           post: {
             title: 'It\'s Simple Made Easy'
@@ -28393,7 +28527,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _this5.rerender();
+        return _this10.rerender();
       });
 
       this.assertText('Nothing here');
@@ -28401,7 +28535,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this5.context, 'showPost', true);
+        return _emberMetal.set(_this10.context, 'showPost', true);
       });
 
       this.assertText('It\'s Simple Made Easy');
@@ -28409,7 +28543,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 0, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this5.context, 'showPost', false);
+        return _emberMetal.set(_this10.context, 'showPost', false);
       });
 
       this.assertText('Nothing here');
@@ -28417,7 +28551,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 1, 'it did destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this5.context, 'showPost', true);
+        return _emberMetal.set(_this10.context, 'showPost', true);
       });
 
       this.assertText('It\'s Simple Made Easy');
@@ -28425,7 +28559,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.strictEqual(willDestroyFired, 1, 'it did not destroy the controller');
 
       this.runTask(function () {
-        return _emberMetal.set(_this5.context, 'showPost', false);
+        return _emberMetal.set(_this10.context, 'showPost', false);
       });
 
       this.assertText('Nothing here');
@@ -28434,14 +28568,14 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test with a supplied model should not fire observers on the controller'] = function testWithASuppliedModelShouldNotFireObserversOnTheController() {
-      var _this6 = this;
+      var _this11 = this;
 
       this.owner.register('controller:post', _emberRuntime.Controller.extend());
       this.registerTemplate('post', '<p>{{model.title}}</p>');
 
       var postDidChange = 0;
       expectDeprecation(function () {
-        _this6.render('<h1>HI</h1>{{render \'post\' post}}', {
+        _this11.render('<h1>HI</h1>{{render \'post\' post}}', {
           postDidChange: _emberMetal.observer('post', function () {
             postDidChange++;
           }),
@@ -28454,24 +28588,27 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.assertText('HIIt\'s Simple Made Easy');
 
       this.runTask(function () {
-        return _this6.rerender();
+        return _this11.rerender();
       });
 
       this.assertText('HIIt\'s Simple Made Easy');
     };
 
     _class.prototype['@test should raise an error when a given controller name does not resolve to a controller'] = function testShouldRaiseAnErrorWhenAGivenControllerNameDoesNotResolveToAController() {
-      var _this7 = this;
+      var _this12 = this;
 
       this.registerTemplate('home', '<p>BYE</p>');
       this.owner.register('controller:posts', _emberRuntime.Controller.extend());
-      expectAssertion(function () {
-        _this7.render('<h1>HI</h1>{{render "home" controller="postss"}}');
-      }, /The controller name you supplied \'postss\' did not resolve to a controller./);
+
+      expectDeprecation(function () {
+        expectAssertion(function () {
+          _this12.render('<h1>HI</h1>{{render "home" controller="postss"}}');
+        }, /The controller name you supplied \'postss\' did not resolve to a controller./);
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
     };
 
     _class.prototype['@test should render with given controller'] = function testShouldRenderWithGivenController(assert) {
-      var _this8 = this;
+      var _this13 = this;
 
       this.registerTemplate('home', '{{uniqueId}}');
 
@@ -28486,7 +28623,10 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
         }
       }));
 
-      this.render('{{render "home" controller="posts"}}');
+      expectDeprecation(function () {
+        _this13.render('{{render "home" controller="posts"}}');
+      }, /Please refactor [\w\{\}"` ]+ to a component/);
+
       var renderedController = this.owner.lookup('controller:posts');
       var uniqueId = renderedController.get('uniqueId');
       var renderedModel = renderedController.get('model');
@@ -28496,7 +28636,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.assertText('0');
 
       this.runTask(function () {
-        return _this8.rerender();
+        return _this13.rerender();
       });
 
       assert.equal(uniqueId, 0);
@@ -28505,13 +28645,13 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test should render templates with models multiple times'] = function testShouldRenderTemplatesWithModelsMultipleTimes(assert) {
-      var _this9 = this;
+      var _this14 = this;
 
       this.owner.register('controller:post', _emberRuntime.Controller.extend());
 
       this.registerTemplate('post', '<p>{{model.title}}</p>');
       expectDeprecation(function () {
-        _this9.render('<h1>HI</h1> {{render \'post\' post1}} {{render \'post\' post2}}', {
+        _this14.render('<h1>HI</h1> {{render \'post\' post1}} {{render \'post\' post2}}', {
           post1: {
             title: 'Me First'
           },
@@ -28524,32 +28664,32 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.assertText('HI Me First Then me');
 
       this.runTask(function () {
-        return _this9.rerender();
+        return _this14.rerender();
       });
 
       this.assertText('HI Me First Then me');
 
       this.runTask(function () {
-        return _emberMetal.set(_this9.context, 'post1.title', 'I am new');
+        return _emberMetal.set(_this14.context, 'post1.title', 'I am new');
       });
 
       this.assertText('HI I am new Then me');
 
       this.runTask(function () {
-        return _emberMetal.set(_this9.context, 'post1', { title: 'Me First' });
+        return _emberMetal.set(_this14.context, 'post1', { title: 'Me First' });
       });
 
       this.assertText('HI Me First Then me');
     };
 
     _class.prototype['@test should not treat invocations with falsy contexts as context-less'] = function testShouldNotTreatInvocationsWithFalsyContextsAsContextLess(assert) {
-      var _this10 = this;
+      var _this15 = this;
 
       this.registerTemplate('post', '<p>{{#unless model.zero}}NOTHING{{/unless}}</p>');
       this.owner.register('controller:post', _emberRuntime.Controller.extend());
 
       expectDeprecation(function () {
-        _this10.render('<h1>HI</h1> {{render \'post\' zero}} {{render \'post\' nonexistent}}', {
+        _this15.render('<h1>HI</h1> {{render \'post\' zero}} {{render \'post\' nonexistent}}', {
           model: {
             zero: false
           }
@@ -28560,7 +28700,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test should render templates both with and without models'] = function testShouldRenderTemplatesBothWithAndWithoutModels(assert) {
-      var _this11 = this;
+      var _this16 = this;
 
       this.registerTemplate('post', '<p>Title:{{model.title}}</p>');
       this.owner.register('controller:post', _emberRuntime.Controller.extend());
@@ -28569,7 +28709,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
         title: 'Rails is omakase'
       };
       expectDeprecation(function () {
-        _this11.render('<h1>HI</h1> {{render \'post\'}} {{render \'post\' post}}', {
+        _this16.render('<h1>HI</h1> {{render \'post\'}} {{render \'post\' post}}', {
           post: post
         });
       }, /Please refactor [\w\{\}"` ]+ to a component/);
@@ -28577,25 +28717,27 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       assert.ok(this.$().text().match(/^HI ?Title: ?Title:Rails is omakase$/));
 
       this.runTask(function () {
-        return _this11.rerender();
+        return _this16.rerender();
       });
 
       assert.ok(this.$().text().match(/^HI ?Title: ?Title:Rails is omakase$/));
 
       this.runTask(function () {
-        return _emberMetal.set(_this11.context, 'post.title', 'Simple Made Easy');
+        return _emberMetal.set(_this16.context, 'post.title', 'Simple Made Easy');
       });
 
       assert.ok(this.$().text().match(/^HI ?Title: ?Title:Simple Made Easy$/));
 
       this.runTask(function () {
-        return _emberMetal.set(_this11.context, 'post', { title: 'Rails is omakase' });
+        return _emberMetal.set(_this16.context, 'post', { title: 'Rails is omakase' });
       });
 
       assert.ok(this.$().text().match(/^HI ?Title: ?Title:Rails is omakase$/));
     };
 
     _class.prototype['@test works with dot notation'] = function testWorksWithDotNotation() {
+      var _this17 = this;
+
       this.registerTemplate('blog.post', '{{uniqueId}}');
 
       var id = 0;
@@ -28606,27 +28748,29 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
         }
       }));
 
-      this.render('{{render "blog.post"}}');
+      expectDeprecation(function () {
+        _this17.render('{{render "blog.post"}}');
+      }, /Please refactor [\w\.{\}"` ]+ to a component/);
 
       this.assertText('0');
     };
 
     _class.prototype['@test throws an assertion if called with an unquoted template name'] = function testThrowsAnAssertionIfCalledWithAnUnquotedTemplateName() {
-      var _this12 = this;
+      var _this18 = this;
 
       this.registerTemplate('home', '<p>BYE</p>');
 
       expectAssertion(function () {
-        _this12.render('<h1>HI</h1>{{render home}}');
+        _this18.render('<h1>HI</h1>{{render home}}');
       }, 'The first argument of {{render}} must be quoted, e.g. {{render "sidebar"}}.');
     };
 
     _class.prototype['@test throws an assertion if called with a literal for a model'] = function testThrowsAnAssertionIfCalledWithALiteralForAModel() {
-      var _this13 = this;
+      var _this19 = this;
 
       this.registerTemplate('home', '<p>BYE</p>');
       expectAssertion(function () {
-        _this13.render('<h1>HI</h1>{{render "home" "model"}}', {
+        _this19.render('<h1>HI</h1>{{render "home" "model"}}', {
           model: {
             title: 'Simple Made Easy'
           }
@@ -28635,7 +28779,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
     };
 
     _class.prototype['@test should set router as target when action not found on parentController is not found'] = function testShouldSetRouterAsTargetWhenActionNotFoundOnParentControllerIsNotFound(assert) {
-      var _this14 = this;
+      var _this20 = this;
 
       var postController = undefined;
       this.registerTemplate('post', 'post template');
@@ -28656,7 +28800,7 @@ enifed('ember-glimmer/tests/integration/helpers/render-test', ['exports', 'ember
       this.owner.register('router:main', routerStub, { instantiate: false });
 
       expectDeprecation(function () {
-        _this14.render('{{render \'post\' post1}}');
+        _this20.render('{{render \'post\' post1}}');
       }, /Please refactor [\w\{\}"` ]+ to a component/);
 
       postController.send('someAction');
@@ -45173,15 +45317,6 @@ enifed('ember-routing/tests/utils_test', ['exports', 'ember-routing/utils'], fun
 
   QUnit.module('Routing query parameter utils - normalizeControllerQueryParams');
 
-  QUnit.test('returns the cached value if that has been previously set', function (assert) {
-    var cached = {};
-    var params = ['foo'];
-    params._qpMap = cached;
-
-    var normalized = _emberRoutingUtils.normalizeControllerQueryParams(params);
-    equal(cached, normalized, 'cached value returned if previously set');
-  });
-
   QUnit.test('converts array style into verbose object style', function (assert) {
     var paramName = 'foo';
     var params = [paramName];
@@ -56727,6 +56862,203 @@ enifed('ember-runtime/tests/system/object/detect_test', ['exports', 'ember-runti
     ok(C.detect(C), 'C is a C class');
   });
 });
+enifed('ember-runtime/tests/system/object/es-compatibility-test', ['exports', 'ember-runtime/system/object', 'ember-metal'], function (exports, _emberRuntimeSystemObject, _emberMetal) {
+  'use strict';
+
+  QUnit.module('EmberObject ES Compatibility');
+
+  QUnit.test('extending an Ember.Object', function (assert) {
+    var calls = [];
+
+    var MyObject = (function (_EmberObject) {
+      babelHelpers.inherits(MyObject, _EmberObject);
+
+      function MyObject() {
+        calls.push('constructor');
+        _EmberObject.apply(this, arguments);
+        this.postInitProperty = 'post-init-property';
+      }
+
+      MyObject.prototype.init = function init() {
+        var _EmberObject$prototype$init;
+
+        calls.push('init');
+        (_EmberObject$prototype$init = _EmberObject.prototype.init).call.apply(_EmberObject$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
+        this.initProperty = 'init-property';
+      };
+
+      return MyObject;
+    })(_emberRuntimeSystemObject.default);
+
+    var myObject = MyObject.create({ passedProperty: 'passed-property' });
+
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
+    assert.equal(myObject.postInitProperty, 'post-init-property', 'constructor property available on instance (create)');
+    assert.equal(myObject.initProperty, 'init-property', 'init property available on instance (create)');
+    assert.equal(myObject.passedProperty, 'passed-property', 'passed property available on instance (create)');
+
+    calls = [];
+    myObject = new MyObject({ passedProperty: 'passed-property' });
+
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
+    assert.equal(myObject.postInitProperty, 'post-init-property', 'constructor property available on instance (new)');
+    assert.equal(myObject.initProperty, 'init-property', 'init property available on instance (new)');
+    assert.equal(myObject.passedProperty, 'passed-property', 'passed property available on instance (new)');
+  });
+
+  QUnit.test('using super', function (assert) {
+    var calls = [];
+
+    var SuperSuperObject = _emberRuntimeSystemObject.default.extend({
+      method: function () {
+        calls.push('super-super-method');
+      }
+    });
+
+    var SuperObject = SuperSuperObject.extend({
+      method: function () {
+        this._super();
+        calls.push('super-method');
+      }
+    });
+
+    var MyObject = (function (_SuperObject) {
+      babelHelpers.inherits(MyObject, _SuperObject);
+
+      function MyObject() {
+        _SuperObject.apply(this, arguments);
+      }
+
+      MyObject.prototype.method = function method() {
+        _SuperObject.prototype.method.call(this);
+        calls.push('method');
+      };
+
+      return MyObject;
+    })(SuperObject);
+
+    var myObject = new MyObject();
+    myObject.method();
+
+    assert.deepEqual(calls, ['super-super-method', 'super-method', 'method'], 'chain of prototype methods called with super');
+  });
+
+  QUnit.test('using mixins', function (assert) {
+    var Mixin1 = _emberMetal.Mixin.create({
+      property1: 'data-1'
+    });
+
+    var Mixin2 = _emberMetal.Mixin.create({
+      property2: 'data-2'
+    });
+
+    var MyObject = (function (_EmberObject$extend) {
+      babelHelpers.inherits(MyObject, _EmberObject$extend);
+
+      function MyObject() {
+        _EmberObject$extend.apply(this, arguments);
+      }
+
+      return MyObject;
+    })(_emberRuntimeSystemObject.default.extend(Mixin1, Mixin2));
+
+    var myObject = new MyObject();
+    assert.equal(myObject.property1, 'data-1', 'includes the first mixin');
+    assert.equal(myObject.property2, 'data-2', 'includes the second mixin');
+  });
+
+  QUnit.test('using instanceof', function (assert) {
+    var MyObject = (function (_EmberObject2) {
+      babelHelpers.inherits(MyObject, _EmberObject2);
+
+      function MyObject() {
+        _EmberObject2.apply(this, arguments);
+      }
+
+      return MyObject;
+    })(_emberRuntimeSystemObject.default);
+
+    var myObject1 = MyObject.create();
+    var myObject2 = new MyObject();
+
+    assert.ok(myObject1 instanceof MyObject);
+    assert.ok(myObject1 instanceof _emberRuntimeSystemObject.default);
+
+    assert.ok(myObject2 instanceof MyObject);
+    assert.ok(myObject2 instanceof _emberRuntimeSystemObject.default);
+  });
+
+  QUnit.test('extending an ES subclass of EmberObject', function (assert) {
+    var calls = [];
+
+    var SubEmberObject = (function (_EmberObject3) {
+      babelHelpers.inherits(SubEmberObject, _EmberObject3);
+
+      function SubEmberObject() {
+        calls.push('constructor');
+        _EmberObject3.apply(this, arguments);
+      }
+
+      SubEmberObject.prototype.init = function init() {
+        var _EmberObject3$prototype$init;
+
+        calls.push('init');
+        (_EmberObject3$prototype$init = _EmberObject3.prototype.init).call.apply(_EmberObject3$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
+      };
+
+      return SubEmberObject;
+    })(_emberRuntimeSystemObject.default);
+
+    var MyObject = (function (_SubEmberObject) {
+      babelHelpers.inherits(MyObject, _SubEmberObject);
+
+      function MyObject() {
+        _SubEmberObject.apply(this, arguments);
+      }
+
+      return MyObject;
+    })(SubEmberObject);
+
+    var myObject = MyObject.create();
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
+
+    calls = [];
+    myObject = new MyObject();
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
+  });
+
+  // TODO: Needs to be fixed. Currently only `init` is called.
+  QUnit.skip('calling extend on an ES subclass of EmberObject', function (assert) {
+    var calls = [];
+
+    var SubEmberObject = (function (_EmberObject4) {
+      babelHelpers.inherits(SubEmberObject, _EmberObject4);
+
+      function SubEmberObject() {
+        calls.push('constructor');
+        _EmberObject4.apply(this, arguments);
+      }
+
+      SubEmberObject.prototype.init = function init() {
+        var _EmberObject4$prototype$init;
+
+        calls.push('init');
+        (_EmberObject4$prototype$init = _EmberObject4.prototype.init).call.apply(_EmberObject4$prototype$init, [this].concat(babelHelpers.slice.call(arguments)));
+      };
+
+      return SubEmberObject;
+    })(_emberRuntimeSystemObject.default);
+
+    var MyObject = SubEmberObject.extend({});
+
+    var myObject = MyObject.create();
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (create)');
+
+    calls = [];
+    myObject = new MyObject();
+    assert.deepEqual(calls, ['constructor', 'init'], 'constructor then init called (new)');
+  });
+});
 enifed('ember-runtime/tests/system/object/events_test', ['exports', 'ember-runtime/system/object', 'ember-runtime/mixins/evented'], function (exports, _emberRuntimeSystemObject, _emberRuntimeMixinsEvented) {
   'use strict';
 
@@ -57361,6 +57693,10 @@ enifed('ember-runtime/tests/system/object/toString_test', ['exports', 'ember-uti
     }
   });
 
+  QUnit.test('NAME_KEY slot is present on Class', function () {
+    ok(_emberRuntimeSystemObject.default.extend().hasOwnProperty(_emberUtils.NAME_KEY), 'Ember Class\'s have a NAME_KEY slot');
+  });
+
   QUnit.test('toString() returns the same value if called twice', function () {
     var Foo = _emberRuntimeSystemNamespace.default.create();
     Foo.toString = function () {
@@ -57439,8 +57775,8 @@ enifed('ember-runtime/tests/system/object/toString_test', ['exports', 'ember-uti
     var bar = Bar.create();
 
     // simulate these classes being defined on a Namespace
-    Foo[_emberUtils.GUID_KEY + '_name'] = 'Foo';
-    Bar[_emberUtils.GUID_KEY + '_name'] = 'Bar';
+    Foo[_emberUtils.NAME_KEY] = 'Foo';
+    Bar[_emberUtils.NAME_KEY] = 'Bar';
 
     equal(bar.toString(), '<Bar:' + _emberUtils.guidFor(bar) + '>', 'does not include toStringExtension part');
     equal(foo.toString(), '<Foo:' + _emberUtils.guidFor(foo) + ':fooey>', 'Includes toStringExtension result');
@@ -58189,6 +58525,23 @@ enifed('ember-template-compiler/tests/plugins/deprecate-render-model-test', ['ex
 
     expectDeprecation(function () {
       _emberTemplateCompilerIndex.compile('{{render "foo-bar" coolModel}}', {
+        moduleName: 'baz/foo-bar'
+      });
+    }, expectedMessage);
+  });
+});
+enifed('ember-template-compiler/tests/plugins/deprecate-render-test', ['exports', 'ember-template-compiler/index'], function (exports, _emberTemplateCompilerIndex) {
+  'use strict';
+
+  QUnit.module('ember-template-compiler: deprecate-render');
+
+  QUnit.test('Using `{{render` without a model provides a deprecation', function () {
+    expect(1);
+
+    var expectedMessage = 'Please refactor `{{render "foo-bar"}}` to a component and' + ' invoke via `{{foo-bar}}`. (\'baz/foo-bar\' @ L1:C0) ';
+
+    expectDeprecation(function () {
+      _emberTemplateCompilerIndex.compile('{{render "foo-bar"}}', {
         moduleName: 'baz/foo-bar'
       });
     }, expectedMessage);
@@ -62900,18 +63253,40 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
     equal(event.isDefaultPrevented(), false, 'should not preventDefault');
   });
 
+  QUnit.test('the {{link-to}} helper throws a useful error if you invoke it wrong', function () {
+    expect(1);
+
+    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'post'}}Post{{/link-to}}"));
+
+    Router.map(function () {
+      this.route('post', { path: 'post/:post_id' });
+    });
+
+    QUnit.throws(function () {
+      bootApplication();
+    }, /(You attempted to define a `\{\{link-to "post"\}\}` but did not pass the parameters required for generating its dynamic segments.|You must provide param `post_id` to `generate`)/);
+  });
+
   QUnit.test('the {{link-to}} helper does not throw an error if its route has exited', function () {
     expect(0);
 
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'index' id='home-link'}}Home{{/link-to}}{{#link-to 'post' defaultPost id='default-post-link'}}Default Post{{/link-to}}{{#if currentPost}}{{#link-to 'post' id='post-link'}}Post{{/link-to}}{{/if}}"));
+    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile("{{#link-to 'index' id='home-link'}}Home{{/link-to}}{{#link-to 'post' defaultPost id='default-post-link'}}Default Post{{/link-to}}{{#if currentPost}}{{#link-to 'post' currentPost id='current-post-link'}}Current Post{{/link-to}}{{/if}}"));
 
     App.ApplicationController = _emberRuntime.Controller.extend({
+      defaultPost: { id: 1 },
       postController: _emberRuntime.inject.controller('post'),
       currentPost: _emberMetal.alias('postController.model')
     });
 
-    App.PostController = _emberRuntime.Controller.extend({
-      model: { id: 1 }
+    App.PostController = _emberRuntime.Controller.extend();
+
+    App.PostRoute = _emberRouting.Route.extend({
+      model: function () {
+        return { id: 2 };
+      },
+      serialize: function (model) {
+        return { post_id: model.id };
+      }
     });
 
     Router.map(function () {
@@ -62924,6 +63299,12 @@ enifed('ember/tests/helpers/link_to_test', ['exports', 'ember-console', 'ember-r
 
     _emberMetal.run(function () {
       return _emberViews.jQuery('#default-post-link', '#qunit-fixture').click();
+    });
+    _emberMetal.run(function () {
+      return _emberViews.jQuery('#home-link', '#qunit-fixture').click();
+    });
+    _emberMetal.run(function () {
+      return _emberViews.jQuery('#current-post-link', '#qunit-fixture').click();
     });
     _emberMetal.run(function () {
       return _emberViews.jQuery('#home-link', '#qunit-fixture').click();
@@ -63903,7 +64284,7 @@ enifed('ember/tests/reexports_test', ['exports', 'ember/index', 'internal-test-h
   ['computed', 'ember-metal'], ['computed.alias', 'ember-metal', 'alias'], ['ComputedProperty', 'ember-metal'], ['cacheFor', 'ember-metal'], ['deprecate', 'ember-metal'], ['deprecateFunc', 'ember-metal'], ['assert', 'ember-metal'], ['warn', 'ember-metal'], ['debug', 'ember-metal'], ['runInDebug', 'ember-metal'], ['merge', 'ember-metal'], ['instrument', 'ember-metal'], ['Instrumentation.instrument', 'ember-metal', 'instrument'], ['Instrumentation.subscribe', 'ember-metal', 'instrumentationSubscribe'], ['Instrumentation.unsubscribe', 'ember-metal', 'instrumentationUnsubscribe'], ['Instrumentation.reset', 'ember-metal', 'instrumentationReset'], ['testing', 'ember-metal', { get: 'isTesting', set: 'setTesting' }], ['onerror', 'ember-metal', { get: 'getOnerror', set: 'setOnerror' }],
   // ['create'], TODO: figure out what to do here
   // ['keys'], TODO: figure out what to do here
-  ['FEATURES', 'ember-metal'], ['FEATURES.isEnabled', 'ember-metal', 'isFeatureEnabled'], ['Error', 'ember-metal'], ['META_DESC', 'ember-metal'], ['meta', 'ember-metal'], ['get', 'ember-metal'], ['set', 'ember-metal'], ['_getPath', 'ember-metal'], ['getWithDefault', 'ember-metal'], ['trySet', 'ember-metal'], ['_Cache', 'ember-metal', 'Cache'], ['on', 'ember-metal'], ['addListener', 'ember-metal'], ['removeListener', 'ember-metal'], ['_suspendListener', 'ember-metal', 'suspendListener'], ['_suspendListeners', 'ember-metal', 'suspendListeners'], ['sendEvent', 'ember-metal'], ['hasListeners', 'ember-metal'], ['watchedEvents', 'ember-metal'], ['listenersFor', 'ember-metal'], ['accumulateListeners', 'ember-metal'], ['isNone', 'ember-metal'], ['isEmpty', 'ember-metal'], ['isBlank', 'ember-metal'], ['isPresent', 'ember-metal'], ['_Backburner', 'backburner', 'default'], ['run', 'ember-metal'], ['_ObserverSet', 'ember-metal', 'ObserverSet'], ['propertyWillChange', 'ember-metal'], ['propertyDidChange', 'ember-metal'], ['overrideChains', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['endPropertyChanges', 'ember-metal'], ['changeProperties', 'ember-metal'], ['defineProperty', 'ember-metal'], ['watchKey', 'ember-metal'], ['unwatchKey', 'ember-metal'], ['removeChainWatcher', 'ember-metal'], ['_ChainNode', 'ember-metal', 'ChainNode'], ['finishChains', 'ember-metal'], ['watchPath', 'ember-metal'], ['unwatchPath', 'ember-metal'], ['watch', 'ember-metal'], ['isWatching', 'ember-metal'], ['unwatch', 'ember-metal'], ['destroy', 'ember-metal'], ['libraries', 'ember-metal'], ['OrderedSet', 'ember-metal'], ['Map', 'ember-metal'], ['MapWithDefault', 'ember-metal'], ['getProperties', 'ember-metal'], ['setProperties', 'ember-metal'], ['expandProperties', 'ember-metal'], ['NAME_KEY', 'ember-metal'], ['addObserver', 'ember-metal'], ['observersFor', 'ember-metal'], ['removeObserver', 'ember-metal'], ['_suspendObserver', 'ember-metal'], ['_suspendObservers', 'ember-metal'], ['required', 'ember-metal'], ['aliasMethod', 'ember-metal'], ['observer', 'ember-metal'], ['immediateObserver', 'ember-metal', '_immediateObserver'], ['mixin', 'ember-metal'], ['Mixin', 'ember-metal'], ['bind', 'ember-metal'], ['Binding', 'ember-metal'], ['isGlobalPath', 'ember-metal'],
+  ['FEATURES', 'ember-metal'], ['FEATURES.isEnabled', 'ember-metal', 'isFeatureEnabled'], ['Error', 'ember-metal'], ['META_DESC', 'ember-metal'], ['meta', 'ember-metal'], ['get', 'ember-metal'], ['set', 'ember-metal'], ['_getPath', 'ember-metal'], ['getWithDefault', 'ember-metal'], ['trySet', 'ember-metal'], ['_Cache', 'ember-metal', 'Cache'], ['on', 'ember-metal'], ['addListener', 'ember-metal'], ['removeListener', 'ember-metal'], ['_suspendListener', 'ember-metal', 'suspendListener'], ['_suspendListeners', 'ember-metal', 'suspendListeners'], ['sendEvent', 'ember-metal'], ['hasListeners', 'ember-metal'], ['watchedEvents', 'ember-metal'], ['listenersFor', 'ember-metal'], ['accumulateListeners', 'ember-metal'], ['isNone', 'ember-metal'], ['isEmpty', 'ember-metal'], ['isBlank', 'ember-metal'], ['isPresent', 'ember-metal'], ['_Backburner', 'backburner', 'default'], ['run', 'ember-metal'], ['_ObserverSet', 'ember-metal', 'ObserverSet'], ['propertyWillChange', 'ember-metal'], ['propertyDidChange', 'ember-metal'], ['overrideChains', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['beginPropertyChanges', 'ember-metal'], ['endPropertyChanges', 'ember-metal'], ['changeProperties', 'ember-metal'], ['defineProperty', 'ember-metal'], ['watchKey', 'ember-metal'], ['unwatchKey', 'ember-metal'], ['removeChainWatcher', 'ember-metal'], ['_ChainNode', 'ember-metal', 'ChainNode'], ['finishChains', 'ember-metal'], ['watchPath', 'ember-metal'], ['unwatchPath', 'ember-metal'], ['watch', 'ember-metal'], ['isWatching', 'ember-metal'], ['unwatch', 'ember-metal'], ['destroy', 'ember-metal'], ['libraries', 'ember-metal'], ['OrderedSet', 'ember-metal'], ['Map', 'ember-metal'], ['MapWithDefault', 'ember-metal'], ['getProperties', 'ember-metal'], ['setProperties', 'ember-metal'], ['expandProperties', 'ember-metal'], ['NAME_KEY', 'ember-utils'], ['addObserver', 'ember-metal'], ['observersFor', 'ember-metal'], ['removeObserver', 'ember-metal'], ['_suspendObserver', 'ember-metal'], ['_suspendObservers', 'ember-metal'], ['required', 'ember-metal'], ['aliasMethod', 'ember-metal'], ['observer', 'ember-metal'], ['immediateObserver', 'ember-metal', '_immediateObserver'], ['mixin', 'ember-metal'], ['Mixin', 'ember-metal'], ['bind', 'ember-metal'], ['Binding', 'ember-metal'], ['isGlobalPath', 'ember-metal'],
 
   // ember-views
   ['$', 'ember-views', 'jQuery'], ['ViewUtils.isSimpleClick', 'ember-views', 'isSimpleClick'], ['ViewUtils.getViewElement', 'ember-views', 'getViewElement'], ['ViewUtils.getViewBounds', 'ember-views', 'getViewBounds'], ['ViewUtils.getViewClientRects', 'ember-views', 'getViewClientRects'], ['ViewUtils.getViewBoundingClientRect', 'ember-views', 'getViewBoundingClientRect'], ['ViewUtils.getRootViews', 'ember-views', 'getRootViews'], ['ViewUtils.getChildViews', 'ember-views', 'getChildViews'], ['TextSupport', 'ember-views'], ['ComponentLookup', 'ember-views'], ['EventDispatcher', 'ember-views'],
@@ -65719,6 +66100,10 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
         return { id: params.postId };
       },
 
+      serialize: function (model) {
+        return { postId: model.id };
+      },
+
       actions: {
         editPost: function (context) {
           this.transitionTo('post.edit');
@@ -66164,6 +66549,8 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Route will assert if you try to explicitly render {into: ...} a missing template', function () {
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
     Router.map(function () {
       this.route('home', { path: '/' });
     });
@@ -67358,7 +67745,12 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can this.render({into:...}) the render helper', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('other'));
     _emberGlimmer.setTemplate('bar', _emberTemplateCompiler.compile('bar'));
@@ -67385,7 +67777,12 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can disconnect from the render helper', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('other'));
 
@@ -67410,7 +67807,12 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can this.render({into:...}) the render helper\'s children', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('<div class="index">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('other', _emberTemplateCompiler.compile('other'));
@@ -67439,7 +67841,12 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can disconnect from the render helper\'s children', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('<div class="index">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('other', _emberTemplateCompiler.compile('other'));
@@ -67466,8 +67873,16 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can this.render({into:...}) nested render helpers', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
-    _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{render "cart"}}</div>'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{render "cart"}}</div>'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('cart', _emberTemplateCompiler.compile('<div class="cart">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('other'));
     _emberGlimmer.setTemplate('baz', _emberTemplateCompiler.compile('baz'));
@@ -67494,8 +67909,16 @@ enifed('ember/tests/routing/basic_test', ['exports', 'ember-utils', 'ember-conso
   });
 
   QUnit.test('Can disconnect from nested render helpers', function () {
-    _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
-    _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{render "cart"}}</div>'));
+    expectDeprecation(/Rendering into a {{render}} helper that resolves to an {{outlet}} is deprecated./);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('application', _emberTemplateCompiler.compile('{{render "sidebar"}}'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
+    expectDeprecation(function () {
+      _emberGlimmer.setTemplate('sidebar', _emberTemplateCompiler.compile('<div class="sidebar">{{render "cart"}}</div>'));
+    }, /Please refactor [\w\{\}"` ]+ to a component/);
+
     _emberGlimmer.setTemplate('cart', _emberTemplateCompiler.compile('<div class="cart">{{outlet}}</div>'));
     _emberGlimmer.setTemplate('index', _emberTemplateCompiler.compile('other'));
 
