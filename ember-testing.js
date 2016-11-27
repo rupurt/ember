@@ -6,10 +6,11 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.11.0-alpha.1-alpha+7491b2f8
+ * @version   2.10.0-beta.3-alpha+d61eea39
  */
 
-var enifed, requireModule, Ember;
+var enifed, requireModule, require, Ember;
+var mainContext = this;
 
 (function() {
   var isNode = typeof window === 'undefined' &&
@@ -39,14 +40,14 @@ var enifed, requireModule, Ember;
       registry[name] = value;
     };
 
-    requireModule = function(name) {
+    require = requireModule = function(name) {
       return internalRequire(name, null);
     };
 
     // setup `require` module
-    requireModule['default'] = requireModule;
+    require['default'] = require;
 
-    requireModule.has = function registryHas(moduleName) {
+    require.has = function registryHas(moduleName) {
       return !!registry[moduleName] || !!registry[moduleName + '/index'];
     };
 
@@ -87,7 +88,7 @@ var enifed, requireModule, Ember;
         if (deps[i] === 'exports') {
           reified[i] = exports;
         } else if (deps[i] === 'require') {
-          reified[i] = requireModule;
+          reified[i] = require;
         } else {
           reified[i] = internalRequire(deps[i], name);
         }
@@ -102,14 +103,16 @@ var enifed, requireModule, Ember;
 
     Ember.__loader = {
       define: enifed,
-      require: requireModule,
+      require: require,
       registry: registry
     };
   } else {
     enifed = Ember.__loader.define;
-    requireModule = Ember.__loader.require;
+    require = requireModule = Ember.__loader.require;
   }
 })();
+
+var babelHelpers;
 
 function classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -1661,20 +1664,18 @@ enifed('ember-testing/helpers/wait', ['exports', 'ember-testing/test/waiters', '
     any async operations from other helpers (or your assertions) have been processed.
   
     This is most often used as the return value for the helper functions (see 'click',
-    'fillIn','visit',etc). However, there is a method to register a test helper which
-    utilizes this method without the need to actually call `wait()` in your helpers.
-  
-    The `wait` helper is built into `registerAsyncHelper` by default. You will not need
-    to `return app.testHelpers.wait();` - the wait behavior is provided for you.
+    'fillIn','visit',etc).
   
     Example:
   
     ```javascript
     Ember.Test.registerAsyncHelper('loginUser', function(app, username, password) {
       visit('secured/path/here')
-        .fillIn('#username', username)
-        .fillIn('#password', password)
-        .click('.submit');
+      .fillIn('#username', username)
+      .fillIn('#password', password)
+      .click('.submit')
+  
+      return app.testHelpers.wait();
     });
   
     @method wait
@@ -1754,9 +1755,7 @@ enifed('ember-testing/initializers', ['exports', 'ember-runtime'], function (exp
     }
   });
 });
-enifed('ember-testing/setup_for_testing', ['exports', 'ember-metal', 'ember-views', 'ember-testing/test/adapter', 'ember-testing/test/pending_requests', 'ember-testing/adapters/adapter', 'ember-testing/adapters/qunit'], function (exports, _emberMetal, _emberViews, _emberTestingTestAdapter, _emberTestingTestPending_requests, _emberTestingAdaptersAdapter, _emberTestingAdaptersQunit) {
-  /* global self */
-
+enifed('ember-testing/setup_for_testing', ['exports', 'ember-metal', 'ember-views', 'ember-testing/test/adapter', 'ember-testing/test/pending_requests', 'ember-testing/adapters/qunit'], function (exports, _emberMetal, _emberViews, _emberTestingTestAdapter, _emberTestingTestPending_requests, _emberTestingAdaptersQunit) {
   'use strict';
 
   exports.default = setupForTesting;
@@ -1780,7 +1779,7 @@ enifed('ember-testing/setup_for_testing', ['exports', 'ember-metal', 'ember-view
     var adapter = _emberTestingTestAdapter.getAdapter();
     // if adapter is not manually set default to QUnit
     if (!adapter) {
-      _emberTestingTestAdapter.setAdapter(typeof self.QUnit === 'undefined' ? new _emberTestingAdaptersAdapter.default() : new _emberTestingAdaptersQunit.default());
+      _emberTestingTestAdapter.setAdapter(new _emberTestingAdaptersQunit.default());
     }
 
     _emberViews.jQuery(document).off('ajaxSend', _emberTestingTestPending_requests.incrementPendingRequests);
