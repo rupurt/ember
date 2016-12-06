@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   2.12.0-alpha.1-alpha+dc322de3
+ * @version   2.11.0-beta.2-alpha+92a31b77
  */
 
 var enifed, requireModule, Ember;
@@ -10563,7 +10563,7 @@ babelHelpers.inherits(_class2, _RenderingTest2);
     return _class2;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 });
-enifed('ember-glimmer/tests/integration/components/contextual-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal', 'ember-runtime/system/native_array'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal, _emberRuntimeSystemNative_array) {
+enifed('ember-glimmer/tests/integration/components/closure-components-test', ['exports', 'ember-utils', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-metal', 'ember-runtime/system/native_array'], function (exports, _emberUtils, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberMetal, _emberRuntimeSystemNative_array) {
   'use strict';
 
   var _templateObject = babelHelpers.taggedTemplateLiteralLoose(['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}'], ['\n      {{component (component "-looked-up") "Hodari" greeting="Hodi"}}']),
@@ -10584,7 +10584,7 @@ enifed('ember-glimmer/tests/integration/components/contextual-components-test', 
       _templateObject16 = babelHelpers.taggedTemplateLiteralLoose(['\n      {{#with (hash ctxCmp=(component compName isOpen=isOpen)) as |thing|}}\n        {{#thing.ctxCmp}}This is a contextual component{{/thing.ctxCmp}}\n      {{/with}}\n    '], ['\n      {{#with (hash ctxCmp=(component compName isOpen=isOpen)) as |thing|}}\n        {{#thing.ctxCmp}}This is a contextual component{{/thing.ctxCmp}}\n      {{/with}}\n    ']),
       _templateObject17 = babelHelpers.taggedTemplateLiteralLoose(['\n          <button {{action (action (mut val) 10)}} class="my-button">\n            Change to 10\n          </button>'], ['\n          <button {{action (action (mut val) 10)}} class="my-button">\n            Change to 10\n          </button>']);
 
-  _emberGlimmerTestsUtilsTestCase.moduleFor('Components test: contextual components', (function (_RenderingTest) {
+  _emberGlimmerTestsUtilsTestCase.moduleFor('Components test: closure components', (function (_RenderingTest) {
 babelHelpers.inherits(_class, _RenderingTest);
 
     function _class() {
@@ -11097,7 +11097,7 @@ babelHelpers.inherits(_class, _RenderingTest);
       this.assertText('Inner 28');
     };
 
-    _class.prototype['@test conflicting positional and hash parameters raise and assertion if in the same component context'] = function testConflictingPositionalAndHashParametersRaiseAndAssertionIfInTheSameComponentContext() {
+    _class.prototype['@test conflicting positional and hash parameters raise and assertion if in the same closure'] = function testConflictingPositionalAndHashParametersRaiseAndAssertionIfInTheSameClosure() {
       var _this15 = this;
 
       this.registerComponent('-looked-up', {
@@ -11151,7 +11151,7 @@ babelHelpers.inherits(_class, _RenderingTest);
       this.assertText('Hodi Hodari');
     };
 
-    _class.prototype['@test conflicting positional and hash parameters does not raise an assertion if in different component context'] = function testConflictingPositionalAndHashParametersDoesNotRaiseAnAssertionIfInDifferentComponentContext() {
+    _class.prototype['@test conflicting positional and hash parameters does not raise an assertion if in different closure'] = function testConflictingPositionalAndHashParametersDoesNotRaiseAnAssertionIfInDifferentClosure() {
       var _this17 = this;
 
       this.registerComponent('-looked-up', {
@@ -11328,7 +11328,7 @@ babelHelpers.inherits(_class, _RenderingTest);
 
     _class.prototype['@test renders with dot path and rest parameter does not leak'] = function testRendersWithDotPathAndRestParameterDoesNotLeak(assert) {
       // In the original implementation, positional parameters were not handled
-      // correctly causing the first positional parameter to be the contextual
+      // correctly causing the first positional parameter to be the closure
       // component itself.
       var value = false;
 
@@ -11407,7 +11407,7 @@ babelHelpers.inherits(_class, _RenderingTest);
       assert.equal(this.$('#nested-prop').text(), '1');
     };
 
-    _class.prototype['@test adding parameters to a contextual component\'s instance does not add it to other instances'] = function testAddingParametersToAContextualComponentSInstanceDoesNotAddItToOtherInstances() {
+    _class.prototype['@test adding parameters to a closure component\'s instance does not add it to other instances'] = function testAddingParametersToAClosureComponentSInstanceDoesNotAddItToOtherInstances() {
       var _this26 = this;
 
       // If parameters and attributes are not handled correctly, setting a value
@@ -11431,7 +11431,7 @@ babelHelpers.inherits(_class, _RenderingTest);
       this.assertText('Foo');
     };
 
-    _class.prototype['@test parameters in a contextual component are mutable when value is a param'] = function testParametersInAContextualComponentAreMutableWhenValueIsAParam(assert) {
+    _class.prototype['@test parameters in a closure are mutable when closure is a param'] = function testParametersInAClosureAreMutableWhenClosureIsAParam(assert) {
       var _this27 = this;
 
       // This checks that a `(mut)` is added to parameters and attributes to
@@ -11856,20 +11856,20 @@ babelHelpers.inherits(_class, _RenderingTest);
     return _class;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest));
 
-  var ContextualComponentMutableParamsTest = (function (_RenderingTest2) {
-babelHelpers.inherits(ContextualComponentMutableParamsTest, _RenderingTest2);
+  var ClosureComponentMutableParamsTest = (function (_RenderingTest2) {
+babelHelpers.inherits(ClosureComponentMutableParamsTest, _RenderingTest2);
 
-    function ContextualComponentMutableParamsTest() {
+    function ClosureComponentMutableParamsTest() {
       _RenderingTest2.apply(this, arguments);
     }
 
-    ContextualComponentMutableParamsTest.prototype.render = function render(templateStr) {
+    ClosureComponentMutableParamsTest.prototype.render = function render(templateStr) {
       var context = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       _RenderingTest2.prototype.render.call(this, templateStr + '<span class="value">{{model.val2}}</span>', _emberUtils.assign(context, { model: { val2: 8 } }));
     };
 
-    return ContextualComponentMutableParamsTest;
+    return ClosureComponentMutableParamsTest;
   })(_emberGlimmerTestsUtilsTestCase.RenderingTest);
 
   var MutableParamTestGenerator = (function () {
@@ -11883,7 +11883,7 @@ babelHelpers.inherits(ContextualComponentMutableParamsTest, _RenderingTest2);
       var title = _ref2.title;
       var setup = _ref2.setup;
 
-      return _ref = {}, _ref['@test parameters in a contextual component are mutable when value is a ' + title] = function (assert) {
+      return _ref = {}, _ref['@test parameters in a closure are mutable when closure is a ' + title] = function (assert) {
         var _this35 = this;
 
         this.registerComponent('change-button', {
@@ -11920,7 +11920,7 @@ babelHelpers.inherits(ContextualComponentMutableParamsTest, _RenderingTest2);
     return MutableParamTestGenerator;
   })();
 
-  _emberGlimmerTestsUtilsAbstractTestCase.applyMixins(ContextualComponentMutableParamsTest, new MutableParamTestGenerator([{
+  _emberGlimmerTestsUtilsAbstractTestCase.applyMixins(ClosureComponentMutableParamsTest, new MutableParamTestGenerator([{
     title: 'param',
     setup: function () {
       this.render('{{component (component "change-button" model.val2)}}');
@@ -11957,7 +11957,7 @@ babelHelpers.inherits(ContextualComponentMutableParamsTest, _RenderingTest2);
     }
   }]));
 
-  _emberGlimmerTestsUtilsTestCase.moduleFor('Components test: contextual components -- mutable params', ContextualComponentMutableParamsTest);
+  _emberGlimmerTestsUtilsTestCase.moduleFor('Components test: closure components -- mutable params', ClosureComponentMutableParamsTest);
 });
 enifed('ember-glimmer/tests/integration/components/curly-components-test', ['exports', 'ember-metal', 'ember-runtime', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case', 'ember-glimmer/tests/utils/test-helpers'], function (exports, _emberMetal, _emberRuntime, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase, _emberGlimmerTestsUtilsTestHelpers) {
   /* globals EmberDev */
@@ -34836,7 +34836,7 @@ enifed('ember-glimmer/tests/utils/shared-conditional-tests', ['exports', 'ember-
 
   _emberGlimmerTestsUtilsAbstractTestCase.applyMixins.apply(undefined, [IfUnlessWithSyntaxTest].concat(IfUnlessWithTestCases));
 });
-enifed('ember-glimmer/tests/utils/string-test', ['exports', 'ember-glimmer/tests/utils/helpers', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case'], function (exports, _emberGlimmerTestsUtilsHelpers, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase) {
+enifed('ember-glimmer/tests/utils/string-test', ['exports', 'ember-glimmer/tests/utils/helpers', 'ember-metal', 'ember-glimmer/tests/utils/abstract-test-case', 'ember-glimmer/tests/utils/test-case'], function (exports, _emberGlimmerTestsUtilsHelpers, _emberMetal, _emberGlimmerTestsUtilsAbstractTestCase, _emberGlimmerTestsUtilsTestCase) {
   'use strict';
 
   _emberGlimmerTestsUtilsTestCase.moduleFor('SafeString', (function (_TestCase) {
@@ -34869,29 +34869,31 @@ enifed('ember-glimmer/tests/utils/string-test', ['exports', 'ember-glimmer/tests
     return _class;
   })(_emberGlimmerTestsUtilsAbstractTestCase.TestCase));
 
-  _emberGlimmerTestsUtilsTestCase.moduleFor('SafeString isHTMLSafe', (function (_TestCase2) {
-    babelHelpers.inherits(_class2, _TestCase2);
+  if (true) {
+    _emberGlimmerTestsUtilsTestCase.moduleFor('SafeString isHTMLSafe', (function (_TestCase2) {
+      babelHelpers.inherits(_class2, _TestCase2);
 
-    function _class2() {
-      _TestCase2.apply(this, arguments);
-    }
+      function _class2() {
+        _TestCase2.apply(this, arguments);
+      }
 
-    _class2.prototype['@test isHTMLSafe should detect SafeString'] = function testIsHTMLSafeShouldDetectSafeString() {
-      var safeString = _emberGlimmerTestsUtilsHelpers.htmlSafe('<em>Emphasize</em> the important things.');
+      _class2.prototype['@test isHTMLSafe should detect SafeString'] = function testIsHTMLSafeShouldDetectSafeString() {
+        var safeString = _emberGlimmerTestsUtilsHelpers.htmlSafe('<em>Emphasize</em> the important things.');
 
-      this.assert.ok(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(safeString));
-    };
+        this.assert.ok(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(safeString));
+      };
 
-    _class2.prototype['@test isHTMLSafe should not detect SafeString on primatives'] = function testIsHTMLSafeShouldNotDetectSafeStringOnPrimatives() {
-      this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe('Hello World'));
-      this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe({}));
-      this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe([]));
-      this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(10));
-      this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(null));
-    };
+      _class2.prototype['@test isHTMLSafe should not detect SafeString on primatives'] = function testIsHTMLSafeShouldNotDetectSafeStringOnPrimatives() {
+        this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe('Hello World'));
+        this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe({}));
+        this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe([]));
+        this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(10));
+        this.assert.notOk(_emberGlimmerTestsUtilsHelpers.isHTMLSafe(null));
+      };
 
-    return _class2;
-  })(_emberGlimmerTestsUtilsAbstractTestCase.TestCase));
+      return _class2;
+    })(_emberGlimmerTestsUtilsAbstractTestCase.TestCase));
+  }
 });
 enifed('ember-glimmer/tests/utils/test-case', ['exports', 'internal-test-helpers'], function (exports, _internalTestHelpers) {
   'use strict';
@@ -46435,61 +46437,63 @@ enifed('ember-runtime/tests/computed/reduce_computed_macros_test', ['exports', '
     });
   });
 
-  QUnit.module('computed.uniqBy', {
-    setup: function () {
-      obj = _emberRuntimeSystemObject.default.extend({
-        list: null,
-        uniqueById: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'id')
-      }).create({
-        list: _emberRuntimeSystemNative_array.A([{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 1, value: 'one' }])
+  if (true) {
+    QUnit.module('computed.uniqBy', {
+      setup: function () {
+        obj = _emberRuntimeSystemObject.default.extend({
+          list: null,
+          uniqueById: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'id')
+        }).create({
+          list: _emberRuntimeSystemNative_array.A([{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 1, value: 'one' }])
+        });
+      },
+      teardown: function () {
+        _emberMetal.run(obj, 'destroy');
+      }
+    });
+
+    QUnit.test('uniqBy is readOnly', function () {
+      QUnit.throws(function () {
+        obj.set('uniqueById', 1);
+      }, /Cannot set read-only property "uniqueById" on object:/);
+    });
+    QUnit.test('does not include duplicates', function () {
+      deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }]);
+    });
+
+    QUnit.test('it does not share state among instances', function () {
+      var MyObject = _emberRuntimeSystemObject.default.extend({
+        list: [],
+        uniqueByName: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'name')
       });
-    },
-    teardown: function () {
-      _emberMetal.run(obj, 'destroy');
-    }
-  });
+      var a = MyObject.create({ list: [{ name: 'bob' }, { name: 'mitch' }, { name: 'mitch' }] });
+      var b = MyObject.create({ list: [{ name: 'warren' }, { name: 'mitch' }] });
 
-  QUnit.test('uniqBy is readOnly', function () {
-    QUnit.throws(function () {
-      obj.set('uniqueById', 1);
-    }, /Cannot set read-only property "uniqueById" on object:/);
-  });
-  QUnit.test('does not include duplicates', function () {
-    deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }]);
-  });
-
-  QUnit.test('it does not share state among instances', function () {
-    var MyObject = _emberRuntimeSystemObject.default.extend({
-      list: [],
-      uniqueByName: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'name')
+      deepEqual(a.get('uniqueByName'), [{ name: 'bob' }, { name: 'mitch' }]);
+      // Making sure that 'mitch' appears
+      deepEqual(b.get('uniqueByName'), [{ name: 'warren' }, { name: 'mitch' }]);
     });
-    var a = MyObject.create({ list: [{ name: 'bob' }, { name: 'mitch' }, { name: 'mitch' }] });
-    var b = MyObject.create({ list: [{ name: 'warren' }, { name: 'mitch' }] });
 
-    deepEqual(a.get('uniqueByName'), [{ name: 'bob' }, { name: 'mitch' }]);
-    // Making sure that 'mitch' appears
-    deepEqual(b.get('uniqueByName'), [{ name: 'warren' }, { name: 'mitch' }]);
-  });
+    QUnit.test('it handles changes to the dependent array', function () {
+      obj.get('list').pushObject({ id: 3, value: 'three' });
 
-  QUnit.test('it handles changes to the dependent array', function () {
-    obj.get('list').pushObject({ id: 3, value: 'three' });
+      deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 3, value: 'three' }], 'The list includes three');
 
-    deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 3, value: 'three' }], 'The list includes three');
+      obj.get('list').pushObject({ id: 3, value: 'three' });
 
-    obj.get('list').pushObject({ id: 3, value: 'three' });
-
-    deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 3, value: 'three' }], 'The list does not include a duplicate three');
-  });
-
-  QUnit.test('it returns an empty array when computed on a non-array', function () {
-    var MyObject = _emberRuntimeSystemObject.default.extend({
-      list: null,
-      uniq: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'name')
+      deepEqual(obj.get('uniqueById'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 3, value: 'three' }], 'The list does not include a duplicate three');
     });
-    var a = MyObject.create({ list: 'not an array' });
 
-    deepEqual(a.get('uniq'), []);
-  });
+    QUnit.test('it returns an empty array when computed on a non-array', function () {
+      var MyObject = _emberRuntimeSystemObject.default.extend({
+        list: null,
+        uniq: _emberRuntimeComputedReduce_computed_macros.uniqBy('list', 'name')
+      });
+      var a = MyObject.create({ list: 'not an array' });
+
+      deepEqual(a.get('uniq'), []);
+    });
+  }
 
   QUnit.module('computed.intersect', {
     setup: function () {
@@ -50927,11 +50931,16 @@ enifed('ember-runtime/tests/mixins/enumerable_test', ['exports', 'ember-runtime/
     var X = _emberRuntimeSystemObject.default.extend(_emberRuntimeMixinsEnumerable.default, {
       contains: function () {
         return true;
-      },
-      includes: function () {
-        return true;
       }
     });
+
+    if (true) {
+      X.reopen({
+        includes: function () {
+          return true;
+        }
+      });
+    }
 
     var x = X.create();
     var y = x.without(K);
@@ -51004,14 +51013,16 @@ enifed('ember-runtime/tests/mixins/enumerable_test', ['exports', 'ember-runtime/
     equal(allWhite, true);
   });
 
-  QUnit.test('should throw an error passing a second argument to includes', function () {
-    var x = _emberRuntimeSystemObject.default.extend(_emberRuntimeMixinsEnumerable.default).create();
+  if (true) {
+    QUnit.test('should throw an error passing a second argument to includes', function () {
+      var x = _emberRuntimeSystemObject.default.extend(_emberRuntimeMixinsEnumerable.default).create();
 
-    equal(x.includes('any'), false);
-    expectAssertion(function () {
-      x.includes('any', 1);
-    }, /Enumerable#includes cannot accept a second argument "startAt" as enumerable items are unordered./);
-  });
+      equal(x.includes('any'), false);
+      expectAssertion(function () {
+        x.includes('any', 1);
+      }, /Enumerable#includes cannot accept a second argument "startAt" as enumerable items are unordered./);
+    });
+  }
 
   // ..........................................................
   // CONTENT DID CHANGE
@@ -51970,7 +51981,7 @@ enifed('ember-runtime/tests/mixins/target_action_support_test', ['exports', 'emb
     ok(true === obj.triggerAction({ actionContext: null }), 'a valid target and action were specified');
   });
 });
-enifed('ember-runtime/tests/suites/array', ['exports', 'ember-runtime/tests/suites/enumerable', 'ember-runtime/tests/suites/array/indexOf', 'ember-runtime/tests/suites/array/lastIndexOf', 'ember-runtime/tests/suites/array/objectAt', 'ember-runtime/tests/suites/array/includes', 'ember-runtime/mixins/array'], function (exports, _emberRuntimeTestsSuitesEnumerable, _emberRuntimeTestsSuitesArrayIndexOf, _emberRuntimeTestsSuitesArrayLastIndexOf, _emberRuntimeTestsSuitesArrayObjectAt, _emberRuntimeTestsSuitesArrayIncludes, _emberRuntimeMixinsArray) {
+enifed('ember-runtime/tests/suites/array', ['exports', 'ember-runtime/tests/suites/enumerable', 'ember-runtime/tests/suites/array/indexOf', 'ember-runtime/tests/suites/array/lastIndexOf', 'ember-runtime/tests/suites/array/objectAt', 'ember-runtime/tests/suites/array/includes', 'ember-runtime/mixins/array', 'ember-metal'], function (exports, _emberRuntimeTestsSuitesEnumerable, _emberRuntimeTestsSuitesArrayIndexOf, _emberRuntimeTestsSuitesArrayLastIndexOf, _emberRuntimeTestsSuitesArrayObjectAt, _emberRuntimeTestsSuitesArrayIncludes, _emberRuntimeMixinsArray, _emberMetal) {
   'use strict';
 
   var ObserverClass = _emberRuntimeTestsSuitesEnumerable.ObserverClass.extend({
@@ -52005,7 +52016,9 @@ enifed('ember-runtime/tests/suites/array', ['exports', 'ember-runtime/tests/suit
   ArrayTests.importModuleTests(_emberRuntimeTestsSuitesArrayLastIndexOf.default);
   ArrayTests.importModuleTests(_emberRuntimeTestsSuitesArrayObjectAt.default);
 
-  ArrayTests.importModuleTests(_emberRuntimeTestsSuitesArrayIncludes.default);
+  if (true) {
+    ArrayTests.importModuleTests(_emberRuntimeTestsSuitesArrayIncludes.default);
+  }
 
   exports.ArrayTests = ArrayTests;
   exports.ObserverClass = ObserverClass;
@@ -52525,9 +52538,13 @@ enifed('ember-runtime/tests/suites/enumerable', ['exports', 'ember-utils', 'embe
   EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableToArray.default);
   EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableUniq.default);
 
-  EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableUniqBy.default);
+  if (true) {
+    EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableUniqBy.default);
+  }
 
-  EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableIncludes.default);
+  if (true) {
+    EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableIncludes.default);
+  }
 
   EnumerableTests.importModuleTests(_emberRuntimeTestsSuitesEnumerableWithout.default);
 
@@ -52624,7 +52641,7 @@ enifed('ember-runtime/tests/suites/enumerable/compact', ['exports', 'ember-runti
 
   exports.default = suite;
 });
-enifed('ember-runtime/tests/suites/enumerable/contains', ['exports', 'ember-runtime/tests/suites/suite'], function (exports, _emberRuntimeTestsSuitesSuite) {
+enifed('ember-runtime/tests/suites/enumerable/contains', ['exports', 'ember-runtime/tests/suites/suite', 'ember-metal'], function (exports, _emberRuntimeTestsSuitesSuite, _emberMetal) {
   'use strict';
 
   var suite = _emberRuntimeTestsSuitesSuite.SuiteModuleBuilder.create();
@@ -52635,7 +52652,9 @@ enifed('ember-runtime/tests/suites/enumerable/contains', ['exports', 'ember-runt
     var data = this.newFixture(3);
     var obj = this.newObject(data);
 
-    expectDeprecation('`Enumerable#contains` is deprecated, use `Enumerable#includes` instead.');
+    if (true) {
+      expectDeprecation('`Enumerable#contains` is deprecated, use `Enumerable#includes` instead.');
+    }
     equal(obj.contains(data[1]), true, 'should return true if contained');
   });
 
@@ -52643,7 +52662,9 @@ enifed('ember-runtime/tests/suites/enumerable/contains', ['exports', 'ember-runt
     var data = this.newFixture(1);
     var obj = this.newObject(this.newFixture(3));
 
-    expectDeprecation('`Enumerable#contains` is deprecated, use `Enumerable#includes` instead.');
+    if (true) {
+      expectDeprecation('`Enumerable#contains` is deprecated, use `Enumerable#includes` instead.');
+    }
     equal(obj.contains(data[0]), false, 'should return false if not contained');
   });
 
@@ -53511,21 +53532,23 @@ enifed('ember-runtime/tests/suites/enumerable/uniq', ['exports', 'ember-runtime/
 
   exports.default = suite;
 });
-enifed('ember-runtime/tests/suites/enumerable/uniqBy', ['exports', 'ember-runtime/tests/suites/suite'], function (exports, _emberRuntimeTestsSuitesSuite) {
+enifed('ember-runtime/tests/suites/enumerable/uniqBy', ['exports', 'ember-runtime/tests/suites/suite', 'ember-metal'], function (exports, _emberRuntimeTestsSuitesSuite, _emberMetal) {
   'use strict';
 
   var suite = _emberRuntimeTestsSuitesSuite.SuiteModuleBuilder.create();
 
   suite.module('uniqBy');
 
-  suite.test('should return new instance with duplicates removed', function () {
-    var numbers = this.newObject([{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 1, value: 'one' }]);
-    deepEqual(numbers.uniqBy('id'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }]);
-  });
+  if (true) {
+    suite.test('should return new instance with duplicates removed', function () {
+      var numbers = this.newObject([{ id: 1, value: 'one' }, { id: 2, value: 'two' }, { id: 1, value: 'one' }]);
+      deepEqual(numbers.uniqBy('id'), [{ id: 1, value: 'one' }, { id: 2, value: 'two' }]);
+    });
+  }
 
   exports.default = suite;
 });
-enifed('ember-runtime/tests/suites/enumerable/without', ['exports', 'ember-runtime/tests/suites/suite'], function (exports, _emberRuntimeTestsSuitesSuite) {
+enifed('ember-runtime/tests/suites/enumerable/without', ['exports', 'ember-runtime/tests/suites/suite', 'ember-metal'], function (exports, _emberRuntimeTestsSuitesSuite, _emberMetal) {
   'use strict';
 
   var suite = _emberRuntimeTestsSuitesSuite.SuiteModuleBuilder.create();
@@ -53547,19 +53570,21 @@ enifed('ember-runtime/tests/suites/enumerable/without', ['exports', 'ember-runti
     deepEqual(this.toArray(obj), before, 'should not have changed original');
   });
 
-  suite.test('should remove NaN value', function () {
-    var before = undefined,
-        after = undefined,
-        obj = undefined,
-        ret = undefined;
+  if (true) {
+    suite.test('should remove NaN value', function () {
+      var before = undefined,
+          after = undefined,
+          obj = undefined,
+          ret = undefined;
 
-    before = [].concat(this.newFixture(2), [NaN]);
-    after = [before[0], before[1]];
-    obj = this.newObject(before);
+      before = [].concat(this.newFixture(2), [NaN]);
+      after = [before[0], before[1]];
+      obj = this.newObject(before);
 
-    ret = obj.without(NaN);
-    deepEqual(this.toArray(ret), after, 'should have removed item');
-  });
+      ret = obj.without(NaN);
+      deepEqual(this.toArray(ret), after, 'should have removed item');
+    });
+  }
 
   suite.test('should return same instance if object not found', function () {
     var item = undefined,
@@ -60763,7 +60788,7 @@ enifed('ember-testing/tests/simple_setup', ['exports', 'ember-metal', 'ember-vie
     }
   });
 });
-enifed('ember-testing/tests/test/waiters-test', ['exports', 'ember-testing/test/waiters'], function (exports, _emberTestingTestWaiters) {
+enifed('ember-testing/tests/test/waiters-test', ['exports', 'ember-metal', 'ember-testing/test/waiters'], function (exports, _emberMetal, _emberTestingTestWaiters) {
   'use strict';
 
   var Waiters = (function () {
@@ -60917,9 +60942,13 @@ enifed('ember-testing/tests/test/waiters-test', ['exports', 'ember-testing/test/
     this.waiters.register();
 
     var waiters = undefined;
-    expectDeprecation(function () {
+    if (true) {
+      expectDeprecation(function () {
+        waiters = _emberTestingTestWaiters.generateDeprecatedWaitersArray();
+      }, /Usage of `Ember.Test.waiters` is deprecated/);
+    } else {
       waiters = _emberTestingTestWaiters.generateDeprecatedWaitersArray();
-    }, /Usage of `Ember.Test.waiters` is deprecated/);
+    }
 
     assert.deepEqual(waiters, [[null, waiter1], [null, waiter2]]);
   });
@@ -64436,9 +64465,11 @@ enifed('ember/tests/reexports_test', ['exports', 'ember/index', 'internal-test-h
     });
   });
 
-  QUnit.test('Ember.String.isHTMLSafe exports correctly', function (assert) {
-    _internalTestHelpers.confirmExport(_emberIndex.default, assert, 'String.isHTMLSafe', 'ember-glimmer', 'isHTMLSafe');
-  });
+  if (true) {
+    QUnit.test('Ember.String.isHTMLSafe exports correctly', function (assert) {
+      _internalTestHelpers.confirmExport(_emberIndex.default, assert, 'String.isHTMLSafe', 'ember-glimmer', 'isHTMLSafe');
+    });
+  }
 
   if (false) {
     QUnit.test('Ember.WeakMap exports correctly', function (assert) {
